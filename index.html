@@ -68,11 +68,18 @@
     .step { display:grid; grid-template-columns:88px 1fr; gap:12px; align-items:start; }
     .tag { color:var(--red); background:var(--soft-red); padding:4px 8px; border-radius:8px; font-size:13px; font-weight:700; text-align:center; }
     .body { background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:12px; }
+    .video-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .video-card {
+      background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:13px;
+      box-shadow:0 8px 18px rgba(41,32,20,.04);
+    }
+    .video-card strong { display:block; color:var(--red); margin-bottom:4px; }
     .footer-note { color:var(--muted); font-size:13px; text-align:center; margin-top:28px; }
     @media (max-width:720px) {
       h1 { font-size:29px; }
       .grid { grid-template-columns:1fr; }
       .compare-pairs { grid-template-columns:1fr; }
+      .video-grid { grid-template-columns:1fr; }
       .step { grid-template-columns:1fr; }
       .tag { text-align:left; width:max-content; }
       table { display:block; overflow-x:auto; white-space:nowrap; }
@@ -90,6 +97,7 @@
   <nav class="toolbar">
     <a href="#core">核心卡片</a>
     <a href="#tests">画质测试</a>
+    <a href="#video">视频能力</a>
     <a href="#compare">对比对象</a>
     <a href="#shoot">爱群人像</a>
     <a href="#ending">结尾方向</a>
@@ -156,6 +164,12 @@
           </div>
         </article>
         
+      </div>
+    </section>
+    <section id="video">
+      <h2>我会怎么讲视频能力</h2>
+      <div class="video-grid">
+        <div class="video-card"><strong>整体判断</strong>视频参数很满，这部分我会直接承认它规格给得很足，不把它写成只会拍照的机器。</div><div class="video-card"><strong>最大遗憾</strong>比较可惜的是没有传感器防抖，防抖方面只有镜头防抖。手持走动、边走边拍不能期待太高。</div><div class="video-card"><strong>适合场景</strong>如果是定镜、固定机位、轻微手持，问题不大；拍咖啡、静物、环境空镜、人物小段落都可以。</div><div class="video-card"><strong>必须演示</strong>我要专门演示 4K 慢放，看它在动作、头发、衣服摆动、街景行人里有没有实际可用性。</div><div class="video-card"><strong>口播重点</strong>视频这段不是吹规格，而是讲清楚：参数强，但没有机身防抖，所以它更适合有控制的拍法。</div>
       </div>
     </section>
     <section id="compare">

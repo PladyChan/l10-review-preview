@@ -47,33 +47,6 @@
       background:var(--soft-gold); border:1px solid #ead5a9; border-radius:14px; padding:16px;
       font-size:16px;
     }
-    .gear-list { display:grid; gap:12px; }
-    .gear-card {
-      display:grid; grid-template-columns:220px minmax(0,1fr); gap:14px; align-items:stretch;
-      background:var(--paper); border:1px solid var(--line); border-radius:16px; overflow:hidden;
-      box-shadow:0 10px 24px rgba(41,32,20,.05);
-    }
-    .gear-left {
-      background:#efe8db; padding:15px; border-right:1px solid var(--line);
-      display:flex; flex-direction:column; justify-content:center;
-    }
-    .gear-camera { font-weight:800; line-height:1.22; font-size:17px; }
-    .gear-lens { color:var(--muted); margin-top:7px; font-size:14px; line-height:1.35; }
-    .gear-right { padding:14px; }
-    .exposure-line {
-      display:flex; flex-wrap:wrap; gap:6px; align-items:center; margin-bottom:10px;
-      color:#2c2a26; font-weight:700; font-size:14px;
-    }
-    .exposure-label {
-      color:var(--gold); background:var(--soft-gold); padding:3px 8px; border-radius:999px;
-      font-size:12px; flex:0 0 auto;
-    }
-    .param-chips { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:9px; }
-    .param-chips span {
-      background:var(--soft-green); color:var(--green); border:1px solid #d1dfd6;
-      padding:4px 8px; border-radius:999px; font-size:12px; font-weight:650;
-    }
-    .gear-note { color:#3a3a3a; font-size:14px; }
     table { width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:14px; border:1px solid var(--line); background:var(--paper); }
     th,td { padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:top; font-size:14px; }
     th { text-align:left; background:#efe8db; color:#2e2b26; }
@@ -86,8 +59,6 @@
     @media (max-width:720px) {
       h1 { font-size:29px; }
       .grid { grid-template-columns:1fr; }
-      .gear-card { grid-template-columns:1fr; }
-      .gear-left { border-right:0; border-bottom:1px solid var(--line); }
       .step { grid-template-columns:1fr; }
       .tag { text-align:left; width:max-content; }
       table { display:block; overflow-x:auto; white-space:nowrap; }
@@ -104,7 +75,6 @@
   </header>
   <nav class="toolbar">
     <a href="#core">核心卡片</a>
-    <a href="#gear">器材参数</a>
     <a href="#tests">画质测试</a>
     <a href="#compare">对比对象</a>
     <a href="#shoot">爱群人像</a>
@@ -115,72 +85,6 @@
       <h2>核心卡片</h2>
       <div class="grid">
         <article class="card"><span class="kicker">定位</span><h3>L10 不是全能横评对象</h3><p>这篇不做全部机型、全部项目的表格横评。每台机器只承担一个比较任务：S9 看定位冲突，GR4 / X-M5 看传感器和日常成像差距，Type109 看产品血统，手机看计算摄影和真实光学变焦差异。</p></article><article class="card"><span class="kicker">锐度</span><h3>不能吹锐，但有柔和感</h3><p>L10 镜头全开偏肉，边缘更崩；收到 F2.8 后中心明显变锐，F5.6-F8 已经可以拍风光。边缘始终差一点，所以它不是锐度怪物，而是中心够用、全开柔、焦段完整。</p></article><article class="card"><span class="kicker">GR4 对比</span><h3>比的不是谁更锐，而是谁拍得到</h3><p>和 GR4 绝对锐度差距没有想象中大。L10 的优势在 50mm / 75mm 真实光学焦段；GR4 要靠数码裁切模拟长焦，这里应该单独比较细节、透视和可用像素。</p></article><article class="card"><span class="kicker">创作</span><h3>爱群大酒店人像是创作章节</h3><p>这组不做横向对比。室内自然光暗、走廊灯光昏，标变大光圈和闪光灯给了创作自由度。降噪 -5、锐化 -5 后，高 ISO 噪点主要是黑白颗粒，直出已经有胶片噪点感。</p></article><article class="card"><span class="kicker">结尾</span><h3>想要松下版 GR4，但 L10 更像在撞 S9</h3><p>你真正期待的可能是一台能和 GR4 类比的松下随身机：更小、更明确、更快拍。但 L10 的价格、体积和定位会让人自然拿它和 S9 比，它更像 S9 旁边的固定镜头竞争项。</p></article>
-      </div>
-    </section>
-    <section id="gear">
-      <h2>器材参数卡</h2>
-      <div class="gear-list">
-        
-        <article class="gear-card">
-          <div class="gear-left">
-            <div class="gear-camera">Panasonic Lumix L10</div>
-            <div class="gear-lens">内置 24-75mm F1.7-2.8</div>
-          </div>
-          <div class="gear-right">
-            <div class="exposure-line"><span class="exposure-label">焦段 / 三要素</span>24-75mm / F1.7-2.8 / 快门按场景 / ISO 低感到高感测试</div>
-            <div class="param-chips"><span>4/3 多画幅</span><span>20.4MP</span><span>EVF</span><span>Real Time LUT</span><span>美肤</span><span>508g</span></div>
-            <div class="gear-note">主角。重点看镜头全开柔、F2.8 中心变锐、长焦光学优势和直出颗粒。</div>
-          </div>
-        </article>
-        
-        <article class="gear-card">
-          <div class="gear-left">
-            <div class="gear-camera">Panasonic Lumix S9</div>
-            <div class="gear-lens">S 18-40mm F4.5-6.3</div>
-          </div>
-          <div class="gear-right">
-            <div class="exposure-line"><span class="exposure-label">焦段 / 三要素</span>18-40mm / F4.5-6.3 / 快门按场景 / ISO 对齐 L10</div>
-            <div class="param-chips"><span>全画幅</span><span>24.2MP</span><span>无 EVF</span><span>IBIS</span><span>Real Time LUT</span></div>
-            <div class="gear-note">用来比外观、体积、广角和全幅基础画质，不展开全项目横评。</div>
-          </div>
-        </article>
-        
-        <article class="gear-card">
-          <div class="gear-left">
-            <div class="gear-camera">Panasonic Lumix S9</div>
-            <div class="gear-lens">S 40mm F2</div>
-          </div>
-          <div class="gear-right">
-            <div class="exposure-line"><span class="exposure-label">焦段 / 三要素</span>40mm / F2 / 快门按场景 / ISO 对齐 L10</div>
-            <div class="param-chips"><span>全画幅</span><span>定焦</span><span>人像质感</span><span>高感上限</span><span>虚化上限</span></div>
-            <div class="gear-note">只在画质上限、人像质感和选购判断里引用。</div>
-          </div>
-        </article>
-        
-        <article class="gear-card">
-          <div class="gear-left">
-            <div class="gear-camera">Ricoh GR4</div>
-            <div class="gear-lens">28mm 等效定焦</div>
-          </div>
-          <div class="gear-right">
-            <div class="exposure-line"><span class="exposure-label">焦段 / 三要素</span>28mm / F2.8 / 快门按场景 / ISO 对齐 L10</div>
-            <div class="param-chips"><span>APS-C</span><span>口袋机</span><span>定焦</span><span>扫街</span><span>裁切对比</span></div>
-            <div class="gear-note">重点比 28mm 定焦锐度、APS-C 成像，以及裁切到 50/75mm 时和 L10 长焦的差异。</div>
-          </div>
-        </article>
-        
-        <article class="gear-card">
-          <div class="gear-left">
-            <div class="gear-camera">Fujifilm X-M5</div>
-            <div class="gear-lens">23mm F2.8</div>
-          </div>
-          <div class="gear-right">
-            <div class="exposure-line"><span class="exposure-label">焦段 / 三要素</span>35mm 等效 / F2.8 / 快门按场景 / ISO 对齐 L10</div>
-            <div class="param-chips"><span>APS-C</span><span>X100VI 近似参照</span><span>无 EVF</span><span>胶片模拟</span></div>
-            <div class="gear-note">没有 X100VI 真机，所以只作为 35mm APS-C 定焦参照，不能写成 X100VI 实测。</div>
-          </div>
-        </article>
-        
       </div>
     </section>
     <section id="tests">

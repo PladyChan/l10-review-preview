@@ -74,12 +74,19 @@
       box-shadow:0 8px 18px rgba(41,32,20,.04);
     }
     .video-card strong { display:block; color:var(--red); margin-bottom:4px; }
+    .focal-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:14px; }
+    .focal-card {
+      background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:13px;
+      box-shadow:0 8px 18px rgba(41,32,20,.04);
+    }
+    .focal-card strong { display:block; color:var(--green); font-size:17px; margin-bottom:5px; }
     .footer-note { color:var(--muted); font-size:13px; text-align:center; margin-top:28px; }
     @media (max-width:720px) {
       h1 { font-size:29px; }
       .grid { grid-template-columns:1fr; }
       .compare-pairs { grid-template-columns:1fr; }
       .video-grid { grid-template-columns:1fr; }
+      .focal-grid { grid-template-columns:1fr; }
       .step { grid-template-columns:1fr; }
       .tag { text-align:left; width:max-content; }
       table { display:block; overflow-x:auto; white-space:nowrap; }
@@ -185,6 +192,10 @@
       <h2>广州爱群大酒店人像</h2>
       <div class="timeline">
         <div class="step"><div class="tag">地点</div><div class="body">广州爱群大酒店</div></div><div class="step"><div class="tag">光线</div><div class="body">室内自然光比较暗，走廊只有昏暗灯光</div></div><div class="step"><div class="tag">拍法</div><div class="body">我用了标变大光圈 + 闪光灯</div></div><div class="step"><div class="tag">机内设置</div><div class="body">降噪 -5，锐化 -5</div></div><div class="step"><div class="tag">画面质感</div><div class="body">高 ISO 噪点讨喜，主要是黑白噪点</div></div><div class="step"><div class="tag">LUT 判断</div><div class="body">我不用额外开噪点模拟，直出已有胶片颗粒感</div></div>
+      </div>
+      <h3>从 24 到 75mm 的构图变化</h3>
+      <div class="focal-grid">
+        <div class="focal-card"><strong>24mm</strong>交代爱群酒店的室内环境、走廊纵深和老建筑氛围。这个焦段适合把人放进空间里，而不是只拍脸。</div><div class="focal-card"><strong>35mm</strong>更接近日常观看距离，适合半环境人像。人物存在感更强，但还保留酒店背景和光线关系。</div><div class="focal-card"><strong>50mm</strong>开始压缩空间，适合半身、坐姿、桌边或窗边人物。这个焦段能把杂乱环境收住。</div><div class="focal-card"><strong>75mm</strong>拍更紧的半身、表情、手部和服装细节。暗走廊里用 75mm 可以把背景压暗压虚，让闪光灯打到的人更突出。</div>
       </div>
     </section>
     <section id="ending">

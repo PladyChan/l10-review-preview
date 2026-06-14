@@ -51,6 +51,19 @@
     th,td { padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:top; font-size:14px; }
     th { text-align:left; background:#efe8db; color:#2e2b26; }
     tr:last-child td { border-bottom:0; }
+    .detail-list { display:grid; gap:12px; margin-top:14px; }
+    .detail-card {
+      background:var(--paper); border:1px solid var(--line); border-radius:14px; padding:15px;
+      box-shadow:0 10px 24px rgba(41,32,20,.05);
+    }
+    .detail-card h3 { margin:0 0 8px; }
+    .detail-card p { margin:8px 0; color:#303030; font-size:15px; }
+    .compare-pairs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:10px; }
+    .pair {
+      border:1px solid var(--line); border-radius:10px; padding:10px; background:#fffaf0;
+      font-size:14px;
+    }
+    .pair strong { display:block; color:var(--green); margin-bottom:3px; }
     .timeline { display:grid; gap:10px; }
     .step { display:grid; grid-template-columns:88px 1fr; gap:12px; align-items:start; }
     .tag { color:var(--red); background:var(--soft-red); padding:4px 8px; border-radius:8px; font-size:13px; font-weight:700; text-align:center; }
@@ -59,6 +72,7 @@
     @media (max-width:720px) {
       h1 { font-size:29px; }
       .grid { grid-template-columns:1fr; }
+      .compare-pairs { grid-template-columns:1fr; }
       .step { grid-template-columns:1fr; }
       .tag { text-align:left; width:max-content; }
       table { display:block; overflow-x:auto; white-space:nowrap; }
@@ -95,6 +109,54 @@
           <tr><td>锐度</td><td>我会拍 24/35/50/75mm；全开、F2.8、F5.6-F8</td><td>GR4、X-M5 + 23/2.8、Type109、手机 1x/2x/长焦</td><td>我主要看中心变锐点、边缘崩坏程度、GR4 裁切对比</td></tr><tr><td>夜景 / 高感</td><td>我会拍街景、咖啡馆、昏暗走廊</td><td>S9、X-M5、GR4、手机夜景模式</td><td>我主要看黑白噪点还是彩噪；ISO 是否影响小红书输出</td></tr><tr><td>宽容度</td><td>我会拍窗边、正午、灯牌</td><td>S9、X-M5、手机 HDR</td><td>我主要看高光能否拉回；暗部拉亮是否变脏</td></tr><tr><td>色彩 / LUT</td><td>我会拍街景、室内暖光、人像</td><td>S9 LUT、富士胶片模拟、手机 Leica 风格</td><td>我主要看 LUT 是否让肤色灰、脏、硬；是否需要噪点模拟</td></tr><tr><td>虚化</td><td>我会拍咖啡杯、半身、75mm 细节</td><td>S9 + 40/2、X-M5 + 23/2.8、GR4 裁切、手机人像模式</td><td>我主要看主体分离是否够；和 S9 + 40/2 差距多大</td></tr>
         </tbody>
       </table>
+      <div class="detail-list">
+        
+        <article class="detail-card">
+          <h3>锐度：焦段和光圈要分开讲</h3>
+          <p><strong>我怎么拍 L10：</strong>L10 我会拍 24 / 35 / 50 / 75mm。每个焦段先拍最大光圈，再拍 F2.8；如果是远景或风光，再补 F5.6-F8。</p>
+          <p><strong>这项想说明：</strong>这项不是为了证明 L10 很锐，而是为了说明它全开柔、F2.8 中心变锐、边缘始终弱一点，这个差异日常有没有影响。</p>
+          <div class="compare-pairs">
+            <div class="pair"><strong>GR4</strong>用 28mm 原生视角比 L10 24/35mm 的中心和边缘；再用 GR4 裁切模拟 50/75mm，和 L10 真长焦比细节。</div><div class="pair"><strong>X-M5 + 23/2.8</strong>用 35mm 等效定焦当 APS-C 参照，重点看同类日常视角下 L10 收到 F2.8 后差距大不大。</div><div class="pair"><strong>Type109</strong>同样 24-75mm F1.7-2.8 路线，重点看 L10 是否只是现代化，而不是画幅升级。</div><div class="pair"><strong>手机</strong>1x 比 24mm，2x 比 50mm 附近，长焦或裁切比 75mm，重点看算法锐化和真实光学细节差异。</div>
+          </div>
+        </article>
+        
+        <article class="detail-card">
+          <h3>夜景 / 高感：先分手持和画质</h3>
+          <p><strong>我怎么拍 L10：</strong>L10 我会拍 24mm F1.7、50mm、75mm F2.8；ISO 从 800 到 6400。暗走廊、咖啡馆、街景分开看。</p>
+          <p><strong>这项想说明：</strong>这项要分清楚：是高 ISO 噪点影响画面，还是快门太慢导致糊片。我的重点是噪点质感和日常输出，而不是实验室纯净度。</p>
+          <div class="compare-pairs">
+            <div class="pair"><strong>S9</strong>用全画幅做高感和宽容度上限参照，看 L10 到 ISO 3200/6400 时差距是否一眼可见。</div><div class="pair"><strong>X-M5</strong>用 APS-C 看传感器级别差距，判断 4/3 到 APS-C 在夜景里是否真的影响日常。</div><div class="pair"><strong>GR4</strong>看 APS-C 口袋机的高感细节和 L10 的大光圈变焦谁更实用。</div><div class="pair"><strong>手机夜景模式</strong>单独说明手机是多帧计算，不是同一种拍法；看它更干净还是更涂抹。</div>
+          </div>
+        </article>
+        
+        <article class="detail-card">
+          <h3>宽容度：我会故意拍难救的光</h3>
+          <p><strong>我怎么拍 L10：</strong>L10 我会拍窗边、正午白墙、夜景灯牌。每个场景拍正常曝光、-1EV、-2EV，再看 RAW 能拉回多少。</p>
+          <p><strong>这项想说明：</strong>这项主要看 L10 的失败边界：高光死不死、暗部拉亮脏不脏、肤色会不会灰。不是为了硬拼全幅，而是看我日常要不要更小心曝光。</p>
+          <div class="compare-pairs">
+            <div class="pair"><strong>S9</strong>全画幅宽容度参照，尤其看 -2EV 拉回时暗部和肤色差距。</div><div class="pair"><strong>X-M5</strong>APS-C 参照，判断 L10 和 APS-C 的后期余量差距在日常是否明显。</div><div class="pair"><strong>手机 HDR</strong>看手机自动 HDR 是否更省事，同时注意它有没有假亮、边缘 HDR 痕迹或肤色变怪。</div>
+          </div>
+        </article>
+        
+        <article class="detail-card">
+          <h3>色彩 / LUT：不能只看环境，要看人脸</h3>
+          <p><strong>我怎么拍 L10：</strong>L10 我会拍街景、室内暖光、人像。同一场景拍标准、我常用的 LUT、RAW 后期；有人脸时再看美肤低档。</p>
+          <p><strong>这项想说明：</strong>LUT 好不好不是看滤镜名字，而是看它会不会把肤色压灰、压脏、压硬。我的爱群人像也会放到这条线里讲。</p>
+          <div class="compare-pairs">
+            <div class="pair"><strong>S9 LUT</strong>同是 LUMIX LUT 工作流，看 L10 直出和 S9 的风格逻辑是否一致。</div><div class="pair"><strong>富士胶片模拟</strong>用 X-M5 看富士直出生态和 L10 LUT 的区别，但不写成谁绝对更好。</div><div class="pair"><strong>手机 Leica 风格</strong>看手机是不是第一眼更讨喜，但也看它是否统一、是否过度计算人脸。</div>
+          </div>
+        </article>
+        
+        <article class="detail-card">
+          <h3>虚化：不要按全幅 F1.7-2.8 理解</h3>
+          <p><strong>我怎么拍 L10：</strong>L10 我会拍 24mm 环境、50mm 静物、75mm 半身或细节，全部用最大光圈，再补一张收一点光圈的安全版本。</p>
+          <p><strong>这项想说明：</strong>这项要讲清楚：L10 有主体分离，但不是全幅大光圈定焦那种虚化。它的价值在 24-75mm 连续焦段和真实长焦。</p>
+          <div class="compare-pairs">
+            <div class="pair"><strong>S9 + 40/2</strong>作为人像质感和虚化上限参照，说明 L10 和全幅定焦差距在哪里。</div><div class="pair"><strong>X-M5 + 23/2.8</strong>APS-C 35mm 视角参照，看日常半身和环境图的主体分离差异。</div><div class="pair"><strong>GR4 裁切</strong>看 GR4 28mm 裁切后能不能替代 L10 的 50/75mm 视角。</div><div class="pair"><strong>手机人像模式</strong>看算法虚化第一眼是否更强，以及发丝、眼镜、衣服边缘有没有破绽。</div>
+          </div>
+        </article>
+        
+      </div>
     </section>
     <section id="compare">
       <h2>我为什么提这些对比对象</h2>

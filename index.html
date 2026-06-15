@@ -86,6 +86,12 @@
       box-shadow:0 8px 18px rgba(41,32,20,.04);
     }
     .focal-card strong { display:block; color:var(--green); font-size:17px; margin-bottom:5px; }
+    .noise-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin-top:14px; }
+    .noise-card {
+      background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:13px;
+      box-shadow:0 8px 18px rgba(41,32,20,.04);
+    }
+    .noise-card strong { display:block; color:var(--red); margin-bottom:5px; }
     .footer-note { color:var(--muted); font-size:13px; text-align:center; margin-top:28px; }
     @media (max-width:720px) {
       h1 { font-size:29px; }
@@ -94,6 +100,7 @@
       .handling-grid { grid-template-columns:1fr; }
       .video-grid { grid-template-columns:1fr; }
       .focal-grid { grid-template-columns:1fr; }
+      .noise-grid { grid-template-columns:1fr; }
       .step { grid-template-columns:1fr; }
       .tag { text-align:left; width:max-content; }
       table { display:block; overflow-x:auto; white-space:nowrap; }
@@ -148,7 +155,7 @@
           <p><strong>我怎么拍 L10：</strong>L10 我会拍 24mm F1.7、50mm、75mm F2.8；ISO 从 800 到 6400。暗走廊、咖啡馆、街景分开看。</p>
           <p><strong>这项想说明：</strong>这项要分清楚：是高 ISO 噪点影响画面，还是快门太慢导致糊片。我的重点是噪点质感和日常输出，而不是实验室纯净度。</p>
           <div class="compare-pairs">
-            <div class="pair"><strong>S9</strong>用全画幅做高感和宽容度上限参照，看 L10 到 ISO 3200/6400 时差距是否一眼可见。</div><div class="pair"><strong>X-M5</strong>用 APS-C 看传感器级别差距，判断 4/3 到 APS-C 在夜景里是否真的影响日常。</div><div class="pair"><strong>GR4</strong>看 APS-C 口袋机的高感细节和 L10 的大光圈变焦谁更实用。</div><div class="pair"><strong>手机夜景模式</strong>单独说明手机是多帧计算，不是同一种拍法；看它更干净还是更涂抹。</div>
+            <div class="pair"><strong>S9</strong>用全画幅做高感上限参照，看 S9 是否明显更干净、暗部颜色是否更稳。</div><div class="pair"><strong>X-M5</strong>用 APS-C 看传感器级别差距，重点看噪点颗粒、彩噪和暗部细节是不是比 L10 更稳。</div><div class="pair"><strong>GR4</strong>看 APS-C 口袋机的高感细节和颗粒形态，再和 L10 的黑白噪点质感对照。</div><div class="pair"><strong>手机夜景模式</strong>单独说明手机是多帧计算，不是同一种拍法；看它更干净，还是涂抹、假锐化、质感更数字。</div>
           </div>
         </article>
         
@@ -210,6 +217,10 @@
       <h3>从 24 到 75mm 的构图变化</h3>
       <div class="focal-grid">
         <div class="focal-card"><strong>24mm</strong>交代爱群酒店的室内环境、走廊纵深和老建筑氛围。这个焦段适合把人放进空间里，而不是只拍脸。</div><div class="focal-card"><strong>35mm</strong>更接近日常观看距离，适合半环境人像。人物存在感更强，但还保留酒店背景和光线关系。</div><div class="focal-card"><strong>50mm</strong>开始压缩空间，适合半身、坐姿、桌边或窗边人物。这个焦段能把杂乱环境收住。</div><div class="focal-card"><strong>75mm</strong>拍更紧的半身、表情、手部和服装细节。暗走廊里用 75mm 可以把背景压暗压虚，让闪光灯打到的人更突出。</div>
+      </div>
+      <h3>高 ISO 黑白噪点怎么对比</h3>
+      <div class="noise-grid">
+        <div class="noise-card"><strong>L10</strong>我重点看它在降噪 -5、锐化 -5 后，高 ISO 是不是主要呈现黑白颗粒，而不是脏彩噪。</div><div class="noise-card"><strong>S9</strong>全画幅应该更干净，我会用它判断 L10 的噪点到底是风格，还是画质差距已经明显。</div><div class="noise-card"><strong>X-M5</strong>APS-C 参照，重点看暗部细节和噪点颗粒是否比 L10 更细、更稳。</div><div class="noise-card"><strong>GR4</strong>看 GR4 高 ISO 的颗粒和细节保留，再和 L10 的黑白噪点质感对比。</div><div class="noise-card"><strong>手机夜景</strong>看手机夜景模式是不是更亮更干净，但同时有没有涂抹、塑料感、过度锐化。</div>
       </div>
     </section>
     <section id="ending">

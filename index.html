@@ -68,6 +68,12 @@
     .step { display:grid; grid-template-columns:88px 1fr; gap:12px; align-items:start; }
     .tag { color:var(--red); background:var(--soft-red); padding:4px 8px; border-radius:8px; font-size:13px; font-weight:700; text-align:center; }
     .body { background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:12px; }
+    .handling-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .handling-card {
+      background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:13px;
+      box-shadow:0 8px 18px rgba(41,32,20,.04);
+    }
+    .handling-card strong { display:block; color:var(--green); margin-bottom:4px; }
     .video-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
     .video-card {
       background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:13px;
@@ -85,6 +91,7 @@
       h1 { font-size:29px; }
       .grid { grid-template-columns:1fr; }
       .compare-pairs { grid-template-columns:1fr; }
+      .handling-grid { grid-template-columns:1fr; }
       .video-grid { grid-template-columns:1fr; }
       .focal-grid { grid-template-columns:1fr; }
       .step { grid-template-columns:1fr; }
@@ -106,6 +113,7 @@
     <a href="#tests">画质测试</a>
     <a href="#video">视频能力</a>
     <a href="#compare">对比对象</a>
+    <a href="#handling">操作节奏</a>
     <a href="#shoot">爱群人像</a>
     <a href="#ending">结尾方向</a>
   </nav>
@@ -187,6 +195,12 @@
           <tr><td>S9</td><td>我用它聊外观、体积、操作、简单画质差异、选购冲突</td><td>我想回答：L10 是否撞上 S9 预算？有 EVF 和 24-75mm 能否成立？</td></tr><tr><td>GR4</td><td>我用它聊 APS-C 成像、28mm 纯粹、口袋属性</td><td>我想回答：日常画质差距是否明显？L10 长焦能否弥补不够小？</td></tr><tr><td>X-M5 + 23/2.8</td><td>我用它做 APS-C 参照，也近似承担 X100VI 对比</td><td>我没有 X100VI 真机，所以不能写实测，只能写概念参照。</td></tr><tr><td>Type109</td><td>我用它聊 4/3 + 24-75mm F1.7-2.8 血统</td><td>我想回答：L10 是不是这条路线的现代化，而不是画幅升级。</td></tr><tr><td>一英寸手机</td><td>我用它聊 24mm 主摄和计算摄影</td><td>我想回答：手机强在主摄，L10 强在 35/50/75mm 真实光学变焦。</td></tr>
         </tbody>
       </table>
+    </section>
+    <section id="handling">
+      <h2>我的操作节奏</h2>
+      <div class="handling-grid">
+        <div class="handling-card"><strong>变焦速度</strong>L10 的变焦确实不算快，这点我会直接讲，不把它美化成很跟手。</div><div class="handling-card"><strong>我的习惯</strong>我现在习惯在抬手过程中就先参与一段变焦，让相机到眼前的时候，焦段已经差不多到位。</div><div class="handling-card"><strong>实际影响</strong>如果等看到画面以后再从 24mm 慢慢拉到 75mm，节奏会慢；但提前预判焦段以后，实际拍摄会顺很多。</div><div class="handling-card"><strong>口播角度</strong>这不是没有缺点，而是我已经形成了一套使用节奏：先判断距离和构图，再在抬手动作里完成一部分变焦。</div>
+      </div>
     </section>
     <section id="shoot">
       <h2>广州爱群大酒店人像</h2>

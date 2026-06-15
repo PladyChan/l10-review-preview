@@ -9,12 +9,32 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
+      color-scheme:dark light;
       --bg:#050505; --surface:#0c0c0c; --surface-2:#151515; --surface-3:#1f1f1f;
       --line:#2a2a2a; --text:#f2f2f2; --muted:#8a8a8a; --faint:#4d4d4d;
       --accent:#ff2a2a; --ok:#e8e8e8;
       --font-display:"Space Grotesk","Inter","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
       --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
       --font-mono:"Space Mono","SFMono-Regular",ui-monospace,monospace;
+    }
+    @media (prefers-color-scheme:light) {
+      :root {
+        --bg:#f3f1ea; --surface:#fffdf6; --surface-2:#ece8dd; --surface-3:#ded8cb;
+        --line:#cfc8b8; --text:#111111; --muted:#6f6b62; --faint:#a19a8e;
+        --accent:#d71920; --ok:#111111;
+      }
+    }
+    :root[data-theme="dark"] {
+      color-scheme:dark;
+      --bg:#050505; --surface:#0c0c0c; --surface-2:#151515; --surface-3:#1f1f1f;
+      --line:#2a2a2a; --text:#f2f2f2; --muted:#8a8a8a; --faint:#4d4d4d;
+      --accent:#ff2a2a; --ok:#e8e8e8;
+    }
+    :root[data-theme="light"] {
+      color-scheme:light;
+      --bg:#f3f1ea; --surface:#fffdf6; --surface-2:#ece8dd; --surface-3:#ded8cb;
+      --line:#cfc8b8; --text:#111111; --muted:#6f6b62; --faint:#a19a8e;
+      --accent:#d71920; --ok:#111111;
     }
     * { box-sizing:border-box; }
     html { scroll-behavior:smooth; }
@@ -63,6 +83,16 @@
     }
     .toolbar a:first-child { border-left:1px solid var(--line); }
     .toolbar a:hover { color:var(--text); background:var(--surface-2); }
+    .theme-toggle {
+      margin-left:auto; flex:0 0 auto; align-self:stretch; border:0; border-right:1px solid var(--line);
+      border-left:1px solid var(--line); border-radius:0; padding:0 14px; background:var(--surface-2);
+      color:var(--text); font-family:var(--font-mono); font-size:12px; cursor:pointer;
+      display:inline-flex; align-items:center; gap:8px;
+    }
+    .theme-toggle::before {
+      content:""; width:8px; height:8px; background:var(--accent); display:inline-block;
+    }
+    .theme-toggle:hover { background:var(--surface-3); }
     main { padding:22px 18px 60px; }
     section { max-width:980px; margin:0 auto 24px; }
     h2 {
@@ -147,8 +177,21 @@
       .tag { text-align:left; width:max-content; }
       table { display:block; overflow-x:auto; white-space:nowrap; }
       .toolbar a { padding:11px 12px; }
+      .theme-toggle { position:sticky; right:0; min-height:42px; padding:0 12px; }
     }
   </style>
+  <script>
+    (() => {
+      try {
+        const saved = localStorage.getItem("l10-theme");
+        if (saved === "dark" || saved === "light") {
+          document.documentElement.dataset.theme = saved;
+        }
+      } catch (error) {
+        document.documentElement.dataset.theme = "";
+      }
+    })();
+  </script>
 </head>
 <body>
   <header class="hero">
@@ -167,12 +210,13 @@
     <a href="#handling">操作节奏</a>
     <a href="#shoot">爱群人像</a>
     <a href="#ending">结尾方向</a>
+    <button class="theme-toggle" type="button" aria-label="切换深浅色" data-theme-toggle>THEME</button>
   </nav>
   <main>
     <section id="core">
       <h2>核心卡片</h2>
       <div class="grid">
-        <article class="card"><span class="kicker">定位</span><h3>我不打算做全项目横评</h3><p>这期我不会把每台机器的每个项目都摊开比。每个对比对象只服务一个问题：S9 看定位冲突，GR4 / X-M5 看传感器和日常成像差距，Type109 看产品血统，手机看计算摄影和真实光学变焦差异。</p></article><article class="card"><span class="kicker">锐度</span><h3>我不会把这颗镜头吹成锐</h3><p>我实际看下来，L10 镜头全开偏肉，边缘更崩；收到 F2.8 后中心明显变锐，F5.6-F8 已经可以拍风光。边缘始终差一点，所以这颗镜头更适合讲成中心够用、全开柔、焦段完整，而不是锐度怪物。</p></article><article class="card"><span class="kicker">GR4 对比</span><h3>我更想比谁真的拍得到</h3><p>我觉得它和 GR4 的绝对锐度差距没有想象中大。L10 的优势在 50mm / 75mm 真实光学焦段；GR4 要靠数码裁切模拟长焦，所以这里要单独比较细节、透视和可用像素。</p></article><article class="card"><span class="kicker">创作</span><h3>爱群大酒店这组讲创作</h3><p>这组我不做横向对比。室内自然光暗、走廊灯光昏，标变大光圈和闪光灯给了我很大的创作自由度。降噪 -5、锐化 -5 后，高 ISO 噪点主要是黑白颗粒，直出已经有胶片噪点感。</p></article><article class="card"><span class="kicker">结尾</span><h3>希望 M43 继续做下去</h3><p>我真正期待的不是一台和 S9 抢预算的固定镜头相机，而是 M43 继续做短小精悍的产品线：像 GM1 那种小机器，甚至是一台直接和 GR 竞争的小型定焦。L10 有它的完整度，但这个结尾想说的是，我更希望松下把 M43 的小，继续做到极致。</p></article>
+        <article class="card"><span class="kicker">定位</span><h3>我不打算做全项目横评</h3><p>这期我不会把每台机器的每个项目都摊开比。每个对比对象只服务一个问题：S9 看定位冲突，GR4 / X-M5 看传感器和日常成像差距，Type109 看产品血统，手机看计算摄影和真实光学变焦差异。</p></article><article class="card"><span class="kicker">锐度</span><h3>我不会把这颗镜头吹成锐</h3><p>我实际看下来，L10 镜头全开偏肉，边缘更崩；收到 F2.8 后中心明显变锐，F5.6-F8 已经可以拍风光。边缘始终差一点，所以这颗镜头更适合讲成中心够用、全开柔、焦段完整，而不是锐度怪物。</p></article><article class="card"><span class="kicker">GR4 对比</span><h3>我更想比谁真的拍得到</h3><p>我觉得它和 GR4 的绝对锐度差距没有想象中大。L10 的优势在 50mm / 75mm 真实光学焦段；GR4 要靠数码裁切模拟长焦，所以这里要单独比较细节、透视和可用像素。</p></article><article class="card"><span class="kicker">设计血统</span><h3>LX3、Type109 到 L10 是一条线</h3><p>比例切换、对焦模式切换这些东西还在，能看出它不是凭空做出来的机器。只是三要素转盘被改成了更现代的模式转盘，对现在大部分人更好上手，但我还是会怀念以前那种更机械、更摄影的操作感。</p></article><article class="card"><span class="kicker">创作</span><h3>爱群大酒店这组讲创作</h3><p>这组我不做横向对比。室内自然光暗、走廊灯光昏，标变大光圈和闪光灯给了我很大的创作自由度。降噪 -5、锐化 -5 后，高 ISO 噪点主要是黑白颗粒，直出已经有胶片噪点感。</p></article><article class="card"><span class="kicker">结尾</span><h3>希望 M43 继续做下去</h3><p>我真正期待的不是一台和 S9 抢预算的固定镜头相机，而是 M43 继续做短小精悍的产品线：像 GM1 那种小机器，甚至是一台直接和 GR 竞争的小型定焦。L10 有它的完整度，但这个结尾想说的是，我更希望松下把 M43 的小，继续做到极致。</p></article>
       </div>
     </section>
     <section id="tests">
@@ -243,7 +287,7 @@
       <table>
         <thead><tr><th>对象</th><th>用它讲什么</th><th>不能写偏的地方</th></tr></thead>
         <tbody>
-          <tr><td>S9</td><td>聊外观、体积、操作、简单画质差异、选购冲突</td><td>回答：L10 是否撞上 S9 预算？有 EVF 和 24-75mm 能否成立？</td></tr><tr><td>GR4</td><td>聊 APS-C 成像、28mm 纯粹、口袋属性</td><td>回答：日常画质差距是否明显？L10 长焦能否弥补不够小？</td></tr><tr><td>X-M5 + 23/2.8</td><td>做 APS-C 参照，也近似承担 X100VI 对比</td><td>没有 X100VI 真机，所以不能写实测，只能写概念参照。</td></tr><tr><td>Type109</td><td>聊 4/3 + 24-75mm F1.7-2.8 血统</td><td>回答：L10 是不是这条路线的现代化，而不是画幅升级。</td></tr><tr><td>一英寸手机</td><td>聊 24mm 主摄和计算摄影</td><td>回答：手机强在主摄，L10 强在 35/50/75mm 真实光学变焦。</td></tr>
+          <tr><td>S9</td><td>聊外观、体积、操作、简单画质差异、选购冲突</td><td>回答：L10 是否撞上 S9 预算？有 EVF 和 24-75mm 能否成立？</td></tr><tr><td>GR4</td><td>聊 APS-C 成像、28mm 纯粹、口袋属性</td><td>回答：日常画质差距是否明显？L10 长焦能否弥补不够小？</td></tr><tr><td>X-M5 + 23/2.8</td><td>做 APS-C 参照，也近似承担 X100VI 对比</td><td>没有 X100VI 真机，所以不能写实测，只能写概念参照。</td></tr><tr><td>Type109 / LX3</td><td>聊 4/3 + 24-75mm F1.7-2.8 血统，以及比例切换、对焦模式切换、转盘逻辑的继承</td><td>回答：L10 是不是这条路线的现代化，而不是画幅升级；现代模式转盘是否牺牲了一点老派操作味道。</td></tr><tr><td>一英寸手机</td><td>聊 24mm 主摄和计算摄影</td><td>回答：手机强在主摄，L10 强在 35/50/75mm 真实光学变焦。</td></tr>
         </tbody>
       </table>
     </section>
@@ -275,5 +319,37 @@
       <div class="footer-note">Generated from local review notes. Update notes first, then rebuild this page.</div>
     </section>
   </main>
+  <script>
+    (() => {
+      const root = document.documentElement;
+      const button = document.querySelector("[data-theme-toggle]");
+      const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+      const currentTheme = () => root.dataset.theme || (systemDark.matches ? "dark" : "light");
+      const hasSavedTheme = () => {
+        try {
+          return Boolean(localStorage.getItem("l10-theme"));
+        } catch (error) {
+          return false;
+        }
+      };
+      const render = () => {
+        const theme = currentTheme();
+        button.textContent = theme === "dark" ? "DARK" : "LIGHT";
+        button.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+      };
+      button.addEventListener("click", () => {
+        const next = currentTheme() === "dark" ? "light" : "dark";
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem("l10-theme", next);
+        } catch (error) {}
+        render();
+      });
+      systemDark.addEventListener("change", () => {
+        if (!hasSavedTheme()) render();
+      });
+      render();
+    })();
+  </script>
 </body>
 </html>

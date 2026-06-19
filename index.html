@@ -13,7 +13,7 @@
       --bg:#050505; --surface:#0c0c0c; --surface-2:#151515; --surface-3:#1f1f1f;
       --line:#2a2a2a; --text:#f2f2f2; --muted:#8a8a8a; --faint:#4d4d4d;
       --accent:#ff2a2a; --ok:#e8e8e8;
-      --font-display:"Space Grotesk","Inter","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+      --font-display:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
       --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
       --font-mono:"Space Mono","SFMono-Regular",ui-monospace,monospace;
     }
@@ -37,7 +37,7 @@
       --accent:#d71920; --ok:#111111;
     }
     * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
+    html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
     body {
       margin:0; color:var(--text); background:var(--bg);
       font-family:var(--font-body);
@@ -115,13 +115,14 @@
       background:var(--surface-2); border:1px solid var(--line); border-radius:6px; padding:16px;
       font-size:16px;
     }
-    table { width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:6px; border:1px solid var(--line); background:var(--surface); }
-    th,td { padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:top; font-size:14px; }
+    table { width:100%; table-layout:fixed; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:6px; border:1px solid var(--line); background:var(--surface); }
+    th,td { padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:top; font-size:14px; overflow-wrap:anywhere; word-break:normal; }
     th {
       text-align:left; background:var(--surface-2); color:var(--text);
       font-family:var(--font-mono); font-size:12px; text-transform:uppercase;
     }
     td { color:var(--muted); }
+    th:first-child,td:first-child { width:132px; }
     tr:last-child td { border-bottom:0; }
     .detail-list { display:grid; gap:12px; margin-top:14px; }
     .detail-card {
@@ -174,8 +175,12 @@
     .noise-card strong { display:block; color:var(--accent); font-family:var(--font-mono); margin-bottom:5px; }
     .footer-note { color:var(--muted); font-size:13px; text-align:center; margin-top:28px; }
     @media (max-width:720px) {
-      h1 { font-size:29px; }
+      h1 { font-size:26px; }
       .hero { padding-top:28px; }
+      h2 { font-size:20px; margin:26px 0 10px; }
+      h3 { font-size:16px; }
+      .card { padding:14px; }
+      .card p,.detail-card p { font-size:14px; line-height:1.6; }
       .grid { grid-template-columns:1fr; }
       .compare-pairs { grid-template-columns:1fr; }
       .handling-grid { grid-template-columns:1fr; }
@@ -185,8 +190,11 @@
       .noise-grid { grid-template-columns:1fr; }
       .step { grid-template-columns:1fr; }
       .tag { text-align:left; width:max-content; }
-      table { display:block; overflow-x:auto; white-space:nowrap; }
-      .toolbar a { padding:11px 12px; }
+      table { display:table; overflow:visible; white-space:normal; }
+      th,td { padding:9px 8px; font-size:12px; line-height:1.5; }
+      th:first-child,td:first-child { width:86px; }
+      .toolbar { padding:0 12px; }
+      .toolbar a { padding:10px 11px; font-size:11px; }
       .theme-toggle { position:sticky; right:0; min-height:42px; padding:0 12px; }
     }
   </style>
@@ -215,6 +223,7 @@
   <nav class="toolbar">
     <a href="#core">核心卡片</a>
     <a href="#position">主线定位</a>
+    <a href="#lutstory">LUT 创作</a>
     <a href="#tests">画质测试</a>
     <a href="#video">视频能力</a>
     <a href="#crop">裁切像素</a>
@@ -246,6 +255,15 @@
       <h3>生命周期与产品情绪</h3>
       <div class="grid">
         <article class="card"><span class="kicker">生命周期价值</span><h3>生命周期价值</h3><p>不围绕首发价写。价格会下降，固件会更新，LUT / 美肤 / App 联动可能逐渐成熟。L10 可能不是首发最香，而是价格回落、固件成熟后进入真香点。</p></article><article class="card"><span class="kicker">钛合金色情绪</span><h3>钛合金色情绪</h3><p>钛合金色可以联系 Minolta TC-1 这类老高端旗舰卡片机的情绪：高级随身机、金属感、精密感、实体操作和把玩属性。它是产品情绪，不是硬参数优势。</p></article><article class="card"><span class="kicker">视频边界</span><h3>视频边界</h3><p>视频参数不弱，但不是 Pocket 类稳定视频设备，也不是 S9 / X-M5 那种系统视频机。更适合固定机位、轻微手持、咖啡静物、环境空镜和人物小段落。</p></article><article class="card"><span class="kicker">美肤边界</span><h3>美肤边界</h3><p>美肤不是网红磨皮，而是直出人像流程的一部分：LUT 负责风格，美肤负责避免人脸被 LUT 带灰、带脏、带硬。开到明显看出来就是过头。</p></article>
+      </div>
+    </section>
+    <section id="lutstory">
+      <h2>Y2000-LX LUT 创作线索</h2>
+      <div class="grid">
+        <article class="card"><span class="kicker">25 周年</span><h3>25 周年</h3><p>LUMIX 25 周年推出 L10，可以作为回望千禧年便携机黄金时代的入口。那时手机还没有完全接管日常记录，小相机本身就是生活方式。</p></article><article class="card"><span class="kicker">产品血统</span><h3>产品血统</h3><p>从 2001 年 LC5 到 LX3、LX5，再到 LX100 / Type109，L10 可以接上一条线：紧凑机身、直接操控、高性能和徕卡大光圈变焦镜头。</p></article><article class="card"><span class="kicker">Y2000-LX</span><h3>Y2000-LX</h3><p>这个 LUT 采样 LX3。LX3 发布于 2008 年，徕卡镜头和 CCD 共同塑造了浓厚色彩，以及用户理解里的千禧德味。</p></article><article class="card"><span class="kicker">色彩方向</span><h3>色彩方向</h3><p>不是完全复刻老 CCD，而是在 LX3 色彩倾向上做现代审美处理：画面泛青、整体清冷，蓝绿更强，红色更沉稳，影调更重。</p></article><article class="card"><span class="kicker">适用场景</span><h3>适用场景</h3><p>适合日常扫街和风光，阴天和晴天都可以用。后续可以承接 LUT 限时免费分享和 L10 详细测评。</p></article>
+      </div>
+      <div class="callout">
+        这段不是把 L10 写成老 CCD，也不是给画质下结论；它是 L10、Real Time LUT 和 25 年 LUMIX 便携机记忆之间的情绪线。
       </div>
     </section>
     <section id="tests">

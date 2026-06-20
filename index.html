@@ -3,214 +3,69 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Panasonic Lumix L10 测评可视化大纲</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <title>Panasonic Lumix L10 测评笔记</title>
   <style>
     :root {
       color-scheme:dark light;
-      --bg:#050505; --surface:#0c0c0c; --surface-2:#151515; --surface-3:#1f1f1f;
-      --line:#2a2a2a; --text:#f2f2f2; --muted:#8a8a8a; --faint:#4d4d4d;
-      --accent:#ff2a2a; --ok:#e8e8e8;
-      --font-display:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
-      --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
-      --font-mono:"Space Mono","SFMono-Regular",ui-monospace,monospace;
+      --bg:#050505; --panel:#0d0d0d; --panel-2:#151515; --line:#2a2a2a;
+      --text:#f2f2f2; --muted:#9a9a9a; --accent:#ff2a2a;
+      --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
     }
     @media (prefers-color-scheme:light) {
       :root {
-        --bg:#f3f1ea; --surface:#fffdf6; --surface-2:#ece8dd; --surface-3:#ded8cb;
-        --line:#cfc8b8; --text:#111111; --muted:#6f6b62; --faint:#a19a8e;
-        --accent:#d71920; --ok:#111111;
+        --bg:#f5f3ee; --panel:#fffdf8; --panel-2:#ebe5da; --line:#d2c9ba;
+        --text:#151515; --muted:#6c675f; --accent:#d71920;
       }
     }
     :root[data-theme="dark"] {
       color-scheme:dark;
-      --bg:#050505; --surface:#0c0c0c; --surface-2:#151515; --surface-3:#1f1f1f;
-      --line:#2a2a2a; --text:#f2f2f2; --muted:#8a8a8a; --faint:#4d4d4d;
-      --accent:#ff2a2a; --ok:#e8e8e8;
+      --bg:#050505; --panel:#0d0d0d; --panel-2:#151515; --line:#2a2a2a;
+      --text:#f2f2f2; --muted:#9a9a9a; --accent:#ff2a2a;
     }
     :root[data-theme="light"] {
       color-scheme:light;
-      --bg:#f3f1ea; --surface:#fffdf6; --surface-2:#ece8dd; --surface-3:#ded8cb;
-      --line:#cfc8b8; --text:#111111; --muted:#6f6b62; --faint:#a19a8e;
-      --accent:#d71920; --ok:#111111;
+      --bg:#f5f3ee; --panel:#fffdf8; --panel-2:#ebe5da; --line:#d2c9ba;
+      --text:#151515; --muted:#6c675f; --accent:#d71920;
     }
     * { box-sizing:border-box; }
     html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
-    body {
-      margin:0; color:var(--text); background:var(--bg);
-      font-family:var(--font-body);
-      line-height:1.65;
-    }
-    .hero {
-      border-bottom:1px solid var(--line);
-      background:var(--bg);
-      color:var(--text);
-      padding:34px 18px 24px;
-    }
-    .wrap { max-width:980px; margin:0 auto; }
-    .eyebrow {
-      display:inline-flex; align-items:center; gap:8px;
-      color:var(--muted); font-family:var(--font-mono); font-size:12px;
-      letter-spacing:.04em; text-transform:uppercase;
-    }
-    .eyebrow::before {
-      content:""; width:8px; height:8px; background:var(--accent); display:inline-block;
-    }
-    h1 {
-      margin:10px 0 12px; font-family:var(--font-display); font-size:38px;
-      line-height:1.05; letter-spacing:0; max-width:760px;
-    }
-    .hero p { margin:0; max-width:760px; color:var(--muted); font-size:16px; }
-    .hero-meter {
-      display:grid; grid-template-columns:repeat(12,1fr); gap:4px;
-      margin-top:22px; max-width:520px;
-    }
-    .hero-meter span {
-      height:12px; border:1px solid var(--line); background:var(--surface-2);
-    }
-    .hero-meter span:nth-child(-n+8) { background:var(--ok); }
-    .hero-meter span:nth-child(9) { background:var(--accent); border-color:var(--accent); }
-    .toolbar {
-      display:flex; gap:0; overflow-x:auto; padding:0 18px; background:var(--surface);
-      border-bottom:1px solid var(--line); position:sticky; top:0; z-index:5;
-    }
-    .toolbar a {
-      white-space:nowrap; text-decoration:none; color:var(--muted);
-      border-right:1px solid var(--line); padding:12px 14px; font-family:var(--font-mono);
-      font-size:12px; text-transform:uppercase;
-    }
+    body { margin:0; color:var(--text); background:var(--bg); font-family:var(--font); line-height:1.72; }
+    .page { max-width:760px; margin:0 auto; padding:22px 18px 64px; }
+    header { padding:18px 0 16px; border-bottom:1px solid var(--line); }
+    .eyebrow { color:var(--muted); font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
+    h1 { margin:8px 0 10px; font-size:34px; line-height:1.12; letter-spacing:0; }
+    .lead { margin:0; color:var(--muted); font-size:16px; }
+    .toolbar { position:sticky; top:0; z-index:10; margin:0 -18px; padding:0 18px; display:flex; overflow-x:auto; gap:0; background:var(--bg); border-bottom:1px solid var(--line); }
+    .toolbar a,.theme-toggle { flex:0 0 auto; border:0; border-right:1px solid var(--line); background:transparent; color:var(--muted); text-decoration:none; padding:11px 12px; font-size:12px; }
     .toolbar a:first-child { border-left:1px solid var(--line); }
-    .toolbar a:hover { color:var(--text); background:var(--surface-2); }
-    .theme-toggle {
-      margin-left:auto; flex:0 0 auto; align-self:stretch; border:0; border-right:1px solid var(--line);
-      border-left:1px solid var(--line); border-radius:0; padding:0 14px; background:var(--surface-2);
-      color:var(--text); font-family:var(--font-mono); font-size:12px; cursor:pointer;
-      display:inline-flex; align-items:center; gap:8px;
-    }
-    .theme-toggle::before {
-      content:""; width:8px; height:8px; background:var(--accent); display:inline-block;
-    }
-    .theme-toggle:hover { background:var(--surface-3); }
-    main { padding:22px 18px 60px; }
-    section { max-width:980px; margin:0 auto 24px; }
-    h2 {
-      font-family:var(--font-display); font-size:23px; margin:30px 0 12px;
-      line-height:1.2; letter-spacing:0; display:flex; align-items:center; gap:10px;
-    }
-    h2::before { content:""; width:16px; height:8px; background:var(--accent); display:inline-block; }
-    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
-    .card {
-      background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:16px;
-    }
-    .kicker {
-      display:inline-flex; color:var(--muted); border:1px solid var(--line);
-      padding:3px 7px; border-radius:3px; font-family:var(--font-mono);
-      font-size:11px; text-transform:uppercase;
-    }
-    h3 { margin:10px 0 8px; font-family:var(--font-display); font-size:18px; line-height:1.3; }
-    .card p { margin:0; color:var(--muted); font-size:15px; }
-    .callout {
-      background:var(--surface-2); border:1px solid var(--line); border-radius:6px; padding:16px;
-      font-size:16px;
-    }
-    table { width:100%; table-layout:fixed; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:6px; border:1px solid var(--line); background:var(--surface); }
-    th,td { padding:11px 12px; border-bottom:1px solid var(--line); vertical-align:top; font-size:14px; overflow-wrap:anywhere; word-break:normal; }
-    th {
-      text-align:left; background:var(--surface-2); color:var(--text);
-      font-family:var(--font-mono); font-size:12px; text-transform:uppercase;
-    }
-    td { color:var(--muted); }
-    th:first-child,td:first-child { width:132px; }
-    tr:last-child td { border-bottom:0; }
-    .detail-list { display:grid; gap:12px; margin-top:14px; }
-    .detail-card {
-      background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:15px;
-    }
-    .detail-card h3 { margin:0 0 8px; }
-    .detail-card p { margin:8px 0; color:var(--muted); font-size:15px; }
+    .theme-toggle { color:var(--text); }
+    section { padding:24px 0; border-bottom:1px solid var(--line); }
+    h2 { margin:0 0 12px; font-size:24px; line-height:1.25; letter-spacing:0; }
+    h2::before { content:""; display:inline-block; width:18px; height:8px; margin-right:10px; background:var(--accent); vertical-align:middle; }
+    h3 { margin:0 0 8px; font-size:18px; line-height:1.35; }
+    p { margin:0 0 12px; color:var(--muted); }
     strong { color:var(--text); }
-    .compare-pairs { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:10px; }
-    .pair {
-      border:1px solid var(--line); border-radius:4px; padding:10px; background:var(--surface-2);
-      font-size:14px;
-    }
-    .pair strong { display:block; color:var(--text); margin-bottom:3px; font-family:var(--font-mono); }
-    .timeline { display:grid; gap:10px; }
-    .step { display:grid; grid-template-columns:88px 1fr; gap:12px; align-items:start; }
-    .tag {
-      color:var(--bg); background:var(--accent); padding:5px 8px; border-radius:3px;
-      font-family:var(--font-mono); font-size:12px; font-weight:700; text-align:center;
-    }
-    .body { background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:12px; color:var(--muted); }
-    .handling-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
-    .handling-card {
-      background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:13px;
-    }
-    .handling-card strong { display:block; color:var(--text); margin-bottom:4px; font-family:var(--font-mono); }
-    .video-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
-    .video-card {
-      background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:13px;
-    }
-    .video-card strong { display:block; color:var(--accent); margin-bottom:4px; font-family:var(--font-mono); }
-    .crop-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; margin-top:14px; }
-    .crop-card { background:var(--surface); border:1px solid var(--line); border-radius:6px; overflow:hidden; }
-    .crop-head { padding:12px; border-bottom:1px solid var(--line); background:var(--surface-2); }
-    .crop-head strong { display:block; font-family:var(--font-display); font-size:17px; line-height:1.2; }
-    .crop-head span { display:block; color:var(--muted); font-family:var(--font-mono); font-size:12px; margin-top:4px; }
-    .crop-row { display:grid; grid-template-columns:1fr 58px 78px; gap:8px; padding:10px 12px; border-bottom:1px solid var(--line); color:var(--muted); font-size:14px; }
-    .crop-row:last-child { border-bottom:0; }
-    .crop-row b { color:var(--text); font-family:var(--font-mono); font-weight:700; }
-    .crop-note { margin-top:12px; color:var(--muted); }
-    .focal-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:14px; }
-    .focal-card {
-      background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:13px;
-    }
-    .focal-card strong { display:block; color:var(--text); font-family:var(--font-mono); font-size:17px; margin-bottom:5px; }
-    .noise-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; margin-top:14px; }
-    .noise-card {
-      background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:13px;
-    }
-    .noise-card strong { display:block; color:var(--accent); font-family:var(--font-mono); margin-bottom:5px; }
-    .footer-note { color:var(--muted); font-size:13px; text-align:center; margin-top:28px; }
+    .article-block { margin-top:12px; }
+    .summary { margin:14px 0; padding:12px 14px; border-left:3px solid var(--accent); background:var(--panel); color:var(--text); }
+    .tabs { margin-top:14px; }
+    .tab-list { display:flex; overflow-x:auto; gap:8px; padding-bottom:8px; }
+    .tab-button { flex:0 0 auto; border:1px solid var(--line); border-radius:999px; background:var(--panel); color:var(--muted); padding:7px 11px; font:inherit; font-size:13px; }
+    .tab-button.is-active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .tab-panel { padding:15px; border:1px solid var(--line); border-radius:8px; background:var(--panel); }
+    .tab-panel p { margin-bottom:0; }
+    table { width:100%; border-collapse:collapse; margin-top:12px; }
+    th,td { border-bottom:1px solid var(--line); padding:10px 0; text-align:left; vertical-align:top; font-size:14px; }
+    th { color:var(--text); font-size:12px; }
+    td { color:var(--muted); padding-right:12px; }
+    .footer-note { color:var(--muted); font-size:13px; text-align:center; margin-top:24px; }
     @media (max-width:720px) {
-      h1 { font-size:26px; }
-      .hero { padding:24px 12px 18px; }
-      main { padding:16px 12px 44px; }
-      section { margin-bottom:18px; }
-      h2 { font-size:20px; margin:22px 0 8px; }
-      h3 { font-size:16px; margin:12px 0 8px; }
-      .card { padding:14px; }
-      .card p,.detail-card p { font-size:14px; line-height:1.6; }
-      .grid { grid-template-columns:1fr; }
-      .compare-pairs { grid-template-columns:1fr; }
-      .handling-grid { grid-template-columns:1fr; }
-      .video-grid { grid-template-columns:1fr; }
-      .crop-grid { grid-template-columns:1fr; }
-      .focal-grid { grid-template-columns:1fr; }
-      .noise-grid { grid-template-columns:1fr; }
-      .step { grid-template-columns:1fr; }
-      .tag { text-align:left; width:max-content; }
-      #shoot .timeline { gap:6px; }
-      #shoot .step { grid-template-columns:56px minmax(0,1fr); gap:7px; align-items:stretch; }
-      #shoot .tag {
-        width:auto; min-height:100%; display:flex; align-items:center; justify-content:center;
-        padding:4px 5px; font-size:11px; line-height:1.15; text-align:center;
-      }
-      #shoot .body { padding:8px 9px; font-size:13px; line-height:1.45; }
-      #shoot .crop-note { margin:8px 0 0; font-size:13px; line-height:1.55; }
-      #shoot .focal-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; margin-top:8px; }
-      #shoot .noise-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; margin-top:8px; }
-      #shoot .focal-card,#shoot .noise-card { padding:9px; font-size:12.5px; line-height:1.45; }
-      #shoot .focal-card strong,#shoot .noise-card strong { font-size:13px; margin-bottom:3px; }
-      #shoot .focal-card span { display:block; color:var(--muted); font-size:11px; line-height:1.3; margin-bottom:3px; }
-      table { display:table; overflow:visible; white-space:normal; }
-      th,td { padding:9px 8px; font-size:12px; line-height:1.5; }
-      th:first-child,td:first-child { width:86px; }
-      .toolbar { padding:0 12px; }
-      .toolbar a { padding:10px 11px; font-size:11px; }
-      .theme-toggle { position:sticky; right:0; min-height:42px; padding:0 12px; }
+      .page { padding:18px 16px 56px; }
+      h1 { font-size:28px; }
+      h2 { font-size:21px; }
+      section { padding:20px 0; }
+      .tab-panel { padding:13px; }
+      .tab-button { font-size:12px; padding:6px 10px; }
+      th,td { font-size:13px; }
     }
   </style>
   <script>
@@ -227,22 +82,20 @@
   </script>
 </head>
 <body>
-  <header class="hero">
-    <div class="wrap">
+  <div class="page">
+  <header>
       <div class="eyebrow">Panasonic Lumix L10 Review Notes</div>
-      <h1>L10 测评可视化大纲</h1>
-      <p>这是口播稿提纲：先把观点、测试和素材分清楚，再把实拍感受压成小红书图文正文。</p>
-      <div class="hero-meter" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-    </div>
+      <h1>L10 测评笔记</h1>
+      <p class="lead">按文章阅读，而不是卡片墙。每段先给结论，细项通过 tab 切换查看。</p>
   </header>
   <nav class="toolbar">
-    <a href="#core">核心卡片</a>
+    <a href="#core">核心</a>
     <a href="#position">主线定位</a>
-    <a href="#lutstory">LUT 创作</a>
-    <a href="#tests">画质测试</a>
+    <a href="#lutstory">LUT</a>
+    <a href="#tests">画质</a>
     <a href="#video">视频能力</a>
     <a href="#crop">裁切像素</a>
-    <a href="#compare">对比对象</a>
+    <a href="#compare">对比</a>
     <a href="#handling">操作节奏</a>
     <a href="#shoot">爱群人像</a>
     <a href="#ending">结尾方向</a>
@@ -250,160 +103,72 @@
   </nav>
   <main>
     <section id="core">
-      <h2>核心卡片</h2>
-      <div class="grid">
-        <article class="card"><span class="kicker">定位</span><h3>我不打算做全项目横评</h3><p>这期我不会把每台机器的每个项目都摊开比。每个对比对象只服务一个问题：S9 看定位冲突，GR4 / X-M5 看传感器和日常成像差距，Type109 看产品血统，手机看计算摄影和真实光学变焦差异。</p></article><article class="card"><span class="kicker">锐度</span><h3>我不会把这颗镜头吹成锐</h3><p>我实际看下来，L10 镜头全开偏肉，边缘更崩；收到 F2.8 后中心明显变锐，F5.6-F8 已经可以拍风光。但大光圈不够锐对人像反而挺好，画面更柔美，不会把皮肤纹理和脸部线条拍得太硬。</p></article><article class="card"><span class="kicker">GR4 对比</span><h3>我更想比谁真的拍得到</h3><p>我觉得它和 GR4 的绝对锐度差距没有想象中大。L10 的优势在 50mm / 75mm 真实光学焦段；GR4 要靠数码裁切模拟长焦，所以这里要单独比较细节、透视和可用像素。</p></article><article class="card"><span class="kicker">设计血统</span><h3>LX3、Type109 到 L10 是一条线</h3><p>比例切换、对焦模式切换这些东西还在，能看出它不是凭空做出来的机器。只是三要素转盘被改成了更现代的模式转盘，对现在大部分人更好上手，但我还是会怀念以前那种更机械、更摄影的操作感。</p></article><article class="card"><span class="kicker">携带</span><h3>500g 不是口袋机，但上身不重</h3><p>L10 的体积和重量不能按 GR 那种裤兜机理解。500g 左右数字上不轻，镜头也有存在感，但背上身并不重，更像小包机 / 挂脖机，而不是随手塞裤袋的隐形工具。</p></article><article class="card"><span class="kicker">JPG / RAW</span><h3>RAW 噪点讨喜，JPG 把它抹掉了</h3><p>L10 的高 ISO 不能只看 JPG。RAW 里的黑白噪点很讨喜，可以成为画面风格的一部分；但直出 JPG 会把这些颗粒去掉，细节就容易变成涂抹感。这个地方我希望松下后面能优化 JPG 处理方式，不要把本来好看的颗粒全部抹平。</p></article><article class="card"><span class="kicker">创作</span><h3>爱群大酒店这组讲创作</h3><p>这组我不做横向对比。光照充足时直接拍，我没有明显感觉到 M43 劣势；昏暗灯光下搭配热靴和 IT32 闪光灯，人物会被重新提出来；如果不打闪直接大光圈拍到 ISO 3200，就能看到 M43 边界，但 RAW 黑白噪点很讨喜，像胶片颗粒。</p></article><article class="card"><span class="kicker">结尾</span><h3>希望 M43 继续做下去</h3><p>我真正期待的不是一台和 S9 抢预算的固定镜头相机，而是 M43 继续做短小精悍的产品线：像 GM1 那种小机器，甚至是一台直接和 GR 竞争的小型定焦。L10 有它的完整度，但这个结尾想说的是，我更希望松下把 M43 的小，继续做到极致。</p></article>
-      </div>
+      <h2>核心判断</h2>
+      <p>L10 不适合写成参数横评。它不是靠底大、极致便携或系统上限成立，而是靠 24-75mm、EVF、LUT、美肤、RAW 和低决策成本组成一台完整随身相机。</p>
+      <div class="tabs" data-tabs="core"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="core-tab-0" aria-controls="core-panel-0" aria-selected="true">定位</button><button class="tab-button" type="button" role="tab" id="core-tab-1" aria-controls="core-panel-1" aria-selected="false">锐度</button><button class="tab-button" type="button" role="tab" id="core-tab-2" aria-controls="core-panel-2" aria-selected="false">GR4 对比</button><button class="tab-button" type="button" role="tab" id="core-tab-3" aria-controls="core-panel-3" aria-selected="false">设计血统</button><button class="tab-button" type="button" role="tab" id="core-tab-4" aria-controls="core-panel-4" aria-selected="false">携带</button><button class="tab-button" type="button" role="tab" id="core-tab-5" aria-controls="core-panel-5" aria-selected="false">JPG / RAW</button><button class="tab-button" type="button" role="tab" id="core-tab-6" aria-controls="core-panel-6" aria-selected="false">创作</button><button class="tab-button" type="button" role="tab" id="core-tab-7" aria-controls="core-panel-7" aria-selected="false">结尾</button></div><article class="tab-panel" id="core-panel-0" role="tabpanel" aria-labelledby="core-tab-0"><h3>我不打算做全项目横评</h3><p>这期我不会把每台机器的每个项目都摊开比。每个对比对象只服务一个问题：S9 看定位冲突，GR4 / X-M5 看传感器和日常成像差距，Type109 看产品血统，手机看计算摄影和真实光学变焦差异。</p></article><article class="tab-panel" id="core-panel-1" role="tabpanel" aria-labelledby="core-tab-1" hidden><h3>我不会把这颗镜头吹成锐</h3><p>我实际看下来，L10 镜头全开偏肉，边缘更崩；收到 F2.8 后中心明显变锐，F5.6-F8 已经可以拍风光。但大光圈不够锐对人像反而挺好，画面更柔美，不会把皮肤纹理和脸部线条拍得太硬。</p></article><article class="tab-panel" id="core-panel-2" role="tabpanel" aria-labelledby="core-tab-2" hidden><h3>我更想比谁真的拍得到</h3><p>我觉得它和 GR4 的绝对锐度差距没有想象中大。L10 的优势在 50mm / 75mm 真实光学焦段；GR4 要靠数码裁切模拟长焦，所以这里要单独比较细节、透视和可用像素。</p></article><article class="tab-panel" id="core-panel-3" role="tabpanel" aria-labelledby="core-tab-3" hidden><h3>LX3、Type109 到 L10 是一条线</h3><p>比例切换、对焦模式切换这些东西还在，能看出它不是凭空做出来的机器。只是三要素转盘被改成了更现代的模式转盘，对现在大部分人更好上手，但我还是会怀念以前那种更机械、更摄影的操作感。</p></article><article class="tab-panel" id="core-panel-4" role="tabpanel" aria-labelledby="core-tab-4" hidden><h3>500g 不是口袋机，但上身不重</h3><p>L10 的体积和重量不能按 GR 那种裤兜机理解。500g 左右数字上不轻，镜头也有存在感，但背上身并不重，更像小包机 / 挂脖机，而不是随手塞裤袋的隐形工具。</p></article><article class="tab-panel" id="core-panel-5" role="tabpanel" aria-labelledby="core-tab-5" hidden><h3>RAW 噪点讨喜，JPG 把它抹掉了</h3><p>L10 的高 ISO 不能只看 JPG。RAW 里的黑白噪点很讨喜，可以成为画面风格的一部分；但直出 JPG 会把这些颗粒去掉，细节就容易变成涂抹感。这个地方我希望松下后面能优化 JPG 处理方式，不要把本来好看的颗粒全部抹平。</p></article><article class="tab-panel" id="core-panel-6" role="tabpanel" aria-labelledby="core-tab-6" hidden><h3>爱群大酒店这组讲创作</h3><p>这组我不做横向对比。光照充足时直接拍，我没有明显感觉到 M43 劣势；昏暗灯光下搭配热靴和 IT32 闪光灯，人物会被重新提出来；如果不打闪直接大光圈拍到 ISO 3200，就能看到 M43 边界，但 RAW 黑白噪点很讨喜，像胶片颗粒。</p></article><article class="tab-panel" id="core-panel-7" role="tabpanel" aria-labelledby="core-tab-7" hidden><h3>希望 M43 继续做下去</h3><p>我真正期待的不是一台和 S9 抢预算的固定镜头相机，而是 M43 继续做短小精悍的产品线：像 GM1 那种小机器，甚至是一台直接和 GR 竞争的小型定焦。L10 有它的完整度，但这个结尾想说的是，我更希望松下把 M43 的小，继续做到极致。</p></article></div>
     </section>
     <section id="position">
       <h2>主线定位</h2>
-      <div class="grid">
-        <article class="card"><span class="kicker">主角</span><h3>主角</h3><p>主角是 L10，横评对象只用来说明它的位置。文章不能写成纯横评。</p></article><article class="card"><span class="kicker">行业背景</span><h3>行业背景</h3><p>手机吃掉日常拍照、分享和轻视频；Pocket 类设备吃掉稳定视频、Vlog 和随手记录。L10 要回答：为什么还要多带一台相机？</p></article><article class="card"><span class="kicker">成立逻辑</span><h3>成立逻辑</h3><p>不靠大底碾压手机，不靠极致便携赢 GR，不靠画质上限赢 S9，也不靠性价比赢 X-M5。L10 靠完整随身相机方案成立。</p></article><article class="card"><span class="kicker">完整方案</span><h3>完整方案</h3><p>真实 24-75mm 光学变焦、EVF、实体操作、翻转屏、Real Time LUT、美肤、RAW 工作流和低决策成本。</p></article>
-      </div>
-      <h3>竞品边界</h3>
-      <table>
-        <thead><tr><th>对象</th><th>这台机器用来说明什么</th></tr></thead>
-        <tbody>
-          <tr><td>手机 / 一英寸</td><td>不要写手机没有一英寸。顶级手机 23/24mm 主摄已经很强，L10 的区别是 24-75mm 真实光学变焦、焦段一致性、EVF、实体操作、LUT 和 RAW。</td></tr><tr><td>GR</td><td>GR 几乎没有真正竞品。GR 是 APS-C、28mm、262g 级别、裤兜机、Snap 快拍、单手操作和街拍文化认同。GR4 的体积和重量无可替代。GR 是纯粹，L10 是完整。</td></tr><tr><td>X-M5</td><td>X-M5 不能写弱。它是 APS-C 可换镜头系统的高性价比入口，可重可轻；但这类小机身一般不会长期搭配太大的镜头。L10 不赢性价比和系统上限，赢一体化、少决策和固定 24-75mm 闭环。</td></tr><tr><td>S9</td><td>S9 是全幅上限机，画质、高感、宽容度、虚化、镜头系统都强于 L10。L10 不替代 S9，而是 S9 之外的低决策随身机。</td></tr><tr><td>Type109 / LX100</td><td>Type109 是血统参照。L10 是 Type109 / LX100 逻辑的现代版本：传感器、对焦、屏幕、视频和 LUT 工作流更现代，不写成更有味道。</td></tr>
-        </tbody>
-      </table>
-      <h3>生命周期与产品情绪</h3>
-      <div class="grid">
-        <article class="card"><span class="kicker">生命周期价值</span><h3>生命周期价值</h3><p>不围绕首发价写。价格会下降，固件会更新，LUT / 美肤 / App 联动可能逐渐成熟。L10 可能不是首发最香，而是价格回落、固件成熟后进入真香点。</p></article><article class="card"><span class="kicker">钛合金色情绪</span><h3>钛合金色情绪</h3><p>钛合金色可以联系 Minolta TC-1 这类老高端旗舰卡片机的情绪：高级随身机、金属感、精密感、实体操作和把玩属性。它是产品情绪，不是硬参数优势。</p></article><article class="card"><span class="kicker">视频边界</span><h3>视频边界</h3><p>视频参数不弱，但不是 Pocket 类稳定视频设备，也不是 S9 / X-M5 那种系统视频机。更适合固定机位、轻微手持、咖啡静物、环境空镜和人物小段落。</p></article><article class="card"><span class="kicker">美肤边界</span><h3>美肤边界</h3><p>美肤不是网红磨皮，而是直出人像流程的一部分：LUT 负责风格，美肤负责避免人脸被 LUT 带灰、带脏、带硬。开到明显看出来就是过头。</p></article>
-      </div>
+      <p>主角始终是 L10。S9、GR、X-M5、Type109 和手机只是用来说明它的位置，不把文章写成全项目横评。</p>
+      <div class="tabs" data-tabs="position"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="position-tab-0" aria-controls="position-panel-0" aria-selected="true">主角</button><button class="tab-button" type="button" role="tab" id="position-tab-1" aria-controls="position-panel-1" aria-selected="false">行业背景</button><button class="tab-button" type="button" role="tab" id="position-tab-2" aria-controls="position-panel-2" aria-selected="false">成立逻辑</button><button class="tab-button" type="button" role="tab" id="position-tab-3" aria-controls="position-panel-3" aria-selected="false">完整方案</button></div><article class="tab-panel" id="position-panel-0" role="tabpanel" aria-labelledby="position-tab-0"><h3>主角</h3><p>主角是 L10，横评对象只用来说明它的位置。文章不能写成纯横评。</p></article><article class="tab-panel" id="position-panel-1" role="tabpanel" aria-labelledby="position-tab-1" hidden><h3>行业背景</h3><p>手机吃掉日常拍照、分享和轻视频；Pocket 类设备吃掉稳定视频、Vlog 和随手记录。L10 要回答：为什么还要多带一台相机？</p></article><article class="tab-panel" id="position-panel-2" role="tabpanel" aria-labelledby="position-tab-2" hidden><h3>成立逻辑</h3><p>不靠大底碾压手机，不靠极致便携赢 GR，不靠画质上限赢 S9，也不靠性价比赢 X-M5。L10 靠完整随身相机方案成立。</p></article><article class="tab-panel" id="position-panel-3" role="tabpanel" aria-labelledby="position-tab-3" hidden><h3>完整方案</h3><p>真实 24-75mm 光学变焦、EVF、实体操作、翻转屏、Real Time LUT、美肤、RAW 工作流和低决策成本。</p></article></div>
+      <div class="tabs" data-tabs="boundary"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="boundary-tab-0" aria-controls="boundary-panel-0" aria-selected="true">手机 / 一英寸</button><button class="tab-button" type="button" role="tab" id="boundary-tab-1" aria-controls="boundary-panel-1" aria-selected="false">GR</button><button class="tab-button" type="button" role="tab" id="boundary-tab-2" aria-controls="boundary-panel-2" aria-selected="false">X-M5</button><button class="tab-button" type="button" role="tab" id="boundary-tab-3" aria-controls="boundary-panel-3" aria-selected="false">S9</button><button class="tab-button" type="button" role="tab" id="boundary-tab-4" aria-controls="boundary-panel-4" aria-selected="false">Type109 / LX100</button></div><article class="tab-panel" id="boundary-panel-0" role="tabpanel" aria-labelledby="boundary-tab-0"><h3>手机 / 一英寸</h3><p>不要写手机没有一英寸。顶级手机 23/24mm 主摄已经很强，L10 的区别是 24-75mm 真实光学变焦、焦段一致性、EVF、实体操作、LUT 和 RAW。</p></article><article class="tab-panel" id="boundary-panel-1" role="tabpanel" aria-labelledby="boundary-tab-1" hidden><h3>GR</h3><p>GR 几乎没有真正竞品。GR 是 APS-C、28mm、262g 级别、裤兜机、Snap 快拍、单手操作和街拍文化认同。GR4 的体积和重量无可替代。GR 是纯粹，L10 是完整。</p></article><article class="tab-panel" id="boundary-panel-2" role="tabpanel" aria-labelledby="boundary-tab-2" hidden><h3>X-M5</h3><p>X-M5 不能写弱。它是 APS-C 可换镜头系统的高性价比入口，可重可轻；但这类小机身一般不会长期搭配太大的镜头。L10 不赢性价比和系统上限，赢一体化、少决策和固定 24-75mm 闭环。</p></article><article class="tab-panel" id="boundary-panel-3" role="tabpanel" aria-labelledby="boundary-tab-3" hidden><h3>S9</h3><p>S9 是全幅上限机，画质、高感、宽容度、虚化、镜头系统都强于 L10。L10 不替代 S9，而是 S9 之外的低决策随身机。</p></article><article class="tab-panel" id="boundary-panel-4" role="tabpanel" aria-labelledby="boundary-tab-4" hidden><h3>Type109 / LX100</h3><p>Type109 是血统参照。L10 是 Type109 / LX100 逻辑的现代版本：传感器、对焦、屏幕、视频和 LUT 工作流更现代，不写成更有味道。</p></article></div>
+      <div class="tabs" data-tabs="lifecycle"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="lifecycle-tab-0" aria-controls="lifecycle-panel-0" aria-selected="true">生命周期价值</button><button class="tab-button" type="button" role="tab" id="lifecycle-tab-1" aria-controls="lifecycle-panel-1" aria-selected="false">钛合金色情绪</button><button class="tab-button" type="button" role="tab" id="lifecycle-tab-2" aria-controls="lifecycle-panel-2" aria-selected="false">视频边界</button><button class="tab-button" type="button" role="tab" id="lifecycle-tab-3" aria-controls="lifecycle-panel-3" aria-selected="false">美肤边界</button></div><article class="tab-panel" id="lifecycle-panel-0" role="tabpanel" aria-labelledby="lifecycle-tab-0"><h3>生命周期价值</h3><p>不围绕首发价写。价格会下降，固件会更新，LUT / 美肤 / App 联动可能逐渐成熟。L10 可能不是首发最香，而是价格回落、固件成熟后进入真香点。</p></article><article class="tab-panel" id="lifecycle-panel-1" role="tabpanel" aria-labelledby="lifecycle-tab-1" hidden><h3>钛合金色情绪</h3><p>钛合金色可以联系 Minolta TC-1 这类老高端旗舰卡片机的情绪：高级随身机、金属感、精密感、实体操作和把玩属性。它是产品情绪，不是硬参数优势。</p></article><article class="tab-panel" id="lifecycle-panel-2" role="tabpanel" aria-labelledby="lifecycle-tab-2" hidden><h3>视频边界</h3><p>视频参数不弱，但不是 Pocket 类稳定视频设备，也不是 S9 / X-M5 那种系统视频机。更适合固定机位、轻微手持、咖啡静物、环境空镜和人物小段落。</p></article><article class="tab-panel" id="lifecycle-panel-3" role="tabpanel" aria-labelledby="lifecycle-tab-3" hidden><h3>美肤边界</h3><p>美肤不是网红磨皮，而是直出人像流程的一部分：LUT 负责风格，美肤负责避免人脸被 LUT 带灰、带脏、带硬。开到明显看出来就是过头。</p></article></div>
     </section>
     <section id="lutstory">
       <h2>Y2000-LX LUT 创作线索</h2>
-      <div class="grid">
-        <article class="card"><span class="kicker">25 周年</span><h3>25 周年</h3><p>LUMIX 25 周年推出 L10，可以作为回望千禧年便携机黄金时代的入口。那时手机还没有完全接管日常记录，小相机本身就是生活方式。</p></article><article class="card"><span class="kicker">产品血统</span><h3>产品血统</h3><p>从 2001 年 LC5 到 LX3、LX5，再到 LX100 / Type109，L10 可以接上一条线：紧凑机身、直接操控、高性能和徕卡大光圈变焦镜头。</p></article><article class="card"><span class="kicker">Y2000-LX</span><h3>Y2000-LX</h3><p>这个 LUT 采样 LX3。LX3 发布于 2008 年，徕卡镜头和 CCD 共同塑造了浓厚色彩，以及用户理解里的千禧德味。</p></article><article class="card"><span class="kicker">色彩方向</span><h3>色彩方向</h3><p>不是完全复刻老 CCD，而是在 LX3 色彩倾向上做现代审美处理：画面泛青、整体清冷，蓝绿更强，红色更沉稳，影调更重。</p></article><article class="card"><span class="kicker">适用场景</span><h3>适用场景</h3><p>适合日常扫街和风光，阴天和晴天都可以用。后续可以承接 LUT 限时免费分享和 L10 详细测评。</p></article>
-      </div>
-      <div class="callout">
-        这段不是把 L10 写成老 CCD，也不是给画质下结论；它是 L10、Real Time LUT 和 25 年 LUMIX 便携机记忆之间的情绪线。
-      </div>
+      <p>这段不是把 L10 写成老 CCD，也不是给画质下结论；它是 L10、Real Time LUT 和 25 年 LUMIX 便携机记忆之间的情绪线。</p>
+      <div class="tabs" data-tabs="lut"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="lut-tab-0" aria-controls="lut-panel-0" aria-selected="true">25 周年</button><button class="tab-button" type="button" role="tab" id="lut-tab-1" aria-controls="lut-panel-1" aria-selected="false">产品血统</button><button class="tab-button" type="button" role="tab" id="lut-tab-2" aria-controls="lut-panel-2" aria-selected="false">Y2000-LX</button><button class="tab-button" type="button" role="tab" id="lut-tab-3" aria-controls="lut-panel-3" aria-selected="false">色彩方向</button><button class="tab-button" type="button" role="tab" id="lut-tab-4" aria-controls="lut-panel-4" aria-selected="false">适用场景</button></div><article class="tab-panel" id="lut-panel-0" role="tabpanel" aria-labelledby="lut-tab-0"><h3>25 周年</h3><p>LUMIX 25 周年推出 L10，可以作为回望千禧年便携机黄金时代的入口。那时手机还没有完全接管日常记录，小相机本身就是生活方式。</p></article><article class="tab-panel" id="lut-panel-1" role="tabpanel" aria-labelledby="lut-tab-1" hidden><h3>产品血统</h3><p>从 2001 年 LC5 到 LX3、LX5，再到 LX100 / Type109，L10 可以接上一条线：紧凑机身、直接操控、高性能和徕卡大光圈变焦镜头。</p></article><article class="tab-panel" id="lut-panel-2" role="tabpanel" aria-labelledby="lut-tab-2" hidden><h3>Y2000-LX</h3><p>这个 LUT 采样 LX3。LX3 发布于 2008 年，徕卡镜头和 CCD 共同塑造了浓厚色彩，以及用户理解里的千禧德味。</p></article><article class="tab-panel" id="lut-panel-3" role="tabpanel" aria-labelledby="lut-tab-3" hidden><h3>色彩方向</h3><p>不是完全复刻老 CCD，而是在 LX3 色彩倾向上做现代审美处理：画面泛青、整体清冷，蓝绿更强，红色更沉稳，影调更重。</p></article><article class="tab-panel" id="lut-panel-4" role="tabpanel" aria-labelledby="lut-tab-4" hidden><h3>适用场景</h3><p>适合日常扫街和风光，阴天和晴天都可以用。后续可以承接 LUT 限时免费分享和 L10 详细测评。</p></article></div>
     </section>
     <section id="tests">
       <h2>画质测试怎么做</h2>
-      <table>
-        <thead><tr><th>项目</th><th>拍什么</th><th>拿谁比</th><th>重点看什么</th></tr></thead>
-        <tbody>
-          <tr><td>锐度</td><td>24/35/50/75mm；全开、F2.8、F5.6-F8</td><td>GR4、X-M5 + 23/2.8、Type109、手机 1x/2x/长焦</td><td>中心变锐点、边缘崩坏程度、GR4 裁切对比</td></tr><tr><td>裁切像素</td><td>S9 全幅裁切、S9 + 28-70、GR4 28mm、X100VI 35mm 裁切</td><td>L10 50/75mm 真光学焦段</td><td>裁切后剩多少像素；50/75mm 是否还够用</td></tr><tr><td>夜景 / 高感</td><td>街景、咖啡馆、昏暗走廊；重点看 ISO 3200</td><td>S9、X-M5、GR4、手机夜景模式</td><td>黑白噪点还是彩噪；ISO 3200 是否被涂抹成油画</td></tr><tr><td>宽容度</td><td>窗边、正午、灯牌</td><td>S9、X-M5、手机 HDR</td><td>高光能否拉回；暗部拉亮是否变脏</td></tr><tr><td>色彩 / LUT</td><td>街景、室内暖光、人像</td><td>S9 LUT、富士胶片模拟、手机 Leica 风格</td><td>LUT 是否让肤色灰、脏、硬；是否需要噪点模拟</td></tr><tr><td>虚化</td><td>咖啡杯、半身、75mm 细节</td><td>S9 + 28-70、X-M5 + 23/2.8、GR4 裁切、手机人像模式</td><td>主体分离是否够；和 S9 + 28-70 差距多大</td></tr>
-        </tbody>
-      </table>
-      <div class="detail-list">
-        
-        <article class="detail-card">
-          <h3>锐度：焦段和光圈要分开讲</h3>
-          <p><strong>L10 怎么拍：</strong>L10 拍 24 / 35 / 50 / 75mm。每个焦段先拍最大光圈，再拍 F2.8；如果是远景或风光，再补 F5.6-F8。</p>
-          <p><strong>这项想说明：</strong>这项不是为了证明 L10 很锐，而是为了说明它全开柔、F2.8 中心变锐、边缘始终弱一点。边角和风光要讲边界，人像则可以讲柔美。</p>
-          <div class="compare-pairs">
-            <div class="pair"><strong>GR4</strong>用 28mm 原生视角比 L10 24/35mm 的中心和边缘；再用 GR4 裁切模拟 50/75mm，和 L10 真长焦比细节。</div><div class="pair"><strong>X-M5 + 23/2.8</strong>用 35mm 等效定焦当 APS-C 参照，重点看同类日常视角下 L10 收到 F2.8 后差距大不大。</div><div class="pair"><strong>Type109</strong>同样 24-75mm F1.7-2.8 路线，重点看 L10 是否只是现代化，而不是画幅升级。</div><div class="pair"><strong>手机</strong>1x 比 24mm，2x 比 50mm 附近，长焦或裁切比 75mm，重点看算法锐化和真实光学细节差异。</div>
-          </div>
-        </article>
-        
-        <article class="detail-card">
-          <h3>夜景 / 高感：先分手持和画质</h3>
-          <p><strong>L10 怎么拍：</strong>L10 拍 24mm F1.7、50mm、75mm F2.8；ISO 从 800 到 6400。暗走廊、咖啡馆、街景分开看。</p>
-          <p><strong>这项想说明：</strong>这项要分清楚：是高 ISO 噪点影响画面，还是快门太慢导致糊片；还要单独看 ISO 3200 的 JPG 有没有被机内降噪抹成油画。我的重点是 RAW 噪点质感、JPG 涂抹边界、细节保留和日常输出，而不是实验室纯净度。</p>
-          <div class="compare-pairs">
-            <div class="pair"><strong>S9</strong>用全画幅做高感上限参照，看 S9 是否明显更干净、暗部颜色是否更稳。</div><div class="pair"><strong>X-M5</strong>用 APS-C 看传感器级别差距，重点看噪点颗粒、彩噪和暗部细节是不是比 L10 更稳。</div><div class="pair"><strong>GR4</strong>看 APS-C 口袋机的高感细节和颗粒形态，再和 L10 的黑白噪点质感对照。</div><div class="pair"><strong>手机夜景模式</strong>单独说明手机是多帧计算，不是同一种拍法；看它更干净，还是涂抹、假锐化、质感更数字。</div>
-          </div>
-        </article>
-        
-        <article class="detail-card">
-          <h3>宽容度：故意拍难救的光</h3>
-          <p><strong>L10 怎么拍：</strong>L10 拍窗边、正午白墙、夜景灯牌。每个场景拍正常曝光、-1EV、-2EV，再看 RAW 能拉回多少。</p>
-          <p><strong>这项想说明：</strong>这项主要看 L10 的失败边界：高光死不死、暗部拉亮脏不脏、肤色会不会灰。不是为了硬拼全幅，而是看我日常要不要更小心曝光。</p>
-          <div class="compare-pairs">
-            <div class="pair"><strong>S9</strong>全画幅宽容度参照，尤其看 -2EV 拉回时暗部和肤色差距。</div><div class="pair"><strong>X-M5</strong>APS-C 参照，判断 L10 和 APS-C 的后期余量差距在日常是否明显。</div><div class="pair"><strong>手机 HDR</strong>看手机自动 HDR 是否更省事，同时注意它有没有假亮、边缘 HDR 痕迹或肤色变怪。</div>
-          </div>
-        </article>
-        
-        <article class="detail-card">
-          <h3>色彩 / LUT：不能只看环境，要看人脸</h3>
-          <p><strong>L10 怎么拍：</strong>L10 拍街景、室内暖光、人像。同一场景拍标准、常用 LUT、RAW 后期；有人脸时再看美肤低档。</p>
-          <p><strong>这项想说明：</strong>LUT 好不好不是看滤镜名字，而是看它会不会把肤色压灰、压脏、压硬。我的爱群人像也会放到这条线里讲。</p>
-          <div class="compare-pairs">
-            <div class="pair"><strong>S9 / L10 色彩</strong>同一场景、同一白平衡、同一 LUT，同时拍 L10 和 S9，看两台 LUMIX 的底色、肤色和高光颜色有没有差异。</div><div class="pair"><strong>S9 LUT</strong>同是 LUMIX LUT 工作流，看 L10 直出和 S9 的风格逻辑是否一致；如果同 LUT 味道不同，要讲清楚差异来自传感器、镜头还是白平衡。</div><div class="pair"><strong>富士胶片模拟</strong>用 X-M5 看富士直出生态和 L10 LUT 的区别，但不写成谁绝对更好。</div><div class="pair"><strong>手机 Leica 风格</strong>看手机是不是第一眼更讨喜，但也看它是否统一、是否过度计算人脸。</div>
-          </div>
-        </article>
-        
-        <article class="detail-card">
-          <h3>虚化：不要按全幅 F1.7-2.8 理解</h3>
-          <p><strong>L10 怎么拍：</strong>L10 拍 24mm 环境、50mm 静物、75mm 半身或细节，全部用最大光圈，再补一张收一点光圈的安全版本。</p>
-          <p><strong>这项想说明：</strong>这项要讲清楚：L10 有主体分离，但不是全幅大光圈定焦那种虚化。它的价值在 24-75mm 连续焦段和真实长焦。</p>
-          <div class="compare-pairs">
-            <div class="pair"><strong>S9 + 28-70</strong>作为全幅标准变焦参照，看 L10 和全幅变焦在主体分离、高感、宽容度上的差距。</div><div class="pair"><strong>X-M5 + 23/2.8</strong>APS-C 35mm 视角参照，看日常半身和环境图的主体分离差异。</div><div class="pair"><strong>GR4 裁切</strong>看 GR4 28mm 裁切后能不能替代 L10 的 50/75mm 视角。</div><div class="pair"><strong>手机人像模式</strong>看算法虚化第一眼是否更强，以及发丝、眼镜、衣服边缘有没有破绽。</div>
-          </div>
-        </article>
-        
-      </div>
+      <p>画质部分先解决几个具体问题：锐度边界、高 ISO 和手持抖动、RAW/JPG 差异、LUT 对肤色的影响，以及 24-75mm 到底带来什么构图自由。</p>
+      <table><thead><tr><th>项目</th><th>拍什么</th><th>重点</th></tr></thead><tbody><tr><td>锐度</td><td>24/35/50/75mm；全开、F2.8、F5.6-F8</td><td>中心变锐点、边缘崩坏程度、GR4 裁切对比</td></tr><tr><td>裁切像素</td><td>S9 全幅裁切、S9 + 28-70、GR4 28mm、X100VI 35mm 裁切</td><td>裁切后剩多少像素；50/75mm 是否还够用</td></tr><tr><td>夜景 / 高感</td><td>街景、咖啡馆、昏暗走廊；重点看 ISO 3200</td><td>黑白噪点还是彩噪；ISO 3200 是否被涂抹成油画</td></tr><tr><td>宽容度</td><td>窗边、正午、灯牌</td><td>高光能否拉回；暗部拉亮是否变脏</td></tr><tr><td>色彩 / LUT</td><td>街景、室内暖光、人像</td><td>LUT 是否让肤色灰、脏、硬；是否需要噪点模拟</td></tr><tr><td>虚化</td><td>咖啡杯、半身、75mm 细节</td><td>主体分离是否够；和 S9 + 28-70 差距多大</td></tr></tbody></table>
+      <div class="tabs" data-tabs="tests"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="tests-tab-0" aria-controls="tests-panel-0" aria-selected="true">锐度</button><button class="tab-button" type="button" role="tab" id="tests-tab-1" aria-controls="tests-panel-1" aria-selected="false">夜景 / 高感</button><button class="tab-button" type="button" role="tab" id="tests-tab-2" aria-controls="tests-panel-2" aria-selected="false">宽容度</button><button class="tab-button" type="button" role="tab" id="tests-tab-3" aria-controls="tests-panel-3" aria-selected="false">色彩 / LUT</button><button class="tab-button" type="button" role="tab" id="tests-tab-4" aria-controls="tests-panel-4" aria-selected="false">虚化</button></div><article class="tab-panel" id="tests-panel-0" role="tabpanel" aria-labelledby="tests-tab-0"><h3>锐度：焦段和光圈要分开讲</h3><p>L10 拍 24 / 35 / 50 / 75mm。每个焦段先拍最大光圈，再拍 F2.8；如果是远景或风光，再补 F5.6-F8。 这项不是为了证明 L10 很锐，而是为了说明它全开柔、F2.8 中心变锐、边缘始终弱一点。边角和风光要讲边界，人像则可以讲柔美。 GR4：用 28mm 原生视角比 L10 24/35mm 的中心和边缘；再用 GR4 裁切模拟 50/75mm，和 L10 真长焦比细节。 X-M5 + 23/2.8：用 35mm 等效定焦当 APS-C 参照，重点看同类日常视角下 L10 收到 F2.8 后差距大不大。 Type109：同样 24-75mm F1.7-2.8 路线，重点看 L10 是否只是现代化，而不是画幅升级。 手机：1x 比 24mm，2x 比 50mm 附近，长焦或裁切比 75mm，重点看算法锐化和真实光学细节差异。</p></article><article class="tab-panel" id="tests-panel-1" role="tabpanel" aria-labelledby="tests-tab-1" hidden><h3>夜景 / 高感：先分手持和画质</h3><p>L10 拍 24mm F1.7、50mm、75mm F2.8；ISO 从 800 到 6400。暗走廊、咖啡馆、街景分开看。 这项要分清楚：是高 ISO 噪点影响画面，还是快门太慢导致糊片；还要单独看 ISO 3200 的 JPG 有没有被机内降噪抹成油画。我的重点是 RAW 噪点质感、JPG 涂抹边界、细节保留和日常输出，而不是实验室纯净度。 S9：用全画幅做高感上限参照，看 S9 是否明显更干净、暗部颜色是否更稳。 X-M5：用 APS-C 看传感器级别差距，重点看噪点颗粒、彩噪和暗部细节是不是比 L10 更稳。 GR4：看 APS-C 口袋机的高感细节和颗粒形态，再和 L10 的黑白噪点质感对照。 手机夜景模式：单独说明手机是多帧计算，不是同一种拍法；看它更干净，还是涂抹、假锐化、质感更数字。</p></article><article class="tab-panel" id="tests-panel-2" role="tabpanel" aria-labelledby="tests-tab-2" hidden><h3>宽容度：故意拍难救的光</h3><p>L10 拍窗边、正午白墙、夜景灯牌。每个场景拍正常曝光、-1EV、-2EV，再看 RAW 能拉回多少。 这项主要看 L10 的失败边界：高光死不死、暗部拉亮脏不脏、肤色会不会灰。不是为了硬拼全幅，而是看我日常要不要更小心曝光。 S9：全画幅宽容度参照，尤其看 -2EV 拉回时暗部和肤色差距。 X-M5：APS-C 参照，判断 L10 和 APS-C 的后期余量差距在日常是否明显。 手机 HDR：看手机自动 HDR 是否更省事，同时注意它有没有假亮、边缘 HDR 痕迹或肤色变怪。</p></article><article class="tab-panel" id="tests-panel-3" role="tabpanel" aria-labelledby="tests-tab-3" hidden><h3>色彩 / LUT：不能只看环境，要看人脸</h3><p>L10 拍街景、室内暖光、人像。同一场景拍标准、常用 LUT、RAW 后期；有人脸时再看美肤低档。 LUT 好不好不是看滤镜名字，而是看它会不会把肤色压灰、压脏、压硬。我的爱群人像也会放到这条线里讲。 S9 / L10 色彩：同一场景、同一白平衡、同一 LUT，同时拍 L10 和 S9，看两台 LUMIX 的底色、肤色和高光颜色有没有差异。 S9 LUT：同是 LUMIX LUT 工作流，看 L10 直出和 S9 的风格逻辑是否一致；如果同 LUT 味道不同，要讲清楚差异来自传感器、镜头还是白平衡。 富士胶片模拟：用 X-M5 看富士直出生态和 L10 LUT 的区别，但不写成谁绝对更好。 手机 Leica 风格：看手机是不是第一眼更讨喜，但也看它是否统一、是否过度计算人脸。</p></article><article class="tab-panel" id="tests-panel-4" role="tabpanel" aria-labelledby="tests-tab-4" hidden><h3>虚化：不要按全幅 F1.7-2.8 理解</h3><p>L10 拍 24mm 环境、50mm 静物、75mm 半身或细节，全部用最大光圈，再补一张收一点光圈的安全版本。 这项要讲清楚：L10 有主体分离，但不是全幅大光圈定焦那种虚化。它的价值在 24-75mm 连续焦段和真实长焦。 S9 + 28-70：作为全幅标准变焦参照，看 L10 和全幅变焦在主体分离、高感、宽容度上的差距。 X-M5 + 23/2.8：APS-C 35mm 视角参照，看日常半身和环境图的主体分离差异。 GR4 裁切：看 GR4 28mm 裁切后能不能替代 L10 的 50/75mm 视角。 手机人像模式：看算法虚化第一眼是否更强，以及发丝、眼镜、衣服边缘有没有破绽。</p></article></div>
     </section>
     <section id="video">
       <h2>视频能力怎么讲</h2>
-      <div class="video-grid">
-        <div class="video-card"><strong>整体判断</strong>视频参数很满，这部分直接承认它规格给得很足，不把它写成只会拍照的机器。</div><div class="video-card"><strong>最大遗憾</strong>比较可惜的是没有传感器防抖，防抖方面只有镜头防抖。手持走动、边走边拍不能期待太高。</div><div class="video-card"><strong>适合场景</strong>如果是定镜、固定机位、轻微手持，问题不大；拍咖啡、静物、环境空镜、人物小段落都可以。</div><div class="video-card"><strong>必须演示</strong>专门演示 4K 慢放，看它在动作、头发、衣服摆动、街景行人里有没有实际可用性。</div><div class="video-card"><strong>口播重点</strong>视频这段不是吹规格，而是讲清楚：参数强，但没有机身防抖，所以它更适合有控制的拍法。</div>
-      </div>
+      <p>L10 的视频规格不弱，但没有传感器防抖，所以不能按运动 Vlog 机去期待。更适合固定机位、轻微手持和有控制的短镜头。</p>
+      <div class="tabs" data-tabs="video"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="video-tab-0" aria-controls="video-panel-0" aria-selected="true">整体判断</button><button class="tab-button" type="button" role="tab" id="video-tab-1" aria-controls="video-panel-1" aria-selected="false">最大遗憾</button><button class="tab-button" type="button" role="tab" id="video-tab-2" aria-controls="video-panel-2" aria-selected="false">适合场景</button><button class="tab-button" type="button" role="tab" id="video-tab-3" aria-controls="video-panel-3" aria-selected="false">必须演示</button><button class="tab-button" type="button" role="tab" id="video-tab-4" aria-controls="video-panel-4" aria-selected="false">口播重点</button></div><article class="tab-panel" id="video-panel-0" role="tabpanel" aria-labelledby="video-tab-0"><h3>整体判断</h3><p>视频参数很满，这部分直接承认它规格给得很足，不把它写成只会拍照的机器。</p></article><article class="tab-panel" id="video-panel-1" role="tabpanel" aria-labelledby="video-tab-1" hidden><h3>最大遗憾</h3><p>比较可惜的是没有传感器防抖，防抖方面只有镜头防抖。手持走动、边走边拍不能期待太高。</p></article><article class="tab-panel" id="video-panel-2" role="tabpanel" aria-labelledby="video-tab-2" hidden><h3>适合场景</h3><p>如果是定镜、固定机位、轻微手持，问题不大；拍咖啡、静物、环境空镜、人物小段落都可以。</p></article><article class="tab-panel" id="video-panel-3" role="tabpanel" aria-labelledby="video-tab-3" hidden><h3>必须演示</h3><p>专门演示 4K 慢放，看它在动作、头发、衣服摆动、街景行人里有没有实际可用性。</p></article><article class="tab-panel" id="video-panel-4" role="tabpanel" aria-labelledby="video-tab-4" hidden><h3>口播重点</h3><p>视频这段不是吹规格，而是讲清楚：参数强，但没有机身防抖，所以它更适合有控制的拍法。</p></article></div>
     </section>
     <section id="crop">
       <h2>裁切后还剩多少像素</h2>
-      <div class="callout">
-        裁切不是免费长焦，剩余像素会按裁切倍率平方下降。公式：裁切后像素 = 原始像素 / 裁切倍率²。
-      </div>
-      <div class="crop-grid">
-        <article class="crop-card"><div class="crop-head"><strong>S9 全画幅裁切</strong><span>约 24.2MP / 6000x4000</span></div><div class="crop-row"><span>全幅原生</span><b>1x</b><b>24.2MP</b></div><div class="crop-row"><span>裁到 APS-C / Super35</span><b>1.5x</b><b>约 10.8MP</b></div><div class="crop-row"><span>裁到 M43 视角</span><b>2x</b><b>约 6.1MP</b></div></article><article class="crop-card"><div class="crop-head"><strong>S9 + 28-70mm 裁切</strong><span>70mm 已接近 L10 长端</span></div><div class="crop-row"><span>70mm</span><b>1x</b><b>24.2MP</b></div><div class="crop-row"><span>75mm</span><b>1.07x</b><b>约 21.1MP</b></div></article><article class="crop-card"><div class="crop-head"><strong>GR4 从 28mm 裁切</strong><span>约 25.7MP APS-C 定焦</span></div><div class="crop-row"><span>28mm</span><b>1x</b><b>25.7MP</b></div><div class="crop-row"><span>35mm</span><b>1.25x</b><b>约 16.5MP</b></div><div class="crop-row"><span>50mm</span><b>1.79x</b><b>约 8.1MP</b></div><div class="crop-row"><span>75mm</span><b>2.68x</b><b>约 3.6MP</b></div></article><article class="crop-card"><div class="crop-head"><strong>X100VI 从 35mm 裁切</strong><span>约 40.2MP APS-C 定焦</span></div><div class="crop-row"><span>35mm</span><b>1x</b><b>40.2MP</b></div><div class="crop-row"><span>50mm</span><b>1.43x</b><b>约 19.7MP</b></div><div class="crop-row"><span>75mm</span><b>2.14x</b><b>约 8.8MP</b></div></article>
-      </div>
-      <p class="crop-note">这段用来回应“全画幅可以裁切 / GR 也可以裁切”：S9 + 28-70mm 到 70mm 已经接近 L10 的 75mm，轻微裁切仍有约 21.1MP；GR4 从 28mm 裁到 75mm 约 3.6MP；X100VI 从 35mm 裁到 75mm 约 8.8MP。X100VI 高像素裁切更能打，但 L10 的 75mm 仍然是真实光学长焦，也不需要进入可换镜头系统。</p>
+      <p>裁切不是免费长焦，剩余像素会按裁切倍率平方下降。S9 + 28-70 到 70mm 已经接近 L10 的 75mm，但 GR4 从 28mm 裁到 75mm 就只剩三四百万像素。</p>
+      <table><thead><tr><th>对象</th><th>基础</th><th>裁切账本</th></tr></thead><tbody><tr><td>S9 全画幅裁切</td><td>约 24.2MP / 6000x4000</td><td>全幅原生 1x 24.2MP / 裁到 APS-C / Super35 1.5x 约 10.8MP / 裁到 M43 视角 2x 约 6.1MP</td></tr><tr><td>S9 + 28-70mm 裁切</td><td>70mm 已接近 L10 长端</td><td>70mm 1x 24.2MP / 75mm 1.07x 约 21.1MP</td></tr><tr><td>GR4 从 28mm 裁切</td><td>约 25.7MP APS-C 定焦</td><td>28mm 1x 25.7MP / 35mm 1.25x 约 16.5MP / 50mm 1.79x 约 8.1MP / 75mm 2.68x 约 3.6MP</td></tr><tr><td>X100VI 从 35mm 裁切</td><td>约 40.2MP APS-C 定焦</td><td>35mm 1x 40.2MP / 50mm 1.43x 约 19.7MP / 75mm 2.14x 约 8.8MP</td></tr></tbody></table>
     </section>
     <section id="compare">
       <h2>为什么提这些对比对象</h2>
-      <table>
-        <thead><tr><th>对象</th><th>用它讲什么</th><th>不能写偏的地方</th></tr></thead>
-        <tbody>
-          <tr><td>S9</td><td>聊外观、体积、操作、简单画质差异、选购冲突</td><td>回答：L10 是否撞上 S9 预算？有 EVF 和 24-75mm 能否成立？</td></tr><tr><td>GR4</td><td>聊 APS-C 成像、28mm 纯粹、口袋属性和无可替代的体积重量</td><td>回答：日常画质差距是否明显？L10 长焦能否弥补不够小？不能把 L10 写成 GR4 替代品。</td></tr><tr><td>X-M5 + 23/2.8</td><td>做 APS-C 参照，也近似承担 X100VI 对比；同时说明 X-M5 可换镜头、可重可轻</td><td>没有 X100VI 真机，所以不能写实测；X-M5 虽然系统弹性大，但小机身一般不会长期上太大镜头。</td></tr><tr><td>Type109 / LX3</td><td>聊 4/3 + 24-75mm F1.7-2.8 血统，以及比例切换、对焦模式切换、转盘逻辑的继承</td><td>回答：L10 是不是这条路线的现代化，而不是画幅升级；现代模式转盘是否牺牲了一点老派操作味道。</td></tr><tr><td>一英寸手机</td><td>聊 24mm 主摄和计算摄影</td><td>回答：手机强在主摄，L10 强在 35/50/75mm 真实光学变焦。</td></tr>
-        </tbody>
-      </table>
+      <p>每台对比对象只回答一个问题，不做全项目摊开比。这样文章不会变成横评清单，也不会把 L10 写成打败谁。</p>
+      <div class="tabs" data-tabs="compare"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="compare-tab-0" aria-controls="compare-panel-0" aria-selected="true">S9</button><button class="tab-button" type="button" role="tab" id="compare-tab-1" aria-controls="compare-panel-1" aria-selected="false">GR4</button><button class="tab-button" type="button" role="tab" id="compare-tab-2" aria-controls="compare-panel-2" aria-selected="false">X-M5 + 23/2.8</button><button class="tab-button" type="button" role="tab" id="compare-tab-3" aria-controls="compare-panel-3" aria-selected="false">Type109 / LX3</button><button class="tab-button" type="button" role="tab" id="compare-tab-4" aria-controls="compare-panel-4" aria-selected="false">一英寸手机</button></div><article class="tab-panel" id="compare-panel-0" role="tabpanel" aria-labelledby="compare-tab-0"><h3>S9</h3><p>聊外观、体积、操作、简单画质差异、选购冲突 回答：L10 是否撞上 S9 预算？有 EVF 和 24-75mm 能否成立？</p></article><article class="tab-panel" id="compare-panel-1" role="tabpanel" aria-labelledby="compare-tab-1" hidden><h3>GR4</h3><p>聊 APS-C 成像、28mm 纯粹、口袋属性和无可替代的体积重量 回答：日常画质差距是否明显？L10 长焦能否弥补不够小？不能把 L10 写成 GR4 替代品。</p></article><article class="tab-panel" id="compare-panel-2" role="tabpanel" aria-labelledby="compare-tab-2" hidden><h3>X-M5 + 23/2.8</h3><p>做 APS-C 参照，也近似承担 X100VI 对比；同时说明 X-M5 可换镜头、可重可轻 没有 X100VI 真机，所以不能写实测；X-M5 虽然系统弹性大，但小机身一般不会长期上太大镜头。</p></article><article class="tab-panel" id="compare-panel-3" role="tabpanel" aria-labelledby="compare-tab-3" hidden><h3>Type109 / LX3</h3><p>聊 4/3 + 24-75mm F1.7-2.8 血统，以及比例切换、对焦模式切换、转盘逻辑的继承 回答：L10 是不是这条路线的现代化，而不是画幅升级；现代模式转盘是否牺牲了一点老派操作味道。</p></article><article class="tab-panel" id="compare-panel-4" role="tabpanel" aria-labelledby="compare-tab-4" hidden><h3>一英寸手机</h3><p>聊 24mm 主摄和计算摄影 回答：手机强在主摄，L10 强在 35/50/75mm 真实光学变焦。</p></article></div>
     </section>
     <section id="handling">
       <h2>我的操作节奏</h2>
-      <div class="handling-grid">
-        <div class="handling-card"><strong>变焦速度</strong>L10 的变焦确实不算快，这点直接讲，不把它美化成很跟手。</div><div class="handling-card"><strong>我的习惯</strong>我现在习惯在抬手过程中就先参与一段变焦，让相机到眼前的时候，焦段已经差不多到位。</div><div class="handling-card"><strong>实际影响</strong>如果等看到画面以后再从 24mm 慢慢拉到 75mm，节奏会慢；但提前预判焦段以后，实际拍摄会顺很多。</div><div class="handling-card"><strong>口播角度</strong>这不是没有缺点，而是我已经形成了一套使用节奏：先判断距离和构图，再在抬手动作里完成一部分变焦。</div>
-      </div>
+      <p>L10 的变焦不算快，所以真实使用不是等举到眼前再慢慢拉焦，而是在抬手过程中先预判并参与一段变焦。</p>
+      <div class="tabs" data-tabs="handling"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="handling-tab-0" aria-controls="handling-panel-0" aria-selected="true">变焦速度</button><button class="tab-button" type="button" role="tab" id="handling-tab-1" aria-controls="handling-panel-1" aria-selected="false">我的习惯</button><button class="tab-button" type="button" role="tab" id="handling-tab-2" aria-controls="handling-panel-2" aria-selected="false">实际影响</button><button class="tab-button" type="button" role="tab" id="handling-tab-3" aria-controls="handling-panel-3" aria-selected="false">口播角度</button></div><article class="tab-panel" id="handling-panel-0" role="tabpanel" aria-labelledby="handling-tab-0"><h3>变焦速度</h3><p>L10 的变焦确实不算快，这点直接讲，不把它美化成很跟手。</p></article><article class="tab-panel" id="handling-panel-1" role="tabpanel" aria-labelledby="handling-tab-1" hidden><h3>我的习惯</h3><p>我现在习惯在抬手过程中就先参与一段变焦，让相机到眼前的时候，焦段已经差不多到位。</p></article><article class="tab-panel" id="handling-panel-2" role="tabpanel" aria-labelledby="handling-tab-2" hidden><h3>实际影响</h3><p>如果等看到画面以后再从 24mm 慢慢拉到 75mm，节奏会慢；但提前预判焦段以后，实际拍摄会顺很多。</p></article><article class="tab-panel" id="handling-panel-3" role="tabpanel" aria-labelledby="handling-tab-3" hidden><h3>口播角度</h3><p>这不是没有缺点，而是我已经形成了一套使用节奏：先判断距离和构图，再在抬手动作里完成一部分变焦。</p></article></div>
     </section>
     <section id="shoot">
       <h2>广州爱群大酒店人像</h2>
-      <div class="timeline">
-        <div class="step"><div class="tag">地点</div><div class="body">广州爱群大酒店</div></div><div class="step"><div class="tag">光线 1</div><div class="body">光照充足时直接拍摄，没有明显感觉到 M43 有什么劣势</div></div><div class="step"><div class="tag">光线 2</div><div class="body">室内只有昏暗灯光时，热靴搭配 IT32 闪光灯拍摄</div></div><div class="step"><div class="tag">光线 3</div><div class="body">昏暗灯光下不打闪，直接大光圈拍摄，最高到 ISO 3200</div></div><div class="step"><div class="tag">拍法</div><div class="body">直接自然光 / 标变大光圈 + IT32 闪光灯 / 昏暗灯光大光圈高 ISO</div></div><div class="step"><div class="tag">机内设置</div><div class="body">降噪 -5，锐化 -5</div></div><div class="step"><div class="tag">画面质感</div><div class="body">ISO 3200 能看到 M43 劣势，但 RAW 的黑白噪点很讨喜，像胶片颗粒；直出 JPG 去掉噪点后要警惕涂抹感</div></div><div class="step"><div class="tag">防抖边界</div><div class="body">长焦弱光不能按 S9 的手感去端。L10 只有镜头防抖，50mm / 75mm 昏暗室内容易不小心抖掉。</div></div><div class="step"><div class="tag">LUT 判断</div><div class="body">我不用额外开噪点模拟，直出已有胶片颗粒感</div></div>
-      </div>
+      <p>这组不做横向对比，重点讲创作体验：光照充足时直接拍，昏暗灯光下用 IT32 闪光灯控制人物，不打闪时则接受 ISO 3200 和 RAW 颗粒带来的边界。</p>
+      <div class="summary"><p><strong>地点：</strong>广州爱群大酒店</p><p><strong>光线 1：</strong>光照充足时直接拍摄，没有明显感觉到 M43 有什么劣势</p><p><strong>光线 2：</strong>室内只有昏暗灯光时，热靴搭配 IT32 闪光灯拍摄</p><p><strong>光线 3：</strong>昏暗灯光下不打闪，直接大光圈拍摄，最高到 ISO 3200</p></div>
       <h3>三种光线条件</h3>
-      <div class="focal-grid">
-        <div class="focal-card"><strong>光照充足</strong><span>直接拍摄</span>没有明显感觉到 M43 有什么劣势；重点看焦段、构图、肤色和 LUT。</div><div class="focal-card"><strong>室内昏暗灯光</strong><span>热靴 + IT32 闪光灯</span>闪光灯把人物从暗环境里提出来，标变大光圈保留构图自由度。</div><div class="focal-card"><strong>昏暗灯光直接拍</strong><span>大光圈，最高 ISO 3200</span>能看到 M43 高感边界，长焦还要注意手持防抖；RAW 黑白噪点讨喜，像胶片颗粒。</div>
-      </div>
+      <div class="tabs" data-tabs="shoot-light"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="shoot-light-tab-0" aria-controls="shoot-light-panel-0" aria-selected="true">光照充足</button><button class="tab-button" type="button" role="tab" id="shoot-light-tab-1" aria-controls="shoot-light-panel-1" aria-selected="false">室内昏暗灯光</button><button class="tab-button" type="button" role="tab" id="shoot-light-tab-2" aria-controls="shoot-light-panel-2" aria-selected="false">昏暗灯光直接拍</button></div><article class="tab-panel" id="shoot-light-panel-0" role="tabpanel" aria-labelledby="shoot-light-tab-0"><h3>光照充足</h3><p>直接拍摄。没有明显感觉到 M43 有什么劣势；重点看焦段、构图、肤色和 LUT。</p></article><article class="tab-panel" id="shoot-light-panel-1" role="tabpanel" aria-labelledby="shoot-light-tab-1" hidden><h3>室内昏暗灯光</h3><p>热靴 + IT32 闪光灯。闪光灯把人物从暗环境里提出来，标变大光圈保留构图自由度。</p></article><article class="tab-panel" id="shoot-light-panel-2" role="tabpanel" aria-labelledby="shoot-light-tab-2" hidden><h3>昏暗灯光直接拍</h3><p>大光圈，最高 ISO 3200。能看到 M43 高感边界，长焦还要注意手持防抖；RAW 黑白噪点讨喜，像胶片颗粒。</p></article></div>
       <h3>长焦弱光防抖边界</h3>
-      <div class="noise-grid">
-        <div class="noise-card"><strong>问题</strong>L10 只有镜头防抖，没有 S9 那种机身防抖手感。</div><div class="noise-card"><strong>场景</strong>50mm / 75mm 在昏暗室内拍人，如果按端 S9 的习惯去端，很容易不小心抖。</div><div class="noise-card"><strong>判断</strong>照片糊不一定全是高 ISO 画质问题，也可能是快门速度和手持稳定性问题。</div><div class="noise-card"><strong>处理</strong>提高快门、收稳姿势、靠墙或扶栏、连拍多取一张，或者用 IT32 闪光灯把人物定住。</div>
-      </div>
+      <div class="tabs" data-tabs="stabilization"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="stabilization-tab-0" aria-controls="stabilization-panel-0" aria-selected="true">问题</button><button class="tab-button" type="button" role="tab" id="stabilization-tab-1" aria-controls="stabilization-panel-1" aria-selected="false">场景</button><button class="tab-button" type="button" role="tab" id="stabilization-tab-2" aria-controls="stabilization-panel-2" aria-selected="false">判断</button><button class="tab-button" type="button" role="tab" id="stabilization-tab-3" aria-controls="stabilization-panel-3" aria-selected="false">处理</button></div><article class="tab-panel" id="stabilization-panel-0" role="tabpanel" aria-labelledby="stabilization-tab-0"><h3>问题</h3><p>L10 只有镜头防抖，没有 S9 那种机身防抖手感。</p></article><article class="tab-panel" id="stabilization-panel-1" role="tabpanel" aria-labelledby="stabilization-tab-1" hidden><h3>场景</h3><p>50mm / 75mm 在昏暗室内拍人，如果按端 S9 的习惯去端，很容易不小心抖。</p></article><article class="tab-panel" id="stabilization-panel-2" role="tabpanel" aria-labelledby="stabilization-tab-2" hidden><h3>判断</h3><p>照片糊不一定全是高 ISO 画质问题，也可能是快门速度和手持稳定性问题。</p></article><article class="tab-panel" id="stabilization-panel-3" role="tabpanel" aria-labelledby="stabilization-tab-3" hidden><h3>处理</h3><p>提高快门、收稳姿势、靠墙或扶栏、连拍多取一张，或者用 IT32 闪光灯把人物定住。</p></article></div>
       <h3>从 24 到 75mm 的构图变化</h3>
-      <p class="crop-note">这部分最好用同一场景多张构图来证明。不是换地点展示焦段，而是在爱群大酒店同一个空间里，从 24mm 环境交代一路收到 75mm 表情和细节，让观众直接看到 24-75mm 的构图自由。</p>
-      <div class="focal-grid">
-        <div class="focal-card"><strong>24mm</strong>交代爱群酒店的室内环境、走廊纵深和老建筑氛围。这个焦段适合把人放进空间里，而不是只拍脸。</div><div class="focal-card"><strong>35mm</strong>更接近日常观看距离，适合半环境人像。人物存在感更强，但还保留酒店背景和光线关系。</div><div class="focal-card"><strong>50mm</strong>开始压缩空间，适合半身、坐姿、桌边或窗边人物。这个焦段能把杂乱环境收住。</div><div class="focal-card"><strong>75mm</strong>拍更紧的半身、表情、手部和服装细节。暗走廊里用 75mm 可以把背景压暗压虚，让闪光灯打到的人更突出。</div>
-      </div>
+      <p>这部分最好用同一场景多张构图来证明。不是换地点展示焦段，而是在爱群大酒店同一个空间里，从 24mm 环境交代一路收到 75mm 表情和细节。</p>
+      <div class="tabs" data-tabs="focal"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="focal-tab-0" aria-controls="focal-panel-0" aria-selected="true">24mm</button><button class="tab-button" type="button" role="tab" id="focal-tab-1" aria-controls="focal-panel-1" aria-selected="false">35mm</button><button class="tab-button" type="button" role="tab" id="focal-tab-2" aria-controls="focal-panel-2" aria-selected="false">50mm</button><button class="tab-button" type="button" role="tab" id="focal-tab-3" aria-controls="focal-panel-3" aria-selected="false">75mm</button></div><article class="tab-panel" id="focal-panel-0" role="tabpanel" aria-labelledby="focal-tab-0"><h3>24mm</h3><p>交代爱群酒店的室内环境、走廊纵深和老建筑氛围。这个焦段适合把人放进空间里，而不是只拍脸。</p></article><article class="tab-panel" id="focal-panel-1" role="tabpanel" aria-labelledby="focal-tab-1" hidden><h3>35mm</h3><p>更接近日常观看距离，适合半环境人像。人物存在感更强，但还保留酒店背景和光线关系。</p></article><article class="tab-panel" id="focal-panel-2" role="tabpanel" aria-labelledby="focal-tab-2" hidden><h3>50mm</h3><p>开始压缩空间，适合半身、坐姿、桌边或窗边人物。这个焦段能把杂乱环境收住。</p></article><article class="tab-panel" id="focal-panel-3" role="tabpanel" aria-labelledby="focal-tab-3" hidden><h3>75mm</h3><p>拍更紧的半身、表情、手部和服装细节。暗走廊里用 75mm 可以把背景压暗压虚，让闪光灯打到的人更突出。</p></article></div>
       <h3>同一场景多构图照片组</h3>
-      <div class="focal-grid">
-        <div class="focal-card"><strong>24mm</strong><span>环境交代</span>同一场景的空间、走廊、窗户、墙面或老建筑氛围。</div><div class="focal-card"><strong>35mm</strong><span>半环境人像</span>人物更明确，但仍保留场景关系。</div><div class="focal-card"><strong>50mm</strong><span>半身 / 坐姿 / 桌边</span>收掉杂乱背景，让人物和局部动作更集中。</div><div class="focal-card"><strong>75mm</strong><span>表情 / 手部 / 服装细节</span>从同一场景里提取细节，说明这是光学长焦，不是后期裁切。</div>
-      </div>
+      <div class="tabs" data-tabs="composition"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="composition-tab-0" aria-controls="composition-panel-0" aria-selected="true">24mm</button><button class="tab-button" type="button" role="tab" id="composition-tab-1" aria-controls="composition-panel-1" aria-selected="false">35mm</button><button class="tab-button" type="button" role="tab" id="composition-tab-2" aria-controls="composition-panel-2" aria-selected="false">50mm</button><button class="tab-button" type="button" role="tab" id="composition-tab-3" aria-controls="composition-panel-3" aria-selected="false">75mm</button></div><article class="tab-panel" id="composition-panel-0" role="tabpanel" aria-labelledby="composition-tab-0"><h3>24mm：环境交代</h3><p>同一场景的空间、走廊、窗户、墙面或老建筑氛围。</p></article><article class="tab-panel" id="composition-panel-1" role="tabpanel" aria-labelledby="composition-tab-1" hidden><h3>35mm：半环境人像</h3><p>人物更明确，但仍保留场景关系。</p></article><article class="tab-panel" id="composition-panel-2" role="tabpanel" aria-labelledby="composition-tab-2" hidden><h3>50mm：半身 / 坐姿 / 桌边</h3><p>收掉杂乱背景，让人物和局部动作更集中。</p></article><article class="tab-panel" id="composition-panel-3" role="tabpanel" aria-labelledby="composition-tab-3" hidden><h3>75mm：表情 / 手部 / 服装细节</h3><p>从同一场景里提取细节，说明这是光学长焦，不是后期裁切。</p></article></div>
       <h3>高 ISO 黑白噪点怎么对比</h3>
-      <div class="noise-grid">
-        <div class="noise-card"><strong>L10</strong>重点看 RAW 高 ISO 是不是主要呈现讨喜的黑白颗粒；同时单独检查 ISO 3200 的 JPG 是否因为去噪过度被涂抹成油画。</div><div class="noise-card"><strong>S9</strong>全画幅应该更干净，用它判断 L10 的噪点到底是风格，还是画质差距已经明显。</div><div class="noise-card"><strong>X-M5</strong>APS-C 参照，重点看暗部细节和噪点颗粒是否比 L10 更细、更稳。</div><div class="noise-card"><strong>GR4</strong>看 GR4 高 ISO 的颗粒和细节保留，再和 L10 的黑白噪点质感对比。</div><div class="noise-card"><strong>手机夜景</strong>看手机夜景模式是不是更亮更干净，但同时有没有涂抹、塑料感、过度锐化。</div>
-      </div>
+      <div class="tabs" data-tabs="noise"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="noise-tab-0" aria-controls="noise-panel-0" aria-selected="true">L10</button><button class="tab-button" type="button" role="tab" id="noise-tab-1" aria-controls="noise-panel-1" aria-selected="false">S9</button><button class="tab-button" type="button" role="tab" id="noise-tab-2" aria-controls="noise-panel-2" aria-selected="false">X-M5</button><button class="tab-button" type="button" role="tab" id="noise-tab-3" aria-controls="noise-panel-3" aria-selected="false">GR4</button><button class="tab-button" type="button" role="tab" id="noise-tab-4" aria-controls="noise-panel-4" aria-selected="false">手机夜景</button></div><article class="tab-panel" id="noise-panel-0" role="tabpanel" aria-labelledby="noise-tab-0"><h3>L10</h3><p>重点看 RAW 高 ISO 是不是主要呈现讨喜的黑白颗粒；同时单独检查 ISO 3200 的 JPG 是否因为去噪过度被涂抹成油画。</p></article><article class="tab-panel" id="noise-panel-1" role="tabpanel" aria-labelledby="noise-tab-1" hidden><h3>S9</h3><p>全画幅应该更干净，用它判断 L10 的噪点到底是风格，还是画质差距已经明显。</p></article><article class="tab-panel" id="noise-panel-2" role="tabpanel" aria-labelledby="noise-tab-2" hidden><h3>X-M5</h3><p>APS-C 参照，重点看暗部细节和噪点颗粒是否比 L10 更细、更稳。</p></article><article class="tab-panel" id="noise-panel-3" role="tabpanel" aria-labelledby="noise-tab-3" hidden><h3>GR4</h3><p>看 GR4 高 ISO 的颗粒和细节保留，再和 L10 的黑白噪点质感对比。</p></article><article class="tab-panel" id="noise-panel-4" role="tabpanel" aria-labelledby="noise-tab-4" hidden><h3>手机夜景</h3><p>看手机夜景模式是不是更亮更干净，但同时有没有涂抹、塑料感、过度锐化。</p></article></div>
     </section>
     <section id="ending">
       <h2>结尾方向</h2>
-      <div class="callout">
-        我真正希望松下继续把 M43 做下去，不只是做一台和 S9 有预算竞争关系的固定镜头相机，而是重新做出 GM1 那种短小精悍的产品线。甚至更直接一点，做一台小型定焦，正面和 GR 竞争。L10 有 24-75mm、EVF、LUT 和完整度，但它让我想到的不是“这就是终点”，而是 M43 其实还可以继续往更小、更明确、更随身的方向走。
-      </div>
+      <p>我真正希望松下继续把 M43 做下去，不只是做一台和 S9 有预算竞争关系的固定镜头相机，而是重新做出 GM1 那种短小精悍的产品线。甚至更直接一点，做一台小型定焦，正面和 GR 竞争。</p>
+      <p>L10 有 24-75mm、EVF、LUT 和完整度，但它让我想到的不是“这就是终点”，而是 M43 其实还可以继续往更小、更明确、更随身的方向走。</p>
       <div class="footer-note">Generated from local review notes. Update notes first, then rebuild this page.</div>
     </section>
   </main>
+  </div>
   <script>
     (() => {
       const root = document.documentElement;
@@ -435,6 +200,20 @@
       });
       render();
     })();
+    document.querySelectorAll("[data-tabs]").forEach((group) => {
+      const tabs = Array.from(group.querySelectorAll('[role="tab"]'));
+      const panels = Array.from(group.querySelectorAll('[role="tabpanel"]'));
+      tabs.forEach((tab, index) => {
+        tab.addEventListener("click", () => {
+          tabs.forEach((item, itemIndex) => {
+            const active = itemIndex === index;
+            item.classList.toggle("is-active", active);
+            item.setAttribute("aria-selected", active ? "true" : "false");
+            panels[itemIndex].hidden = !active;
+          });
+        });
+      });
+    });
   </script>
 </body>
 </html>

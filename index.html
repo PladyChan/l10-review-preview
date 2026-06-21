@@ -529,6 +529,10 @@
     .aspect-label {
       font-weight: 700;
     }
+    .aspect-m43-label {
+      fill: var(--muted);
+      font-weight: 700;
+    }
     .aspect-circle-label {
       fill: var(--muted);
     }
@@ -636,16 +640,18 @@
 <aside class="insert-module aspect-module" id="visual-aspect">
   <div class="module-kicker">ASPECT TOOL / L10</div>
   <h3>内置比例面积示意：矩形不是同一个 4:3 裁切</h3>
-  <p>这张图只画 L10 自己的四个内置比例。数据口径：以 4:3 的 5184 x 3888 和约 15.2 x 11.4mm 为基准，按像素宽高比例反推其他比例的使用尺寸；它是基于当前规格和同像素密度的估算，不是官方公布的物理开窗尺寸。</p>
+  <p>这张图画 L10 自己的四个内置比例，并加上标准 M43 的 17.3 x 13.0mm 外框作为参照。数据口径：以 4:3 的 5184 x 3888 和约 15.2 x 11.4mm 为基准，按像素宽高比例反推其他比例的使用尺寸；它是基于当前规格和同像素密度的估算，不是官方公布的物理开窗尺寸。</p>
   <figure class="aspect-figure">
     <svg class="aspect-svg" viewBox="0 0 420 340" role="img" aria-label="L10 四个内置画幅比例和镜头像场圆示意">
       <rect x="0.5" y="0.5" width="419" height="339" fill="none" stroke="var(--line)"/>
       <circle class="image-circle" cx="210.0" cy="160.0" r="152.1" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 4"/>
       <text class="aspect-circle-label" x="210.0" y="332.1" text-anchor="middle">估算镜头像场圆：直径约 19.01mm</text>
+      <rect class="aspect-m43-box" x="71.6" y="56.0" width="276.8" height="208.0" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="10 6" vector-effect="non-scaling-stroke"/>
+      <text class="aspect-m43-label" x="79.6" y="74.0">标准 M43 17.3 x 13.0mm</text>
       <rect class="aspect-rect aspect-43" x="88.4" y="68.8" width="243.2" height="182.4" fill="none" stroke="var(--accent)" stroke-width="3"  vector-effect="non-scaling-stroke"/><rect class="aspect-rect aspect-32" x="83.5" y="75.6" width="253.0" height="168.9" fill="none" stroke="var(--ok)" stroke-width="2" stroke-dasharray="8 5" vector-effect="non-scaling-stroke"/><rect class="aspect-rect aspect-169" x="77.9" y="85.7" width="264.2" height="148.6" fill="none" stroke="#9a9a9a" stroke-width="2" stroke-dasharray="8 5" vector-effect="non-scaling-stroke"/><rect class="aspect-rect aspect-11" x="118.8" y="68.8" width="182.4" height="182.4" fill="none" stroke="#f2f2f2" stroke-width="2" stroke-dasharray="8 5" vector-effect="non-scaling-stroke"/>
       <text class="aspect-label" x="95.4" y="84.8" fill="var(--accent)">4:3</text><text class="aspect-label" x="90.5" y="93.6" fill="var(--ok)">3:2</text><text class="aspect-label" x="84.9" y="105.7" fill="#9a9a9a">16:9</text><text class="aspect-label" x="125.8" y="90.8" fill="#f2f2f2">1:1</text>
     </svg>
-    <figcaption>圆形表示镜头至少需要覆盖四个比例里最大的对角线，约等于 3:2 的 19.01mm。实际镜头像场通常会留余量，这里只用于解释多画幅取景关系。</figcaption>
+    <figcaption>虚线外框是标准 M43 面积参照；圆形表示镜头至少需要覆盖四个比例里最大的对角线，约等于 3:2 的 19.01mm。实际镜头像场通常会留余量，这里只用于解释多画幅取景关系。</figcaption>
   </figure>
   <table><thead><tr><th>比例</th><th>分辨率</th><th>约像素</th><th>约使用尺寸</th><th>约面积</th><th>约对角线</th><th>相对 4:3</th><th>相对标准 M43</th></tr></thead><tbody><tr><td>4:3</td><td>5184 x 3888</td><td>20.2MP</td><td>15.20 x 11.40 mm</td><td>173.28 mm²</td><td>19.00 mm</td><td>100.0%</td><td>77.0%</td></tr><tr><td>3:2</td><td>5392 x 3600</td><td>19.4MP</td><td>15.81 x 10.56 mm</td><td>166.88 mm²</td><td>19.01 mm</td><td>96.3%</td><td>74.2%</td></tr><tr><td>16:9</td><td>5632 x 3168</td><td>17.8MP</td><td>16.51 x 9.29 mm</td><td>153.39 mm²</td><td>18.95 mm</td><td>88.5%</td><td>68.2%</td></tr><tr><td>1:1</td><td>3888 x 3888</td><td>15.1MP</td><td>11.40 x 11.40 mm</td><td>129.96 mm²</td><td>16.12 mm</td><td>75.0%</td><td>57.8%</td></tr></tbody></table>
 </aside>

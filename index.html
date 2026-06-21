@@ -71,10 +71,14 @@
     .sensor-controls { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); border:1px solid var(--line); margin-top:14px; background:var(--surface-2); }
     .sensor-button { min-width:0; border:0; border-right:1px solid var(--line); border-radius:0; background:transparent; color:var(--muted); padding:10px; text-align:left; cursor:pointer; }
     .sensor-button:last-child { border-right:0; }
+    .sensor-button em { display:inline-flex; width:18px; height:18px; align-items:center; justify-content:center; border:1px solid var(--line); color:var(--muted); font-family:var(--font-mono); font-size:10px; font-style:normal; margin-bottom:7px; }
+    .sensor-button em:empty { opacity:0; }
     .sensor-button strong { display:block; font-family:var(--font-display); font-size:15px; line-height:1.1; color:var(--text); }
     .sensor-button span { display:block; margin-top:5px; font-family:var(--font-mono); font-size:10px; color:var(--muted); }
     .sensor-button.is-active { background:var(--accent); color:#fff; }
     .sensor-button.is-active strong,.sensor-button.is-active span { color:#fff; }
+    .sensor-button.is-compare-b { box-shadow:inset 0 0 0 2px var(--ok); }
+    .sensor-button.is-compare-b em { border-color:var(--ok); color:var(--text); }
     .sensor-figure { margin:16px 0 14px; }
     .sensor-svg { display:block; width:100%; height:auto; background:var(--surface); }
     .sensor-svg text { fill:var(--muted); font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; }
@@ -91,9 +95,11 @@
     .sensor-readout strong { font-family:var(--font-display); font-size:20px; line-height:1; }
     .sensor-readout span { font-family:var(--font-mono); color:var(--muted); font-size:11px; }
     .sensor-compare { display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--line); background:var(--surface); margin:12px 0 2px; }
-    .sensor-compare label { display:grid; gap:6px; padding:10px; border-right:1px solid var(--line); color:var(--muted); font-family:var(--font-mono); font-size:10px; letter-spacing:.04em; text-transform:uppercase; }
-    .sensor-compare label:nth-child(2) { border-right:0; }
-    .sensor-compare select { width:100%; border:1px solid var(--line); border-radius:0; background:var(--bg); color:var(--text); padding:8px; font:inherit; text-transform:none; }
+    .sensor-compare div { display:grid; grid-template-columns:auto 1fr; gap:8px; align-items:center; padding:10px; border-right:1px solid var(--line); }
+    .sensor-compare div:nth-child(2) { border-right:0; }
+    .sensor-compare div span { display:inline-flex; width:22px; height:22px; align-items:center; justify-content:center; background:var(--accent); color:#fff; font-family:var(--font-mono); font-size:11px; }
+    .sensor-compare div:nth-child(2) span { background:transparent; color:var(--text); border:1px dashed var(--ok); }
+    .sensor-compare div strong { font-family:var(--font-display); font-size:16px; }
     .sensor-compare output { grid-column:1 / -1; border-top:1px solid var(--line); padding:12px; color:var(--text); font-family:var(--font-display); font-size:18px; line-height:1.35; }
     .sensor-compare output::before { content:"A/B "; color:var(--accent); font-family:var(--font-mono); font-size:11px; letter-spacing:.06em; vertical-align:2px; }
     figcaption { margin-top:8px; color:var(--muted); font-family:var(--font-mono); font-size:11px; line-height:1.6; }
@@ -110,7 +116,7 @@
       .sensor-button:nth-child(-n+2) { border-bottom:1px solid var(--line); }
       .sensor-readout { grid-template-columns:1fr; gap:5px; }
       .sensor-compare { grid-template-columns:1fr; }
-      .sensor-compare label { border-right:0; border-bottom:1px solid var(--line); }
+      .sensor-compare div { border-right:0; border-bottom:1px solid var(--line); }
       .tab-panel { padding:13px; }
       .tab-button { font-size:12px; padding:6px 10px; }
       th,td { font-size:13px; }
@@ -173,12 +179,12 @@
       <p>这张图只讲尺寸和面积，不直接等同于最终画质。L10 用的是 4/3 型传感器，但固定镜头成像圈没有覆盖完整标准 M43 面积，所以这里把“L10 可用成像面积”和“标准 M43”分开画。</p>
       
       <div class="sensor-controls" aria-label="选择传感器规格">
-        <button class="sensor-button" type="button" data-sensor-target="one-inch" aria-pressed="false" data-name="一英寸" data-size="13.2 x 8.8 mm" data-area="116 mm2" data-note="传感器规格口径"><strong>一英寸</strong><span>13.2 x 8.8 mm</span></button><button class="sensor-button" type="button" data-sensor-target="l10-used" aria-pressed="false" data-name="L10 可用" data-size="15.2 x 11.4 mm" data-area="173 mm2" data-note="按 20.4MP / 26.5MP 推算"><strong>L10 可用</strong><span>15.2 x 11.4 mm</span></button><button class="sensor-button is-active" type="button" data-sensor-target="m43" aria-pressed="true" data-name="标准 M43" data-size="17.3 x 13 mm" data-area="225 mm2" data-note="传感器规格口径"><strong>标准 M43</strong><span>17.3 x 13 mm</span></button><button class="sensor-button" type="button" data-sensor-target="aps-c" aria-pressed="false" data-name="APS-C" data-size="23.5 x 15.6 mm" data-area="367 mm2" data-note="传感器规格口径"><strong>APS-C</strong><span>23.5 x 15.6 mm</span></button><button class="sensor-button" type="button" data-sensor-target="full-frame" aria-pressed="false" data-name="全画幅" data-size="36 x 24 mm" data-area="864 mm2" data-note="传感器规格口径"><strong>全画幅</strong><span>36 x 24 mm</span></button>
+        <button class="sensor-button" type="button" data-sensor-target="one-inch" aria-pressed="false" data-name="一英寸" data-size="13.2 x 8.8 mm" data-area="116 mm2" data-note="传感器规格口径"><em data-compare-marker></em><strong>一英寸</strong><span>13.2 x 8.8 mm</span></button><button class="sensor-button is-compare-b" type="button" data-sensor-target="l10-used" aria-pressed="false" data-name="L10 可用" data-size="15.2 x 11.4 mm" data-area="173 mm2" data-note="按 20.4MP / 26.5MP 推算"><em data-compare-marker>B</em><strong>L10 可用</strong><span>15.2 x 11.4 mm</span></button><button class="sensor-button is-active is-compare-a" type="button" data-sensor-target="m43" aria-pressed="true" data-name="标准 M43" data-size="17.3 x 13 mm" data-area="225 mm2" data-note="传感器规格口径"><em data-compare-marker>A</em><strong>标准 M43</strong><span>17.3 x 13 mm</span></button><button class="sensor-button" type="button" data-sensor-target="aps-c" aria-pressed="false" data-name="APS-C" data-size="23.5 x 15.6 mm" data-area="367 mm2" data-note="传感器规格口径"><em data-compare-marker></em><strong>APS-C</strong><span>23.5 x 15.6 mm</span></button><button class="sensor-button" type="button" data-sensor-target="full-frame" aria-pressed="false" data-name="全画幅" data-size="36 x 24 mm" data-area="864 mm2" data-note="传感器规格口径"><em data-compare-marker></em><strong>全画幅</strong><span>36 x 24 mm</span></button>
       </div>
       <figure class="sensor-figure" data-sensor-visual>
         <svg class="sensor-svg" viewBox="0 0 410 320" role="img" aria-label="一英寸、M43、APS-C、全画幅传感器尺寸比例图">
           <rect x="0.5" y="0.5" width="409" height="319" fill="none" stroke="var(--line)"/>
-          <g><rect class="sensor-box" data-sensor-box="full-frame" x="24.0" y="26.0" width="360.0" height="240.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="aps-c" x="86.5" y="68.0" width="235.0" height="156.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box is-active" data-sensor-box="m43" x="117.5" y="81.0" width="173.0" height="130.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="l10-used" x="128.0" y="89.0" width="152.0" height="114.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="one-inch" x="138.0" y="102.0" width="132.0" height="88.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><text class="sensor-label" data-sensor-label="full-frame" x="32.0" y="43.0">全画幅 · 36x24</text><text class="sensor-label" data-sensor-label="aps-c" x="94.5" y="85.0">APS-C · 23.5x15.6</text><text class="sensor-label is-active" data-sensor-label="m43" x="125.5" y="98.0">标准 M43 · 17.3x13</text><text class="sensor-label" data-sensor-label="l10-used" x="136.0" y="106.0">L10 可用 · 15.2x11.4</text><text class="sensor-label" data-sensor-label="one-inch" x="146.0" y="119.0">一英寸 · 13.2x8.8</text></g>
+          <g><rect class="sensor-box" data-sensor-box="full-frame" x="24.0" y="26.0" width="360.0" height="240.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="aps-c" x="86.5" y="68.0" width="235.0" height="156.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box is-active is-compare-a" data-sensor-box="m43" x="117.5" y="81.0" width="173.0" height="130.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box is-compare-b" data-sensor-box="l10-used" x="128.0" y="89.0" width="152.0" height="114.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="one-inch" x="138.0" y="102.0" width="132.0" height="88.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><text class="sensor-label" data-sensor-label="full-frame" x="32.0" y="43.0">全画幅 · 36x24</text><text class="sensor-label" data-sensor-label="aps-c" x="94.5" y="85.0">APS-C · 23.5x15.6</text><text class="sensor-label is-active is-compare-a" data-sensor-label="m43" x="125.5" y="98.0">标准 M43 · 17.3x13</text><text class="sensor-label is-compare-b" data-sensor-label="l10-used" x="136.0" y="106.0">L10 可用 · 15.2x11.4</text><text class="sensor-label" data-sensor-label="one-inch" x="146.0" y="119.0">一英寸 · 13.2x8.8</text></g>
           <line x1="24" y1="284.0" x2="384.0" y2="284.0" stroke="var(--line)"/>
           <text x="24" y="304.0" class="sensor-axis">0</text>
           <text x="384.0" y="304.0" text-anchor="end" class="sensor-axis">36mm</text>
@@ -192,8 +198,8 @@
         <span data-sensor-readout-note>传感器规格口径</span>
       </div>
       <div class="sensor-compare" aria-label="传感器面积对比工具">
-        <label>比较 <select data-compare-a><option value="one-inch" data-area="116.16">一英寸</option><option value="l10-used" data-area="173.28">L10 可用</option><option value="m43" data-area="224.90" selected>标准 M43</option><option value="aps-c" data-area="366.60">APS-C</option><option value="full-frame" data-area="864.00">全画幅</option></select></label>
-        <label>相对 <select data-compare-b><option value="one-inch" data-area="116.16">一英寸</option><option value="l10-used" data-area="173.28" selected>L10 可用</option><option value="m43" data-area="224.90">标准 M43</option><option value="aps-c" data-area="366.60">APS-C</option><option value="full-frame" data-area="864.00">全画幅</option></select></label>
+        <div><span>A</span><strong data-compare-a-name>标准 M43</strong></div>
+        <div><span>B</span><strong data-compare-b-name>L10 可用</strong></div>
         <output data-compare-output>A（标准 M43）是 B（L10 可用）的 1.30 倍，面积大约多 30%。</output>
       </div>
       <table><thead><tr><th>规格</th><th>尺寸</th><th>面积</th><th>口径</th></tr></thead><tbody><tr><td>全画幅</td><td>36 x 24 mm</td><td>864 mm2</td><td>常用规格</td></tr><tr><td>APS-C</td><td>23.5 x 15.6 mm</td><td>367 mm2</td><td>常用规格</td></tr><tr><td>标准 M43</td><td>17.3 x 13 mm</td><td>225 mm2</td><td>常用规格</td></tr><tr><td>L10 可用</td><td>15.2 x 11.4 mm</td><td>173 mm2</td><td>推算</td></tr><tr><td>一英寸</td><td>13.2 x 8.8 mm</td><td>116 mm2</td><td>常用规格</td></tr></tbody></table>
@@ -307,7 +313,13 @@
       const size = document.querySelector("[data-sensor-readout-size]");
       const area = document.querySelector("[data-sensor-readout-area]");
       const note = document.querySelector("[data-sensor-readout-note]");
-      if (!buttons.length || !name || !size || !area || !note) return;
+      const compareAName = document.querySelector("[data-compare-a-name]");
+      const compareBName = document.querySelector("[data-compare-b-name]");
+      const output = document.querySelector("[data-compare-output]");
+      if (!buttons.length || !name || !size || !area || !note || !compareAName || !compareBName || !output) return;
+      let compareA = "m43";
+      let compareB = "l10-used";
+      const buttonFor = (id) => buttons.find((button) => button.dataset.sensorTarget === id);
       const selectSensor = (id) => {
         buttons.forEach((button) => {
           const active = button.dataset.sensorTarget === id;
@@ -327,49 +339,51 @@
           label.classList.toggle("is-active", label.dataset.sensorLabel === id);
         });
       };
-      buttons.forEach((button) => {
-        button.addEventListener("click", () => {
-          selectSensor(button.dataset.sensorTarget);
-          const compareA = document.querySelector("[data-compare-a]");
-          if (compareA) {
-            compareA.value = button.dataset.sensorTarget;
-            compareA.dispatchEvent(new Event("change", { bubbles:true }));
-          }
-        });
-      });
-    })();
-    (() => {
-      const a = document.querySelector("[data-compare-a]");
-      const b = document.querySelector("[data-compare-b]");
-      const output = document.querySelector("[data-compare-output]");
-      if (!a || !b || !output) return;
-      const boxes = Array.from(document.querySelectorAll("[data-sensor-box]"));
-      const labels = Array.from(document.querySelectorAll("[data-sensor-label]"));
-      const selected = (select) => select.options[select.selectedIndex];
-      const render = () => {
-        const left = selected(a);
-        const right = selected(b);
-        const leftArea = Number(left.dataset.area);
-        const rightArea = Number(right.dataset.area);
-        if (!leftArea || !rightArea) return;
+      const renderCompare = () => {
+        const aButton = buttonFor(compareA);
+        const bButton = buttonFor(compareB);
+        if (!aButton || !bButton) return;
+        const leftArea = Number(aButton.dataset.area);
+        const rightArea = Number(bButton.dataset.area);
         const ratio = leftArea / rightArea;
         const percent = (ratio - 1) * 100;
         const direction = percent >= 0 ? "大约多" : "大约少";
-        const leftId = a.value;
-        const rightId = b.value;
+        compareAName.textContent = aButton.dataset.name;
+        compareBName.textContent = bButton.dataset.name;
+        output.textContent = `A（${aButton.dataset.name}）是 B（${bButton.dataset.name}）的 ${ratio.toFixed(2)} 倍，面积${direction} ${Math.abs(percent).toFixed(0)}%。`;
+        buttons.forEach((button) => {
+          const id = button.dataset.sensorTarget;
+          const marker = button.querySelector("[data-compare-marker]");
+          button.classList.toggle("is-compare-a", id === compareA);
+          button.classList.toggle("is-compare-b", id === compareB);
+          if (marker) marker.textContent = id === compareA ? "A" : id === compareB ? "B" : "";
+        });
         boxes.forEach((box) => {
-          box.classList.toggle("is-compare-a", box.dataset.sensorBox === leftId);
-          box.classList.toggle("is-compare-b", box.dataset.sensorBox === rightId);
+          box.classList.toggle("is-compare-a", box.dataset.sensorBox === compareA);
+          box.classList.toggle("is-compare-b", box.dataset.sensorBox === compareB);
         });
         labels.forEach((label) => {
-          label.classList.toggle("is-compare-a", label.dataset.sensorLabel === leftId);
-          label.classList.toggle("is-compare-b", label.dataset.sensorLabel === rightId);
+          label.classList.toggle("is-compare-a", label.dataset.sensorLabel === compareA);
+          label.classList.toggle("is-compare-b", label.dataset.sensorLabel === compareB);
         });
-        output.textContent = `A（${left.text}）是 B（${right.text}）的 ${ratio.toFixed(2)} 倍，面积${direction} ${Math.abs(percent).toFixed(0)}%。`;
       };
-      a.addEventListener("change", render);
-      b.addEventListener("change", render);
-      render();
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const id = button.dataset.sensorTarget;
+          selectSensor(id);
+          if (id === compareA) {
+            compareA = compareB;
+            compareB = id;
+          } else {
+            compareA = id;
+          }
+          if (compareA === compareB) {
+            compareB = buttons.find((item) => item.dataset.sensorTarget !== compareA)?.dataset.sensorTarget || compareB;
+          }
+          renderCompare();
+        });
+      });
+      renderCompare();
     })();
   </script>
 </body>

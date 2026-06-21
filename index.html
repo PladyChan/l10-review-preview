@@ -80,8 +80,12 @@
     .sensor-svg text { fill:var(--muted); font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; }
     .sensor-box { stroke:var(--faint); stroke-width:1.5; opacity:.68; transition:stroke .12s linear, opacity .12s linear, stroke-width .12s linear; }
     .sensor-box.is-active { stroke:var(--accent); stroke-width:3; opacity:1; }
+    .sensor-box.is-compare-a { stroke:var(--accent); stroke-width:3.5; opacity:1; }
+    .sensor-box.is-compare-b { stroke:var(--ok); stroke-width:2.5; stroke-dasharray:7 5; opacity:1; }
     .sensor-label { opacity:.42; transition:opacity .12s linear, fill .12s linear; }
     .sensor-label.is-active { fill:var(--text); opacity:1; }
+    .sensor-label.is-compare-a { fill:var(--accent); opacity:1; }
+    .sensor-label.is-compare-b { fill:var(--text); opacity:1; }
     .sensor-axis { text-transform:uppercase; }
     .sensor-readout { display:grid; grid-template-columns:1fr auto auto auto; gap:12px; align-items:center; border:1px solid var(--line); background:var(--surface); padding:10px 12px; margin-bottom:10px; }
     .sensor-readout strong { font-family:var(--font-display); font-size:20px; line-height:1; }
@@ -91,6 +95,7 @@
     .sensor-compare label:nth-child(2) { border-right:0; }
     .sensor-compare select { width:100%; border:1px solid var(--line); border-radius:0; background:var(--bg); color:var(--text); padding:8px; font:inherit; text-transform:none; }
     .sensor-compare output { grid-column:1 / -1; border-top:1px solid var(--line); padding:12px; color:var(--text); font-family:var(--font-display); font-size:18px; line-height:1.35; }
+    .sensor-compare output::before { content:"A/B "; color:var(--accent); font-family:var(--font-mono); font-size:11px; letter-spacing:.06em; vertical-align:2px; }
     figcaption { margin-top:8px; color:var(--muted); font-family:var(--font-mono); font-size:11px; line-height:1.6; }
     .footer-note { color:var(--muted); font-family:var(--font-mono); font-size:11px; text-align:center; margin-top:24px; }
     @media (max-width:720px) {
@@ -189,7 +194,7 @@
       <div class="sensor-compare" aria-label="传感器面积对比工具">
         <label>比较 <select data-compare-a><option value="one-inch" data-area="116.16">一英寸</option><option value="l10-used" data-area="173.28">L10 可用</option><option value="m43" data-area="224.90" selected>标准 M43</option><option value="aps-c" data-area="366.60">APS-C</option><option value="full-frame" data-area="864.00">全画幅</option></select></label>
         <label>相对 <select data-compare-b><option value="one-inch" data-area="116.16">一英寸</option><option value="l10-used" data-area="173.28" selected>L10 可用</option><option value="m43" data-area="224.90">标准 M43</option><option value="aps-c" data-area="366.60">APS-C</option><option value="full-frame" data-area="864.00">全画幅</option></select></label>
-        <output data-compare-output>标准 M43 是 L10 可用的 1.30 倍，面积大约多 30%。</output>
+        <output data-compare-output>A（标准 M43）是 B（L10 可用）的 1.30 倍，面积大约多 30%。</output>
       </div>
       <table><thead><tr><th>规格</th><th>尺寸</th><th>面积</th><th>口径</th></tr></thead><tbody><tr><td>全画幅</td><td>36 x 24 mm</td><td>864 mm2</td><td>常用规格</td></tr><tr><td>APS-C</td><td>23.5 x 15.6 mm</td><td>367 mm2</td><td>常用规格</td></tr><tr><td>标准 M43</td><td>17.3 x 13 mm</td><td>225 mm2</td><td>常用规格</td></tr><tr><td>L10 可用</td><td>15.2 x 11.4 mm</td><td>173 mm2</td><td>推算</td></tr><tr><td>一英寸</td><td>13.2 x 8.8 mm</td><td>116 mm2</td><td>常用规格</td></tr></tbody></table>
     
@@ -323,7 +328,14 @@
         });
       };
       buttons.forEach((button) => {
-        button.addEventListener("click", () => selectSensor(button.dataset.sensorTarget));
+        button.addEventListener("click", () => {
+          selectSensor(button.dataset.sensorTarget);
+          const compareA = document.querySelector("[data-compare-a]");
+          if (compareA) {
+            compareA.value = button.dataset.sensorTarget;
+            compareA.dispatchEvent(new Event("change", { bubbles:true }));
+          }
+        });
       });
     })();
     (() => {
@@ -331,6 +343,8 @@
       const b = document.querySelector("[data-compare-b]");
       const output = document.querySelector("[data-compare-output]");
       if (!a || !b || !output) return;
+      const boxes = Array.from(document.querySelectorAll("[data-sensor-box]"));
+      const labels = Array.from(document.querySelectorAll("[data-sensor-label]"));
       const selected = (select) => select.options[select.selectedIndex];
       const render = () => {
         const left = selected(a);
@@ -341,7 +355,17 @@
         const ratio = leftArea / rightArea;
         const percent = (ratio - 1) * 100;
         const direction = percent >= 0 ? "大约多" : "大约少";
-        output.textContent = `${left.text} 是 ${right.text} 的 ${ratio.toFixed(2)} 倍，面积${direction} ${Math.abs(percent).toFixed(0)}%。`;
+        const leftId = a.value;
+        const rightId = b.value;
+        boxes.forEach((box) => {
+          box.classList.toggle("is-compare-a", box.dataset.sensorBox === leftId);
+          box.classList.toggle("is-compare-b", box.dataset.sensorBox === rightId);
+        });
+        labels.forEach((label) => {
+          label.classList.toggle("is-compare-a", label.dataset.sensorLabel === leftId);
+          label.classList.toggle("is-compare-b", label.dataset.sensorLabel === rightId);
+        });
+        output.textContent = `A（${left.text}）是 B（${right.text}）的 ${ratio.toFixed(2)} 倍，面积${direction} ${Math.abs(percent).toFixed(0)}%。`;
       };
       a.addEventListener("change", render);
       b.addEventListener("change", render);

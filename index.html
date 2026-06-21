@@ -347,6 +347,12 @@
         area.textContent = "-";
         note.textContent = "选择两个规格后显示面积倍数";
       };
+      const clearActive = () => {
+        buttons.forEach((button) => button.classList.remove("is-active"));
+        boxes.forEach((box) => box.classList.remove("is-active"));
+        labels.forEach((label) => label.classList.remove("is-active"));
+        clearReadout();
+      };
       const renderCompare = () => {
         const aButton = compareA ? buttonFor(compareA) : null;
         const bButton = compareB ? buttonFor(compareB) : null;
@@ -383,13 +389,10 @@
           label.classList.toggle("is-compare-a", label.dataset.sensorLabel === compareA);
           label.classList.toggle("is-compare-b", label.dataset.sensorLabel === compareB);
         });
-        if (aButton || bButton) {
-          selectSensor(aButton ? compareA : compareB);
+        if (aButton) {
+          selectSensor(compareA);
         } else {
-          buttons.forEach((button) => button.classList.remove("is-active"));
-          boxes.forEach((box) => box.classList.remove("is-active"));
-          labels.forEach((label) => label.classList.remove("is-active"));
-          clearReadout();
+          clearActive();
         }
       };
       buttons.forEach((button) => {

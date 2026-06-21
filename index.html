@@ -4,56 +4,97 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panasonic Lumix L10 测评阅读版</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      color-scheme: light;
-      --ink: #1d1d1f;
-      --muted: #6e6e73;
-      --line: #d8d8df;
-      --soft: #f5f5f7;
-      --accent: #0f6b57;
+      color-scheme: dark;
+      --bg: #050505;
+      --surface: #0c0c0c;
+      --surface-2: #151515;
+      --ink: #f2f2f2;
+      --muted: #8a8a8a;
+      --line: #2a2a2a;
+      --accent: #ff2a2a;
+      --font-display: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --font-mono: "Space Mono", "SFMono-Regular", ui-monospace, monospace;
+      --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     }
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-family: var(--font-body);
       color: var(--ink);
-      background: white;
+      background: var(--bg);
       line-height: 1.7;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 28px 28px;
+      opacity: .35;
     }
     .layout {
       display: grid;
-      grid-template-columns: 280px minmax(0, 1fr);
+      grid-template-columns: 300px minmax(0, 1fr);
       min-height: 100vh;
     }
     aside {
       position: sticky;
       top: 0;
       height: 100vh;
-      padding: 28px 22px;
+      padding: 26px 20px;
       border-right: 1px solid var(--line);
-      background: var(--soft);
+      background: var(--surface);
       overflow: auto;
     }
     .brand {
-      font-weight: 750;
-      font-size: 20px;
-      line-height: 1.25;
-      margin-bottom: 18px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 22px;
+      line-height: 1.08;
+      letter-spacing: 0;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .brand::before {
+      content: "";
+      display: block;
+      width: 34px;
+      height: 10px;
+      margin-bottom: 14px;
+      background: var(--accent);
+    }
+    .meta {
+      margin-bottom: 22px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
     }
     nav a {
       display: block;
-      color: var(--ink);
+      color: var(--muted);
       text-decoration: none;
-      padding: 9px 10px;
-      border-radius: 8px;
-      margin: 2px 0;
-      font-size: 14px;
+      padding: 10px 0;
+      border-top: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: .03em;
     }
-    nav a:hover { background: white; color: var(--accent); }
+    nav a:hover { color: var(--ink); }
     main {
+      position: relative;
       max-width: 980px;
-      padding: 42px 52px 80px;
+      padding: 42px 52px 86px;
     }
     section {
       padding-bottom: 56px;
@@ -62,43 +103,92 @@
     }
     .file-name {
       color: var(--muted);
-      font-size: 13px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
       margin-bottom: 14px;
     }
-    h1 { font-size: 34px; line-height: 1.22; margin: 0 0 20px; }
-    h2 { font-size: 25px; margin: 34px 0 12px; border-top: 1px solid var(--line); padding-top: 22px; }
-    h3 { font-size: 19px; margin: 26px 0 8px; }
+    h1 {
+      font-family: var(--font-display);
+      font-size: 42px;
+      line-height: 1.08;
+      letter-spacing: 0;
+      margin: 0 0 24px;
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-size: 26px;
+      line-height: 1.2;
+      letter-spacing: 0;
+      margin: 42px 0 14px;
+      border-top: 1px solid var(--line);
+      padding-top: 24px;
+    }
+    h2::before {
+      content: "";
+      display: inline-block;
+      width: 18px;
+      height: 8px;
+      margin-right: 10px;
+      background: var(--accent);
+      vertical-align: middle;
+    }
+    h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      line-height: 1.35;
+      margin: 30px 0 10px;
+    }
     h4 { font-size: 16px; margin: 22px 0 6px; color: var(--muted); }
     p, li { font-size: 16px; }
+    p { margin: 0 0 14px; color: var(--muted); }
+    li { margin: 6px 0; color: var(--muted); }
+    strong { color: var(--ink); }
     ul, ol { padding-left: 1.4em; }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 14px 0 24px;
+      margin: 16px 0 28px;
       font-size: 14px;
+      background: var(--surface);
     }
     th, td {
       border: 1px solid var(--line);
-      padding: 9px 10px;
+      padding: 10px 11px;
       vertical-align: top;
     }
-    th { background: var(--soft); text-align: left; }
+    th {
+      background: var(--surface-2);
+      text-align: left;
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    td { color: var(--muted); }
     code {
-      background: var(--soft);
+      background: var(--surface-2);
       padding: 1px 5px;
-      border-radius: 5px;
+      border-radius: 0;
+      color: var(--ink);
+      font-family: var(--font-mono);
     }
     blockquote {
       margin: 16px 0;
       padding: 12px 16px;
+      border: 1px solid var(--line);
       border-left: 4px solid var(--accent);
-      background: var(--soft);
-      color: #303033;
+      background: var(--surface);
+      color: var(--ink);
     }
     @media (max-width: 820px) {
       .layout { display: block; }
       aside { position: relative; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
       main { padding: 28px 18px 60px; }
+      h1 { font-size: 32px; }
+      h2 { font-size: 22px; }
       table { display: block; overflow-x: auto; white-space: nowrap; }
     }
   </style>
@@ -107,6 +197,7 @@
   <div class="layout">
     <aside>
       <div class="brand">Panasonic Lumix L10<br>测评阅读版</div>
+      <div class="meta">Nothing-inspired full article</div>
       <nav><a href="#sec-0">测评对比草稿</a></nav>
     </aside>
     <main><section id="sec-0"><div class="file-name">L10_测评对比草稿.md</div><h1>Panasonic Lumix L10 测评草稿</h1>

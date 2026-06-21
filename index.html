@@ -68,10 +68,24 @@
     th,td { border-bottom:1px solid var(--line); padding:10px 0; text-align:left; vertical-align:top; font-size:14px; }
     th { color:var(--text); font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; }
     td { color:var(--muted); padding-right:12px; }
+    .sensor-controls { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); border:1px solid var(--line); margin-top:14px; background:var(--surface-2); }
+    .sensor-button { min-width:0; border:0; border-right:1px solid var(--line); border-radius:0; background:transparent; color:var(--muted); padding:10px; text-align:left; cursor:pointer; }
+    .sensor-button:last-child { border-right:0; }
+    .sensor-button strong { display:block; font-family:var(--font-display); font-size:15px; line-height:1.1; color:var(--text); }
+    .sensor-button span { display:block; margin-top:5px; font-family:var(--font-mono); font-size:10px; color:var(--muted); }
+    .sensor-button.is-active { background:var(--accent); color:#fff; }
+    .sensor-button.is-active strong,.sensor-button.is-active span { color:#fff; }
     .sensor-figure { margin:16px 0 14px; }
     .sensor-svg { display:block; width:100%; height:auto; background:var(--surface); }
     .sensor-svg text { fill:var(--muted); font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; }
+    .sensor-box { stroke:var(--faint); stroke-width:1.5; opacity:.68; transition:stroke .12s linear, opacity .12s linear, stroke-width .12s linear; }
+    .sensor-box.is-active { stroke:var(--accent); stroke-width:3; opacity:1; }
+    .sensor-label { opacity:.42; transition:opacity .12s linear, fill .12s linear; }
+    .sensor-label.is-active { fill:var(--text); opacity:1; }
     .sensor-axis { text-transform:uppercase; }
+    .sensor-readout { display:grid; grid-template-columns:1fr auto auto; gap:12px; align-items:center; border:1px solid var(--line); background:var(--surface); padding:10px 12px; margin-bottom:10px; }
+    .sensor-readout strong { font-family:var(--font-display); font-size:20px; line-height:1; }
+    .sensor-readout span { font-family:var(--font-mono); color:var(--muted); font-size:11px; }
     figcaption { margin-top:8px; color:var(--muted); font-family:var(--font-mono); font-size:11px; line-height:1.6; }
     .footer-note { color:var(--muted); font-family:var(--font-mono); font-size:11px; text-align:center; margin-top:24px; }
     @media (max-width:720px) {
@@ -81,6 +95,10 @@
       section { padding:20px 0; }
       .readout strong { font-size:18px; }
       .readout div { padding:9px 10px; }
+      .sensor-controls { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .sensor-button:nth-child(2) { border-right:0; }
+      .sensor-button:nth-child(-n+2) { border-bottom:1px solid var(--line); }
+      .sensor-readout { grid-template-columns:1fr; gap:5px; }
       .tab-panel { padding:13px; }
       .tab-button { font-size:12px; padding:6px 10px; }
       th,td { font-size:13px; }
@@ -142,16 +160,24 @@
       <h2>传感器尺寸比例</h2>
       <p>这张图只讲物理尺寸，不直接等同于最终画质。它能帮助解释：L10 的 M43 明显大于一英寸，但也明显小于 APS-C 和全画幅。</p>
       
-      <figure class="sensor-figure">
+      <div class="sensor-controls" aria-label="选择传感器规格">
+        <button class="sensor-button" type="button" data-sensor-target="one-inch" aria-pressed="false" data-name="一英寸" data-size="13.2 x 8.8 mm" data-area="116 mm2"><strong>一英寸</strong><span>13.2 x 8.8 mm</span></button><button class="sensor-button is-active" type="button" data-sensor-target="m43" aria-pressed="true" data-name="L10 / M43" data-size="17.3 x 13 mm" data-area="225 mm2"><strong>L10 / M43</strong><span>17.3 x 13 mm</span></button><button class="sensor-button" type="button" data-sensor-target="aps-c" aria-pressed="false" data-name="APS-C" data-size="23.5 x 15.6 mm" data-area="367 mm2"><strong>APS-C</strong><span>23.5 x 15.6 mm</span></button><button class="sensor-button" type="button" data-sensor-target="full-frame" aria-pressed="false" data-name="全画幅" data-size="36 x 24 mm" data-area="864 mm2"><strong>全画幅</strong><span>36 x 24 mm</span></button>
+      </div>
+      <figure class="sensor-figure" data-sensor-visual>
         <svg class="sensor-svg" viewBox="0 0 410 320" role="img" aria-label="一英寸、M43、APS-C、全画幅传感器尺寸比例图">
           <rect x="0.5" y="0.5" width="409" height="319" fill="none" stroke="var(--line)"/>
-          <g><rect x="24.0" y="26.0" width="360.0" height="240.0" rx="0" fill="none" stroke="#ff2a2a" stroke-width="2" vector-effect="non-scaling-stroke"/><rect x="86.5" y="68.0" width="235.0" height="156.0" rx="0" fill="none" stroke="#f2f2f2" stroke-width="2" vector-effect="non-scaling-stroke"/><rect x="117.5" y="81.0" width="173.0" height="130.0" rx="0" fill="none" stroke="#f2f2f2" stroke-width="2" vector-effect="non-scaling-stroke"/><rect x="138.0" y="102.0" width="132.0" height="88.0" rx="0" fill="none" stroke="#8a8a8a" stroke-width="2" vector-effect="non-scaling-stroke"/></g>
+          <g><rect class="sensor-box" data-sensor-box="full-frame" x="24.0" y="26.0" width="360.0" height="240.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="aps-c" x="86.5" y="68.0" width="235.0" height="156.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box is-active" data-sensor-box="m43" x="117.5" y="81.0" width="173.0" height="130.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="one-inch" x="138.0" y="102.0" width="132.0" height="88.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><text class="sensor-label" data-sensor-label="full-frame" x="32.0" y="43.0">全画幅 · 36x24</text><text class="sensor-label" data-sensor-label="aps-c" x="94.5" y="85.0">APS-C · 23.5x15.6</text><text class="sensor-label is-active" data-sensor-label="m43" x="125.5" y="98.0">L10 / M43 · 17.3x13</text><text class="sensor-label" data-sensor-label="one-inch" x="146.0" y="119.0">一英寸 · 13.2x8.8</text></g>
           <line x1="24" y1="284.0" x2="384.0" y2="284.0" stroke="var(--line)"/>
           <text x="24" y="304.0" class="sensor-axis">0</text>
           <text x="384.0" y="304.0" text-anchor="end" class="sensor-axis">36mm</text>
         </svg>
         <figcaption>按实际毫米尺寸等比例绘制；APS-C 使用常见 1.5x 规格 23.5 x 15.6mm，不代表 Canon 1.6x APS-C。</figcaption>
       </figure>
+      <div class="sensor-readout" aria-live="polite">
+        <strong data-sensor-readout-name>L10 / M43</strong>
+        <span data-sensor-readout-size>17.3 x 13 mm</span>
+        <span data-sensor-readout-area>225 mm2</span>
+      </div>
       <table><thead><tr><th>规格</th><th>尺寸</th><th>面积</th></tr></thead><tbody><tr><td>全画幅</td><td>36 x 24 mm</td><td>864 mm2</td></tr><tr><td>APS-C</td><td>23.5 x 15.6 mm</td><td>367 mm2</td></tr><tr><td>L10 / M43</td><td>17.3 x 13 mm</td><td>225 mm2</td></tr><tr><td>一英寸</td><td>13.2 x 8.8 mm</td><td>116 mm2</td></tr></tbody></table>
     
     </section>
@@ -255,6 +281,36 @@
         });
       });
     });
+    (() => {
+      const buttons = Array.from(document.querySelectorAll("[data-sensor-target]"));
+      const boxes = Array.from(document.querySelectorAll("[data-sensor-box]"));
+      const labels = Array.from(document.querySelectorAll("[data-sensor-label]"));
+      const name = document.querySelector("[data-sensor-readout-name]");
+      const size = document.querySelector("[data-sensor-readout-size]");
+      const area = document.querySelector("[data-sensor-readout-area]");
+      if (!buttons.length || !name || !size || !area) return;
+      const selectSensor = (id) => {
+        buttons.forEach((button) => {
+          const active = button.dataset.sensorTarget === id;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-pressed", active ? "true" : "false");
+          if (active) {
+            name.textContent = button.dataset.name;
+            size.textContent = button.dataset.size;
+            area.textContent = button.dataset.area;
+          }
+        });
+        boxes.forEach((box) => {
+          box.classList.toggle("is-active", box.dataset.sensorBox === id);
+        });
+        labels.forEach((label) => {
+          label.classList.toggle("is-active", label.dataset.sensorLabel === id);
+        });
+      };
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => selectSensor(button.dataset.sensorTarget));
+      });
+    })();
   </script>
 </body>
 </html>

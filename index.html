@@ -7,9 +7,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <script>
+    (() => {
+      try {
+        const saved = localStorage.getItem("l10-theme");
+        if (saved === "dark" || saved === "light") document.documentElement.dataset.theme = saved;
+      } catch (error) {}
+    })();
+  </script>
   <style>
     :root {
-      color-scheme: dark;
+      color-scheme: dark light;
       --bg: #050505;
       --surface: #0c0c0c;
       --surface-2: #151515;
@@ -21,6 +29,40 @@
       --font-display: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
       --font-mono: "Space Mono", "SFMono-Regular", ui-monospace, monospace;
       --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f3f1ea;
+        --surface: #fffdf6;
+        --surface-2: #ece8dd;
+        --ink: #111111;
+        --muted: #6f6b62;
+        --line: #cfc8b8;
+        --accent: #d71920;
+        --ok: #111111;
+      }
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #050505;
+      --surface: #0c0c0c;
+      --surface-2: #151515;
+      --ink: #f2f2f2;
+      --muted: #8a8a8a;
+      --line: #2a2a2a;
+      --accent: #ff2a2a;
+      --ok: #e8e8e8;
+    }
+    :root[data-theme="light"] {
+      color-scheme: light;
+      --bg: #f3f1ea;
+      --surface: #fffdf6;
+      --surface-2: #ece8dd;
+      --ink: #111111;
+      --muted: #6f6b62;
+      --line: #cfc8b8;
+      --accent: #d71920;
+      --ok: #111111;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
@@ -41,6 +83,12 @@
         linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
       background-size: 28px 28px;
       opacity: .35;
+    }
+    :root[data-theme="light"] body::before {
+      background:
+        linear-gradient(rgba(0,0,0,.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.035) 1px, transparent 1px);
+      opacity: .28;
     }
     .layout {
       display: grid;
@@ -80,6 +128,33 @@
       font-size: 11px;
       letter-spacing: .04em;
       text-transform: uppercase;
+    }
+    .theme-toggle {
+      width: 100%;
+      margin: 0 0 18px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      background: var(--surface-2);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .05em;
+      text-align: left;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+    .theme-toggle::before {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-right: 8px;
+      background: var(--accent);
+      vertical-align: 0;
+    }
+    .theme-toggle:hover {
+      border-color: var(--accent);
     }
     nav a {
       display: block;
@@ -451,6 +526,7 @@
     <aside>
       <div class="brand">Panasonic Lumix L10<br>测评阅读版</div>
       <div class="meta">Nothing-inspired full article</div>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深浅色" aria-pressed="false">THEME AUTO</button>
       <nav><a href="#sec-0">测评对比草稿</a></nav>
     </aside>
     <main><section id="sec-0"><div class="file-name">L10_测评对比草稿.md</div><h1>Panasonic Lumix L10 测评草稿</h1>
@@ -676,6 +752,37 @@
 <p>更长远地说，我还是希望松下把 M43 的“小”继续做下去。L10 有完整度，但它也提醒我，M43 真正迷人的方向可能是 GM1 那种短小精悍的小机器，甚至是一台直接和 GR 竞争的小型定焦。L10 把现代 LX100 逻辑补完整了，可我心里还是会想：M43 不应该只追求完整，也应该继续追求极致的小。</p></section></main>
   </div>
   <script>
+    (() => {
+      const root = document.documentElement;
+      const button = document.querySelector("[data-theme-toggle]");
+      if (!button) return;
+      const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+      const currentTheme = () => root.dataset.theme || (systemDark.matches ? "dark" : "light");
+      const hasSavedTheme = () => {
+        try {
+          return Boolean(localStorage.getItem("l10-theme"));
+        } catch (error) {
+          return false;
+        }
+      };
+      const render = () => {
+        const theme = currentTheme();
+        button.textContent = theme === "dark" ? "THEME DARK" : "THEME LIGHT";
+        button.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+      };
+      button.addEventListener("click", () => {
+        const next = currentTheme() === "dark" ? "light" : "dark";
+        root.dataset.theme = next;
+        try {
+          localStorage.setItem("l10-theme", next);
+        } catch (error) {}
+        render();
+      });
+      systemDark.addEventListener("change", () => {
+        if (!hasSavedTheme()) render();
+      });
+      render();
+    })();
     (() => {
       const buttons = Array.from(document.querySelectorAll("[data-sensor-target]"));
       const boxes = Array.from(document.querySelectorAll("[data-sensor-box]"));

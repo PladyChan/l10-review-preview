@@ -83,9 +83,14 @@
     .sensor-label { opacity:.42; transition:opacity .12s linear, fill .12s linear; }
     .sensor-label.is-active { fill:var(--text); opacity:1; }
     .sensor-axis { text-transform:uppercase; }
-    .sensor-readout { display:grid; grid-template-columns:1fr auto auto; gap:12px; align-items:center; border:1px solid var(--line); background:var(--surface); padding:10px 12px; margin-bottom:10px; }
+    .sensor-readout { display:grid; grid-template-columns:1fr auto auto auto; gap:12px; align-items:center; border:1px solid var(--line); background:var(--surface); padding:10px 12px; margin-bottom:10px; }
     .sensor-readout strong { font-family:var(--font-display); font-size:20px; line-height:1; }
     .sensor-readout span { font-family:var(--font-mono); color:var(--muted); font-size:11px; }
+    .sensor-compare { display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--line); background:var(--surface); margin:12px 0 2px; }
+    .sensor-compare label { display:grid; gap:6px; padding:10px; border-right:1px solid var(--line); color:var(--muted); font-family:var(--font-mono); font-size:10px; letter-spacing:.04em; text-transform:uppercase; }
+    .sensor-compare label:nth-child(2) { border-right:0; }
+    .sensor-compare select { width:100%; border:1px solid var(--line); border-radius:0; background:var(--bg); color:var(--text); padding:8px; font:inherit; text-transform:none; }
+    .sensor-compare output { grid-column:1 / -1; border-top:1px solid var(--line); padding:12px; color:var(--text); font-family:var(--font-display); font-size:18px; line-height:1.35; }
     figcaption { margin-top:8px; color:var(--muted); font-family:var(--font-mono); font-size:11px; line-height:1.6; }
     .footer-note { color:var(--muted); font-family:var(--font-mono); font-size:11px; text-align:center; margin-top:24px; }
     @media (max-width:720px) {
@@ -99,6 +104,8 @@
       .sensor-button:nth-child(2) { border-right:0; }
       .sensor-button:nth-child(-n+2) { border-bottom:1px solid var(--line); }
       .sensor-readout { grid-template-columns:1fr; gap:5px; }
+      .sensor-compare { grid-template-columns:1fr; }
+      .sensor-compare label { border-right:0; border-bottom:1px solid var(--line); }
       .tab-panel { padding:13px; }
       .tab-button { font-size:12px; padding:6px 10px; }
       th,td { font-size:13px; }
@@ -158,27 +165,33 @@
     </section>
     <section id="sensor">
       <h2>传感器尺寸比例</h2>
-      <p>这张图只讲物理尺寸，不直接等同于最终画质。它能帮助解释：L10 的 M43 明显大于一英寸，但也明显小于 APS-C 和全画幅。</p>
+      <p>这张图只讲尺寸和面积，不直接等同于最终画质。L10 用的是 4/3 型传感器，但固定镜头成像圈没有覆盖完整标准 M43 面积，所以这里把“L10 可用成像面积”和“标准 M43”分开画。</p>
       
       <div class="sensor-controls" aria-label="选择传感器规格">
-        <button class="sensor-button" type="button" data-sensor-target="one-inch" aria-pressed="false" data-name="一英寸" data-size="13.2 x 8.8 mm" data-area="116 mm2"><strong>一英寸</strong><span>13.2 x 8.8 mm</span></button><button class="sensor-button is-active" type="button" data-sensor-target="m43" aria-pressed="true" data-name="L10 / M43" data-size="17.3 x 13 mm" data-area="225 mm2"><strong>L10 / M43</strong><span>17.3 x 13 mm</span></button><button class="sensor-button" type="button" data-sensor-target="aps-c" aria-pressed="false" data-name="APS-C" data-size="23.5 x 15.6 mm" data-area="367 mm2"><strong>APS-C</strong><span>23.5 x 15.6 mm</span></button><button class="sensor-button" type="button" data-sensor-target="full-frame" aria-pressed="false" data-name="全画幅" data-size="36 x 24 mm" data-area="864 mm2"><strong>全画幅</strong><span>36 x 24 mm</span></button>
+        <button class="sensor-button" type="button" data-sensor-target="one-inch" aria-pressed="false" data-name="一英寸" data-size="13.2 x 8.8 mm" data-area="116 mm2" data-note="传感器规格口径"><strong>一英寸</strong><span>13.2 x 8.8 mm</span></button><button class="sensor-button" type="button" data-sensor-target="l10-used" aria-pressed="false" data-name="L10 可用" data-size="15.2 x 11.4 mm" data-area="173 mm2" data-note="按 20.4MP / 26.5MP 推算"><strong>L10 可用</strong><span>15.2 x 11.4 mm</span></button><button class="sensor-button is-active" type="button" data-sensor-target="m43" aria-pressed="true" data-name="标准 M43" data-size="17.3 x 13 mm" data-area="225 mm2" data-note="传感器规格口径"><strong>标准 M43</strong><span>17.3 x 13 mm</span></button><button class="sensor-button" type="button" data-sensor-target="aps-c" aria-pressed="false" data-name="APS-C" data-size="23.5 x 15.6 mm" data-area="367 mm2" data-note="传感器规格口径"><strong>APS-C</strong><span>23.5 x 15.6 mm</span></button><button class="sensor-button" type="button" data-sensor-target="full-frame" aria-pressed="false" data-name="全画幅" data-size="36 x 24 mm" data-area="864 mm2" data-note="传感器规格口径"><strong>全画幅</strong><span>36 x 24 mm</span></button>
       </div>
       <figure class="sensor-figure" data-sensor-visual>
         <svg class="sensor-svg" viewBox="0 0 410 320" role="img" aria-label="一英寸、M43、APS-C、全画幅传感器尺寸比例图">
           <rect x="0.5" y="0.5" width="409" height="319" fill="none" stroke="var(--line)"/>
-          <g><rect class="sensor-box" data-sensor-box="full-frame" x="24.0" y="26.0" width="360.0" height="240.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="aps-c" x="86.5" y="68.0" width="235.0" height="156.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box is-active" data-sensor-box="m43" x="117.5" y="81.0" width="173.0" height="130.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="one-inch" x="138.0" y="102.0" width="132.0" height="88.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><text class="sensor-label" data-sensor-label="full-frame" x="32.0" y="43.0">全画幅 · 36x24</text><text class="sensor-label" data-sensor-label="aps-c" x="94.5" y="85.0">APS-C · 23.5x15.6</text><text class="sensor-label is-active" data-sensor-label="m43" x="125.5" y="98.0">L10 / M43 · 17.3x13</text><text class="sensor-label" data-sensor-label="one-inch" x="146.0" y="119.0">一英寸 · 13.2x8.8</text></g>
+          <g><rect class="sensor-box" data-sensor-box="full-frame" x="24.0" y="26.0" width="360.0" height="240.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="aps-c" x="86.5" y="68.0" width="235.0" height="156.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box is-active" data-sensor-box="m43" x="117.5" y="81.0" width="173.0" height="130.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="l10-used" x="128.0" y="89.0" width="152.0" height="114.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="one-inch" x="138.0" y="102.0" width="132.0" height="88.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><text class="sensor-label" data-sensor-label="full-frame" x="32.0" y="43.0">全画幅 · 36x24</text><text class="sensor-label" data-sensor-label="aps-c" x="94.5" y="85.0">APS-C · 23.5x15.6</text><text class="sensor-label is-active" data-sensor-label="m43" x="125.5" y="98.0">标准 M43 · 17.3x13</text><text class="sensor-label" data-sensor-label="l10-used" x="136.0" y="106.0">L10 可用 · 15.2x11.4</text><text class="sensor-label" data-sensor-label="one-inch" x="146.0" y="119.0">一英寸 · 13.2x8.8</text></g>
           <line x1="24" y1="284.0" x2="384.0" y2="284.0" stroke="var(--line)"/>
           <text x="24" y="304.0" class="sensor-axis">0</text>
           <text x="384.0" y="304.0" text-anchor="end" class="sensor-axis">36mm</text>
         </svg>
-        <figcaption>按实际毫米尺寸等比例绘制；APS-C 使用常见 1.5x 规格 23.5 x 15.6mm，不代表 Canon 1.6x APS-C。</figcaption>
+        <figcaption>按毫米尺寸等比例绘制。L10 可用面积按 20.4MP 有效照片 / 26.5MP 总像素，从标准 M43 面积推算；不是官方公布的物理尺寸。APS-C 使用常见 1.5x 规格 23.5 x 15.6mm。</figcaption>
       </figure>
       <div class="sensor-readout" aria-live="polite">
-        <strong data-sensor-readout-name>L10 / M43</strong>
+        <strong data-sensor-readout-name>标准 M43</strong>
         <span data-sensor-readout-size>17.3 x 13 mm</span>
         <span data-sensor-readout-area>225 mm2</span>
+        <span data-sensor-readout-note>传感器规格口径</span>
       </div>
-      <table><thead><tr><th>规格</th><th>尺寸</th><th>面积</th></tr></thead><tbody><tr><td>全画幅</td><td>36 x 24 mm</td><td>864 mm2</td></tr><tr><td>APS-C</td><td>23.5 x 15.6 mm</td><td>367 mm2</td></tr><tr><td>L10 / M43</td><td>17.3 x 13 mm</td><td>225 mm2</td></tr><tr><td>一英寸</td><td>13.2 x 8.8 mm</td><td>116 mm2</td></tr></tbody></table>
+      <div class="sensor-compare" aria-label="传感器面积对比工具">
+        <label>比较 <select data-compare-a><option value="one-inch" data-area="116.16">一英寸</option><option value="l10-used" data-area="173.28">L10 可用</option><option value="m43" data-area="224.90" selected>标准 M43</option><option value="aps-c" data-area="366.60">APS-C</option><option value="full-frame" data-area="864.00">全画幅</option></select></label>
+        <label>相对 <select data-compare-b><option value="one-inch" data-area="116.16">一英寸</option><option value="l10-used" data-area="173.28" selected>L10 可用</option><option value="m43" data-area="224.90">标准 M43</option><option value="aps-c" data-area="366.60">APS-C</option><option value="full-frame" data-area="864.00">全画幅</option></select></label>
+        <output data-compare-output>标准 M43 是 L10 可用的 1.30 倍，面积大约多 30%。</output>
+      </div>
+      <table><thead><tr><th>规格</th><th>尺寸</th><th>面积</th><th>口径</th></tr></thead><tbody><tr><td>全画幅</td><td>36 x 24 mm</td><td>864 mm2</td><td>常用规格</td></tr><tr><td>APS-C</td><td>23.5 x 15.6 mm</td><td>367 mm2</td><td>常用规格</td></tr><tr><td>标准 M43</td><td>17.3 x 13 mm</td><td>225 mm2</td><td>常用规格</td></tr><tr><td>L10 可用</td><td>15.2 x 11.4 mm</td><td>173 mm2</td><td>推算</td></tr><tr><td>一英寸</td><td>13.2 x 8.8 mm</td><td>116 mm2</td><td>常用规格</td></tr></tbody></table>
     
     </section>
     <section id="lutstory">
@@ -288,7 +301,8 @@
       const name = document.querySelector("[data-sensor-readout-name]");
       const size = document.querySelector("[data-sensor-readout-size]");
       const area = document.querySelector("[data-sensor-readout-area]");
-      if (!buttons.length || !name || !size || !area) return;
+      const note = document.querySelector("[data-sensor-readout-note]");
+      if (!buttons.length || !name || !size || !area || !note) return;
       const selectSensor = (id) => {
         buttons.forEach((button) => {
           const active = button.dataset.sensorTarget === id;
@@ -298,6 +312,7 @@
             name.textContent = button.dataset.name;
             size.textContent = button.dataset.size;
             area.textContent = button.dataset.area;
+            note.textContent = button.dataset.note;
           }
         });
         boxes.forEach((box) => {
@@ -310,6 +325,27 @@
       buttons.forEach((button) => {
         button.addEventListener("click", () => selectSensor(button.dataset.sensorTarget));
       });
+    })();
+    (() => {
+      const a = document.querySelector("[data-compare-a]");
+      const b = document.querySelector("[data-compare-b]");
+      const output = document.querySelector("[data-compare-output]");
+      if (!a || !b || !output) return;
+      const selected = (select) => select.options[select.selectedIndex];
+      const render = () => {
+        const left = selected(a);
+        const right = selected(b);
+        const leftArea = Number(left.dataset.area);
+        const rightArea = Number(right.dataset.area);
+        if (!leftArea || !rightArea) return;
+        const ratio = leftArea / rightArea;
+        const percent = (ratio - 1) * 100;
+        const direction = percent >= 0 ? "大约多" : "大约少";
+        output.textContent = `${left.text} 是 ${right.text} 的 ${ratio.toFixed(2)} 倍，面积${direction} ${Math.abs(percent).toFixed(0)}%。`;
+      };
+      a.addEventListener("change", render);
+      b.addEventListener("change", render);
+      render();
     })();
   </script>
 </body>

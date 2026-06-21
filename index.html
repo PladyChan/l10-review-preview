@@ -179,7 +179,7 @@
       <p>这张图只讲尺寸和面积，不直接等同于最终画质。L10 用的是 4/3 型传感器，但固定镜头成像圈没有覆盖完整标准 M43 面积，所以这里把“L10 可用成像面积”和“标准 M43”分开画。</p>
       
       <div class="sensor-controls" aria-label="选择传感器规格">
-        <button class="sensor-button" type="button" data-sensor-target="one-inch" aria-pressed="false" data-name="一英寸" data-size="13.2 x 8.8 mm" data-area="116 mm2" data-note="传感器规格口径"><em data-compare-marker></em><strong>一英寸</strong><span>13.2 x 8.8 mm</span></button><button class="sensor-button is-compare-b" type="button" data-sensor-target="l10-used" aria-pressed="false" data-name="L10 可用" data-size="15.2 x 11.4 mm" data-area="173 mm2" data-note="按 20.4MP / 26.5MP 推算"><em data-compare-marker>B</em><strong>L10 可用</strong><span>15.2 x 11.4 mm</span></button><button class="sensor-button is-active is-compare-a" type="button" data-sensor-target="m43" aria-pressed="true" data-name="标准 M43" data-size="17.3 x 13 mm" data-area="225 mm2" data-note="传感器规格口径"><em data-compare-marker>A</em><strong>标准 M43</strong><span>17.3 x 13 mm</span></button><button class="sensor-button" type="button" data-sensor-target="aps-c" aria-pressed="false" data-name="APS-C" data-size="23.5 x 15.6 mm" data-area="367 mm2" data-note="传感器规格口径"><em data-compare-marker></em><strong>APS-C</strong><span>23.5 x 15.6 mm</span></button><button class="sensor-button" type="button" data-sensor-target="full-frame" aria-pressed="false" data-name="全画幅" data-size="36 x 24 mm" data-area="864 mm2" data-note="传感器规格口径"><em data-compare-marker></em><strong>全画幅</strong><span>36 x 24 mm</span></button>
+        <button class="sensor-button" type="button" data-sensor-target="one-inch" aria-pressed="false" data-name="一英寸" data-size="13.2 x 8.8 mm" data-area="116.16" data-note="传感器规格口径"><em data-compare-marker></em><strong>一英寸</strong><span>13.2 x 8.8 mm</span></button><button class="sensor-button is-compare-b" type="button" data-sensor-target="l10-used" aria-pressed="false" data-name="L10 可用" data-size="15.2 x 11.4 mm" data-area="173.28" data-note="按 20.4MP / 26.5MP 推算"><em data-compare-marker>B</em><strong>L10 可用</strong><span>15.2 x 11.4 mm</span></button><button class="sensor-button is-active is-compare-a" type="button" data-sensor-target="m43" aria-pressed="true" data-name="标准 M43" data-size="17.3 x 13 mm" data-area="224.90" data-note="传感器规格口径"><em data-compare-marker>A</em><strong>标准 M43</strong><span>17.3 x 13 mm</span></button><button class="sensor-button" type="button" data-sensor-target="aps-c" aria-pressed="false" data-name="APS-C" data-size="23.5 x 15.6 mm" data-area="366.60" data-note="传感器规格口径"><em data-compare-marker></em><strong>APS-C</strong><span>23.5 x 15.6 mm</span></button><button class="sensor-button" type="button" data-sensor-target="full-frame" aria-pressed="false" data-name="全画幅" data-size="36 x 24 mm" data-area="864.00" data-note="传感器规格口径"><em data-compare-marker></em><strong>全画幅</strong><span>36 x 24 mm</span></button>
       </div>
       <figure class="sensor-figure" data-sensor-visual>
         <svg class="sensor-svg" viewBox="0 0 410 320" role="img" aria-label="一英寸、M43、APS-C、全画幅传感器尺寸比例图">
@@ -317,18 +317,16 @@
       const compareBName = document.querySelector("[data-compare-b-name]");
       const output = document.querySelector("[data-compare-output]");
       if (!buttons.length || !name || !size || !area || !note || !compareAName || !compareBName || !output) return;
-      let compareA = "m43";
-      let compareB = "l10-used";
+      let selectedSensors = ["m43", "l10-used"];
       const buttonFor = (id) => buttons.find((button) => button.dataset.sensorTarget === id);
       const selectSensor = (id) => {
         buttons.forEach((button) => {
           const active = button.dataset.sensorTarget === id;
           button.classList.toggle("is-active", active);
-          button.setAttribute("aria-pressed", active ? "true" : "false");
           if (active) {
             name.textContent = button.dataset.name;
             size.textContent = button.dataset.size;
-            area.textContent = button.dataset.area;
+            area.textContent = `${Number(button.dataset.area).toFixed(0)} mm2`;
             note.textContent = button.dataset.note;
           }
         });
@@ -339,23 +337,38 @@
           label.classList.toggle("is-active", label.dataset.sensorLabel === id);
         });
       };
+      const clearReadout = () => {
+        name.textContent = "未选择";
+        size.textContent = "点击上方规格";
+        area.textContent = "-";
+        note.textContent = "选择两个规格后显示面积倍数";
+      };
       const renderCompare = () => {
-        const aButton = buttonFor(compareA);
-        const bButton = buttonFor(compareB);
-        if (!aButton || !bButton) return;
-        const leftArea = Number(aButton.dataset.area);
-        const rightArea = Number(bButton.dataset.area);
-        const ratio = leftArea / rightArea;
-        const percent = (ratio - 1) * 100;
-        const direction = percent >= 0 ? "大约多" : "大约少";
-        compareAName.textContent = aButton.dataset.name;
-        compareBName.textContent = bButton.dataset.name;
-        output.textContent = `A（${aButton.dataset.name}）是 B（${bButton.dataset.name}）的 ${ratio.toFixed(2)} 倍，面积${direction} ${Math.abs(percent).toFixed(0)}%。`;
+        const compareA = selectedSensors[0] || "";
+        const compareB = selectedSensors[1] || "";
+        const aButton = compareA ? buttonFor(compareA) : null;
+        const bButton = compareB ? buttonFor(compareB) : null;
+        compareAName.textContent = aButton ? aButton.dataset.name : "未选择";
+        compareBName.textContent = bButton ? bButton.dataset.name : "未选择";
+        if (aButton && bButton) {
+          const leftArea = Number(aButton.dataset.area);
+          const rightArea = Number(bButton.dataset.area);
+          const ratio = leftArea / rightArea;
+          const percent = (ratio - 1) * 100;
+          const direction = percent >= 0 ? "大约多" : "大约少";
+          output.textContent = `A（${aButton.dataset.name}）是 B（${bButton.dataset.name}）的 ${ratio.toFixed(2)} 倍，面积${direction} ${Math.abs(percent).toFixed(0)}%。`;
+        } else if (aButton) {
+          output.textContent = `A（${aButton.dataset.name}）已选中，再点一个规格作为 B 进行对比。`;
+        } else {
+          output.textContent = "点击上方规格选择 A，再点击另一个规格选择 B。再次点击同一个规格可取消选中。";
+        }
         buttons.forEach((button) => {
           const id = button.dataset.sensorTarget;
           const marker = button.querySelector("[data-compare-marker]");
+          const selected = id === compareA || id === compareB;
           button.classList.toggle("is-compare-a", id === compareA);
           button.classList.toggle("is-compare-b", id === compareB);
+          button.setAttribute("aria-pressed", selected ? "true" : "false");
           if (marker) marker.textContent = id === compareA ? "A" : id === compareB ? "B" : "";
         });
         boxes.forEach((box) => {
@@ -366,19 +379,24 @@
           label.classList.toggle("is-compare-a", label.dataset.sensorLabel === compareA);
           label.classList.toggle("is-compare-b", label.dataset.sensorLabel === compareB);
         });
+        if (aButton) {
+          selectSensor(compareA);
+        } else {
+          buttons.forEach((button) => button.classList.remove("is-active"));
+          boxes.forEach((box) => box.classList.remove("is-active"));
+          labels.forEach((label) => label.classList.remove("is-active"));
+          clearReadout();
+        }
       };
       buttons.forEach((button) => {
         button.addEventListener("click", () => {
           const id = button.dataset.sensorTarget;
-          selectSensor(id);
-          if (id === compareA) {
-            compareA = compareB;
-            compareB = id;
+          if (selectedSensors.includes(id)) {
+            selectedSensors = selectedSensors.filter((item) => item !== id);
+          } else if (selectedSensors.length < 2) {
+            selectedSensors.push(id);
           } else {
-            compareA = id;
-          }
-          if (compareA === compareB) {
-            compareB = buttons.find((item) => item.dataset.sensorTarget !== compareA)?.dataset.sensorTarget || compareB;
+            selectedSensors = [id, selectedSensors[0]];
           }
           renderCompare();
         });

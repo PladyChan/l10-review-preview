@@ -320,7 +320,8 @@
       const compareBName = document.querySelector("[data-compare-b-name]");
       const output = document.querySelector("[data-compare-output]");
       if (!buttons.length || !name || !size || !area || !note || !compareAName || !compareBName || !output) return;
-      let selectedSensors = ["m43", "l10-used"];
+      let compareA = "m43";
+      let compareB = "l10-used";
       const buttonFor = (id) => buttons.find((button) => button.dataset.sensorTarget === id);
       const selectSensor = (id) => {
         buttons.forEach((button) => {
@@ -347,8 +348,6 @@
         note.textContent = "选择两个规格后显示面积倍数";
       };
       const renderCompare = () => {
-        const compareA = selectedSensors[0] || "";
-        const compareB = selectedSensors[1] || "";
         const aButton = compareA ? buttonFor(compareA) : null;
         const bButton = compareB ? buttonFor(compareB) : null;
         compareAName.textContent = aButton ? aButton.dataset.name : "未选择";
@@ -362,6 +361,8 @@
           output.textContent = `A（${aButton.dataset.name}）是 B（${bButton.dataset.name}）的 ${ratio.toFixed(2)} 倍，面积${direction} ${Math.abs(percent).toFixed(0)}%。`;
         } else if (aButton) {
           output.textContent = `A（${aButton.dataset.name}）已选中，再点一个规格作为 B 进行对比。`;
+        } else if (bButton) {
+          output.textContent = `B（${bButton.dataset.name}）已选中，再点一个规格作为 A 进行对比。`;
         } else {
           output.textContent = "点击上方规格选择 A，再点击另一个规格选择 B。再次点击同一个规格可取消选中。";
         }
@@ -382,8 +383,8 @@
           label.classList.toggle("is-compare-a", label.dataset.sensorLabel === compareA);
           label.classList.toggle("is-compare-b", label.dataset.sensorLabel === compareB);
         });
-        if (aButton) {
-          selectSensor(compareA);
+        if (aButton || bButton) {
+          selectSensor(aButton ? compareA : compareB);
         } else {
           buttons.forEach((button) => button.classList.remove("is-active"));
           boxes.forEach((box) => box.classList.remove("is-active"));
@@ -394,12 +395,16 @@
       buttons.forEach((button) => {
         button.addEventListener("click", () => {
           const id = button.dataset.sensorTarget;
-          if (selectedSensors.includes(id)) {
-            selectedSensors = selectedSensors.filter((item) => item !== id);
-          } else if (selectedSensors.length < 2) {
-            selectedSensors.push(id);
+          if (id === compareA) {
+            compareA = "";
+          } else if (id === compareB) {
+            compareB = "";
+          } else if (!compareA) {
+            compareA = id;
+          } else if (!compareB) {
+            compareB = id;
           } else {
-            selectedSensors = [id, selectedSensors[0]];
+            compareA = id;
           }
           renderCompare();
         });

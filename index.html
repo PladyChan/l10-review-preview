@@ -496,6 +496,32 @@
       letter-spacing: .06em;
       vertical-align: 2px;
     }
+    .aspect-module {
+      border-left-color: var(--ok);
+    }
+    .aspect-figure {
+      margin: 16px 0 14px;
+    }
+    .aspect-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: var(--surface);
+    }
+    .aspect-svg text {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .04em;
+    }
+    .image-circle {
+      opacity: .85;
+    }
+    .aspect-label {
+      font-weight: 700;
+    }
+    .aspect-circle-label {
+      fill: var(--muted);
+    }
     figcaption {
       margin-top: 8px;
       color: var(--muted);
@@ -584,9 +610,6 @@
     <p>L10 的传感器位置其实很清楚：它比一英寸大一档，但不是碾压；比标准 M43 小一圈；和 APS-C 差距明显；和全画幅差距更大。所以 L10 不能靠“大底”来讲优势，它真正要讲的是 24-75mm 光学变焦、EVF、Real Time LUT 和完整相机体验。</p>
   </div>
   <table><thead><tr><th>规格</th><th>尺寸</th><th>面积</th><th>口径</th></tr></thead><tbody><tr><td>全画幅</td><td>36 x 24 mm</td><td>864.00 mm²</td><td>常用规格</td></tr><tr><td>APS-C</td><td>23.5 x 15.6 mm</td><td>366.60 mm²</td><td>常用规格</td></tr><tr><td>标准 M43</td><td>17.3 x 13 mm</td><td>224.90 mm²</td><td>常用规格</td></tr><tr><td>L10 可用</td><td>15.2 x 11.4 mm</td><td>173.28 mm²</td><td>推算</td></tr><tr><td>一英寸</td><td>13.2 x 8.8 mm</td><td>116.16 mm²</td><td>常用规格</td></tr></tbody></table>
-  <h3>L10 四个内置比例</h3>
-  <p>下面这张表按 20.4MP 有效输出、多比例成像逻辑和同一像素密度推算。4:3、3:2、16:9 不是简单从 4:3 裁掉边缘；1:1 则更接近从 4:3 高度裁出正方形。</p>
-  <table><thead><tr><th>比例</th><th>分辨率</th><th>约像素</th><th>约使用尺寸</th><th>约面积</th><th>相对 4:3</th><th>相对标准 M43</th></tr></thead><tbody><tr><td>4:3</td><td>5184 x 3888</td><td>20.2MP</td><td>15.2 x 11.4 mm</td><td>173 mm²</td><td>100.0%</td><td>77.0%</td></tr><tr><td>3:2</td><td>5392 x 3600</td><td>19.4MP</td><td>15.8 x 10.6 mm</td><td>167 mm²</td><td>96.7%</td><td>74.5%</td></tr><tr><td>16:9</td><td>5632 x 3168</td><td>17.8MP</td><td>16.5 x 9.3 mm</td><td>153 mm²</td><td>88.6%</td><td>68.2%</td></tr><tr><td>1:1</td><td>3888 x 3888</td><td>15.1MP</td><td>11.4 x 11.4 mm</td><td>130 mm²</td><td>75.0%</td><td>57.8%</td></tr></tbody></table>
 
 </aside>
 
@@ -596,6 +619,27 @@
 <p>对应面积也很直观：全画幅 36 x 24 = 864mm2；APS-C 23.5 x 15.6 = 366.6mm2；标准 M43 17.3 x 13 = 224.9mm2；L10 可用 15.2 x 11.4 = 173.28mm2；一英寸 13.2 x 8.8 = 116.16mm2。</p>
 <p>L10 的传感器位置其实很清楚：它比一英寸大一档，但不是碾压；比标准 M43 小一圈；和 APS-C 差距明显；和全画幅差距更大。</p>
 <p>所以 L10 不能靠“大底”来讲优势。它真正要讲的是 24-75mm 光学变焦、EVF、Real Time LUT 和完整相机体验。</p>
+
+<aside class="insert-module aspect-module" id="visual-aspect">
+  <div class="module-kicker">ASPECT TOOL / L10</div>
+  <h3>内置比例面积示意：矩形不是同一个 4:3 裁切</h3>
+  <p>这张图只画 L10 自己的四个内置比例。数据口径：以 4:3 的 5184 x 3888 和约 15.2 x 11.4mm 为基准，按像素宽高比例反推其他比例的使用尺寸；它是基于当前规格和同像素密度的估算，不是官方公布的物理开窗尺寸。</p>
+  <figure class="aspect-figure">
+    <svg class="aspect-svg" viewBox="0 0 420 340" role="img" aria-label="L10 四个内置画幅比例和镜头像场圆示意">
+      <rect x="0.5" y="0.5" width="419" height="339" fill="none" stroke="var(--line)"/>
+      <circle class="image-circle" cx="210.0" cy="160.0" r="152.1" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 4"/>
+      <text class="aspect-circle-label" x="210.0" y="332.1" text-anchor="middle">估算镜头像场圆：直径约 19.01mm</text>
+      <rect class="aspect-rect aspect-43" x="88.4" y="68.8" width="243.2" height="182.4" fill="none" stroke="var(--accent)" stroke-width="3"  vector-effect="non-scaling-stroke"/><rect class="aspect-rect aspect-32" x="83.5" y="75.6" width="253.0" height="168.9" fill="none" stroke="var(--ok)" stroke-width="2" stroke-dasharray="8 5" vector-effect="non-scaling-stroke"/><rect class="aspect-rect aspect-169" x="77.9" y="85.7" width="264.2" height="148.6" fill="none" stroke="#9a9a9a" stroke-width="2" stroke-dasharray="8 5" vector-effect="non-scaling-stroke"/><rect class="aspect-rect aspect-11" x="118.8" y="68.8" width="182.4" height="182.4" fill="none" stroke="#f2f2f2" stroke-width="2" stroke-dasharray="8 5" vector-effect="non-scaling-stroke"/>
+      <text class="aspect-label" x="95.4" y="84.8" fill="var(--accent)">4:3</text><text class="aspect-label" x="90.5" y="93.6" fill="var(--ok)">3:2</text><text class="aspect-label" x="84.9" y="105.7" fill="#9a9a9a">16:9</text><text class="aspect-label" x="125.8" y="90.8" fill="#f2f2f2">1:1</text>
+    </svg>
+    <figcaption>圆形表示镜头至少需要覆盖四个比例里最大的对角线，约等于 3:2 的 19.01mm。实际镜头像场通常会留余量，这里只用于解释多画幅取景关系。</figcaption>
+  </figure>
+  <table><thead><tr><th>比例</th><th>分辨率</th><th>约像素</th><th>约使用尺寸</th><th>约面积</th><th>约对角线</th><th>相对 4:3</th><th>相对标准 M43</th></tr></thead><tbody><tr><td>4:3</td><td>5184 x 3888</td><td>20.2MP</td><td>15.20 x 11.40 mm</td><td>173.28 mm²</td><td>19.00 mm</td><td>100.0%</td><td>77.0%</td></tr><tr><td>3:2</td><td>5392 x 3600</td><td>19.4MP</td><td>15.81 x 10.56 mm</td><td>166.88 mm²</td><td>19.01 mm</td><td>96.3%</td><td>74.2%</td></tr><tr><td>16:9</td><td>5632 x 3168</td><td>17.8MP</td><td>16.51 x 9.29 mm</td><td>153.39 mm²</td><td>18.95 mm</td><td>88.5%</td><td>68.2%</td></tr><tr><td>1:1</td><td>3888 x 3888</td><td>15.1MP</td><td>11.40 x 11.40 mm</td><td>129.96 mm²</td><td>16.12 mm</td><td>75.0%</td><td>57.8%</td></tr></tbody></table>
+</aside>
+
+<h3>内置比例：不是简单裁切</h3>
+<p>L10 的 4:3、3:2、16:9、1:1 不是同一个 4:3 画面简单裁掉上下或左右。按 4:3 的 5184 x 3888 和约 15.2 x 11.4mm 作为基准反推，3:2 和 16:9 会用到更宽的横向范围，1:1 则更接近从 4:3 高度里取正方形。</p>
+<p>这也是多画幅路线的意义：它不是让所有比例共用同一个最大矩形，而是在镜头可覆盖的像场圆里，为不同画幅比例安排不同的有效取景范围。</p>
 <h2>03 血统和情绪</h2>
 <h3>产品血统：LX3 / LX5 / LX100 / Type109 到 L10</h3>
 <p>L10 不是凭空出现的复古小相机。它可以接到 LX3、LX5、LX100、Leica D-Lux Type109 这一条高阶便携机脉络里：固定镜头、直接操控、相对紧凑的机身，以及一台机器解决大部分日常题材的野心。</p>
@@ -621,6 +665,7 @@
 <p>所以 S9 是上限，L10 是更低决策的随身方案。</p>
 <h3>L10 vs GR4：纯粹和完整</h3>
 <p>GR4 代表几乎没有竞品的 28mm 口袋 APS-C。它的价值不是“什么都能拍”，而是把极致口袋扫街这件事做得非常纯粹：小、薄、快、隐蔽，28mm 也足够明确。</p>
+<p>价格上也要按今天的中国市场重新看。按理光映像 2026 年 7 月 1 日调整后的官方建议零售价，RICOH GR IV 是 9799 元，GR IV HDF 是 10399 元，GR IV Monochrome 是 13799 元。GR4 已经不是早年 GR 那种“相对便宜的 APS-C 口袋机”印象，而是明确进入万元级随身机语境。实际成交价要看当日国行和电商渠道，但它的稀缺性让它不像普通相机那样容易按降价逻辑判断。</p>
 <p>L10 不是这种机器。508g、镜头凸出、需要挂脖或放小包，它不能按 GR 的携带逻辑判断。但 L10 有 24-75mm。它不是 28mm 的纯粹，而是环境、人像、静物、旅行细节都能覆盖的完整。</p>
 <p>GR 是纯粹，L10 是完整。</p>
 <h3>L10 vs X100VI：颜值、高像素定焦裁切和真实光学变焦</h3>
@@ -715,7 +760,7 @@
 <p>L10 最尴尬的对手可能不是 GR4、X-M5 或手机，而是松下自己的 S9。</p>
 <p>S9 是全幅，画质、高感、宽容度、虚化上限都更高。S9 + 40mm F2 的人像质感明显强过 L10，S9 + 18-40mm 也能组成很轻的全幅旅行组合。两台机器又都在讲 Real Time LUT，确实会形成内部定位重叠。</p>
 <p>但 L10 不是替代 S9。它有 EVF、固定 24-75mm、热靴和开机就是完整焦段的低决策体验。S9 是全幅系统入口，L10 是松下体系里的另一种随身方案：画质上限低一些，但出门前少想一些。</p>
-<p>L10 也不是 GR4 的直接竞品。GR 是例外，因为 GR 几乎没有竞品，不适合按普通相机降价逻辑判断。L10 可能也不是首发最香的机器，它更像生命周期价值会慢慢显现的产品：价格回落、固件成熟、LUT 生态和用户样片积累后，才更容易进入真香点。</p>
+<p>L10 也不是 GR4 的直接竞品。GR 是例外，因为 GR 几乎没有竞品；即使 GR IV 的中国官方建议零售价已经到 9799 元，GR IV HDF 到 10399 元，它仍然很难按普通相机降价逻辑判断。L10 不一样，它可能不是首发最香的机器，更像生命周期价值会慢慢显现的产品：价格回落、固件成熟、LUT 生态和用户样片积累后，才更容易进入真香点。</p>
 <p>最终口径很简单：L10 不是最小，不是最强，也不是最便宜。它不是靠传感器碾压手机，也不是为了替代 GR、S9 或 X-M5。它的价值是把现代随身相机需要的几件事打包完整：焦段完整、直出完整、操作完整、决策成本低。</p>
 <p>如果想要极致口袋扫街，选 GR。如果想要全幅上限，选 S9。如果想要性价比系统入口，选 X-M5。如果想要 35mm 定焦、高像素裁切和最完整的复古旁轴颜值，选 X100VI。如果想要 Type109 / LX100 的现代版本，想要钛合金高级随身机气质和手机之外的一台完整随身相机，L10 才真正成立。</p>
 <p>L10 是松下高端便携线回归的一步，但不是终点。真正让我期待的，是松下能不能做出一台和 GR4 正面竞争的 M43 口袋机：更小、更薄、更快、更口袋化，有相机操作、有 Real Time LUT、有足够强的直出，并且能正面竞争 GR4。</p></section></main>

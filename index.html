@@ -4,65 +4,83 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panasonic Lumix L10 测评笔记</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme:dark light;
-      --bg:#050505; --panel:#0d0d0d; --panel-2:#151515; --line:#2a2a2a;
-      --text:#f2f2f2; --muted:#9a9a9a; --accent:#ff2a2a;
-      --font:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+      --bg:#050505; --surface:#0c0c0c; --surface-2:#151515; --line:#2a2a2a;
+      --text:#f2f2f2; --muted:#8a8a8a; --faint:#4d4d4d; --accent:#ff2a2a; --ok:#e8e8e8;
+      --font-display:"Space Grotesk","Inter",-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+      --font-mono:"Space Mono","SFMono-Regular",ui-monospace,monospace;
+      --font-body:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
     }
     @media (prefers-color-scheme:light) {
       :root {
-        --bg:#f5f3ee; --panel:#fffdf8; --panel-2:#ebe5da; --line:#d2c9ba;
-        --text:#151515; --muted:#6c675f; --accent:#d71920;
+        --bg:#f3f1ea; --surface:#fffdf6; --surface-2:#ece8dd; --line:#cfc8b8;
+        --text:#111111; --muted:#6f6b62; --faint:#a19a8e; --accent:#d71920; --ok:#111111;
       }
     }
     :root[data-theme="dark"] {
       color-scheme:dark;
-      --bg:#050505; --panel:#0d0d0d; --panel-2:#151515; --line:#2a2a2a;
-      --text:#f2f2f2; --muted:#9a9a9a; --accent:#ff2a2a;
+      --bg:#050505; --surface:#0c0c0c; --surface-2:#151515; --line:#2a2a2a;
+      --text:#f2f2f2; --muted:#8a8a8a; --faint:#4d4d4d; --accent:#ff2a2a; --ok:#e8e8e8;
     }
     :root[data-theme="light"] {
       color-scheme:light;
-      --bg:#f5f3ee; --panel:#fffdf8; --panel-2:#ebe5da; --line:#d2c9ba;
-      --text:#151515; --muted:#6c675f; --accent:#d71920;
+      --bg:#f3f1ea; --surface:#fffdf6; --surface-2:#ece8dd; --line:#cfc8b8;
+      --text:#111111; --muted:#6f6b62; --faint:#a19a8e; --accent:#d71920; --ok:#111111;
     }
     * { box-sizing:border-box; }
     html { scroll-behavior:smooth; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
-    body { margin:0; color:var(--text); background:var(--bg); font-family:var(--font); line-height:1.72; }
-    .page { max-width:760px; margin:0 auto; padding:22px 18px 64px; }
-    header { padding:18px 0 16px; border-bottom:1px solid var(--line); }
-    .eyebrow { color:var(--muted); font-size:12px; letter-spacing:.04em; text-transform:uppercase; }
-    h1 { margin:8px 0 10px; font-size:34px; line-height:1.12; letter-spacing:0; }
+    body { margin:0; color:var(--text); background:var(--bg); font-family:var(--font-body); line-height:1.72; }
+    .page { max-width:780px; margin:0 auto; padding:22px 18px 64px; }
+    header { padding:18px 0 18px; border-bottom:1px solid var(--line); }
+    .eyebrow { color:var(--muted); font-family:var(--font-mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; }
+    h1 { margin:8px 0 10px; font-family:var(--font-display); font-size:34px; line-height:1.12; letter-spacing:0; }
     .lead { margin:0; color:var(--muted); font-size:16px; }
+    .readout { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); border:1px solid var(--line); margin-top:16px; background:var(--surface); }
+    .readout div { min-width:0; padding:10px 12px; border-right:1px solid var(--line); }
+    .readout div:last-child { border-right:0; }
+    .readout strong { display:block; font-family:var(--font-display); font-size:22px; line-height:1; color:var(--text); }
+    .readout span { display:block; margin-top:5px; color:var(--muted); font-family:var(--font-mono); font-size:10px; letter-spacing:.05em; text-transform:uppercase; }
     .toolbar { position:sticky; top:0; z-index:10; margin:0 -18px; padding:0 18px; display:flex; overflow-x:auto; gap:0; background:var(--bg); border-bottom:1px solid var(--line); }
-    .toolbar a,.theme-toggle { flex:0 0 auto; border:0; border-right:1px solid var(--line); background:transparent; color:var(--muted); text-decoration:none; padding:11px 12px; font-size:12px; }
+    .toolbar a,.theme-toggle { flex:0 0 auto; border:0; border-right:1px solid var(--line); background:transparent; color:var(--muted); text-decoration:none; padding:11px 12px; font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; }
     .toolbar a:first-child { border-left:1px solid var(--line); }
-    .theme-toggle { color:var(--text); }
+    .theme-toggle { color:var(--text); cursor:pointer; }
+    .theme-toggle::before { content:""; display:inline-block; width:8px; height:8px; margin-right:8px; background:var(--accent); vertical-align:-1px; }
     section { padding:24px 0; border-bottom:1px solid var(--line); }
-    h2 { margin:0 0 12px; font-size:24px; line-height:1.25; letter-spacing:0; }
+    h2 { margin:0 0 12px; font-family:var(--font-display); font-size:24px; line-height:1.25; letter-spacing:0; }
     h2::before { content:""; display:inline-block; width:18px; height:8px; margin-right:10px; background:var(--accent); vertical-align:middle; }
-    h3 { margin:0 0 8px; font-size:18px; line-height:1.35; }
+    h3 { margin:0 0 8px; font-family:var(--font-display); font-size:18px; line-height:1.35; }
     p { margin:0 0 12px; color:var(--muted); }
     strong { color:var(--text); }
     .article-block { margin-top:12px; }
-    .summary { margin:14px 0; padding:12px 14px; border-left:3px solid var(--accent); background:var(--panel); color:var(--text); }
+    .summary { margin:14px 0; padding:12px 14px; border-left:3px solid var(--accent); background:var(--surface); color:var(--text); }
     .tabs { margin-top:14px; }
-    .tab-list { display:flex; overflow-x:auto; gap:8px; padding-bottom:8px; }
-    .tab-button { flex:0 0 auto; border:1px solid var(--line); border-radius:999px; background:var(--panel); color:var(--muted); padding:7px 11px; font:inherit; font-size:13px; }
-    .tab-button.is-active { background:var(--accent); border-color:var(--accent); color:#fff; }
-    .tab-panel { padding:15px; border:1px solid var(--line); border-radius:8px; background:var(--panel); }
+    .tab-list { display:flex; overflow-x:auto; gap:0; padding-bottom:0; border:1px solid var(--line); border-bottom:0; background:var(--surface-2); }
+    .tab-button { flex:0 0 auto; border:0; border-right:1px solid var(--line); border-radius:0; background:transparent; color:var(--muted); padding:8px 11px; font-family:var(--font-mono); font-size:12px; letter-spacing:.02em; cursor:pointer; }
+    .tab-button.is-active { background:var(--accent); color:#fff; }
+    .tab-panel { padding:15px; border:1px solid var(--line); border-radius:0; background:var(--surface); }
     .tab-panel p { margin-bottom:0; }
     table { width:100%; border-collapse:collapse; margin-top:12px; }
     th,td { border-bottom:1px solid var(--line); padding:10px 0; text-align:left; vertical-align:top; font-size:14px; }
-    th { color:var(--text); font-size:12px; }
+    th { color:var(--text); font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; text-transform:uppercase; }
     td { color:var(--muted); padding-right:12px; }
-    .footer-note { color:var(--muted); font-size:13px; text-align:center; margin-top:24px; }
+    .sensor-figure { margin:16px 0 14px; }
+    .sensor-svg { display:block; width:100%; height:auto; background:var(--surface); }
+    .sensor-svg text { fill:var(--muted); font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; }
+    .sensor-axis { text-transform:uppercase; }
+    figcaption { margin-top:8px; color:var(--muted); font-family:var(--font-mono); font-size:11px; line-height:1.6; }
+    .footer-note { color:var(--muted); font-family:var(--font-mono); font-size:11px; text-align:center; margin-top:24px; }
     @media (max-width:720px) {
       .page { padding:18px 16px 56px; }
       h1 { font-size:28px; }
       h2 { font-size:21px; }
       section { padding:20px 0; }
+      .readout strong { font-size:18px; }
+      .readout div { padding:9px 10px; }
       .tab-panel { padding:13px; }
       .tab-button { font-size:12px; padding:6px 10px; }
       th,td { font-size:13px; }
@@ -87,10 +105,16 @@
       <div class="eyebrow">Panasonic Lumix L10 Review Notes</div>
       <h1>L10 测评笔记</h1>
       <p class="lead">按文章阅读，而不是卡片墙。每段先给结论，细项通过 tab 切换查看。</p>
+      <div class="readout" aria-label="测评主读数">
+        <div><strong>24-75</strong><span>Optical Zoom</span></div>
+        <div><strong>M43</strong><span>Sensor Line</span></div>
+        <div><strong>ISO3200</strong><span>RAW Grain</span></div>
+      </div>
   </header>
   <nav class="toolbar">
     <a href="#core">核心</a>
     <a href="#position">主线定位</a>
+    <a href="#sensor">传感器</a>
     <a href="#lutstory">LUT</a>
     <a href="#tests">画质</a>
     <a href="#video">视频能力</a>
@@ -113,6 +137,23 @@
       <div class="tabs" data-tabs="position"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="position-tab-0" aria-controls="position-panel-0" aria-selected="true">主角</button><button class="tab-button" type="button" role="tab" id="position-tab-1" aria-controls="position-panel-1" aria-selected="false">行业背景</button><button class="tab-button" type="button" role="tab" id="position-tab-2" aria-controls="position-panel-2" aria-selected="false">成立逻辑</button><button class="tab-button" type="button" role="tab" id="position-tab-3" aria-controls="position-panel-3" aria-selected="false">完整方案</button></div><article class="tab-panel" id="position-panel-0" role="tabpanel" aria-labelledby="position-tab-0"><h3>主角</h3><p>主角是 L10，横评对象只用来说明它的位置。文章不能写成纯横评。</p></article><article class="tab-panel" id="position-panel-1" role="tabpanel" aria-labelledby="position-tab-1" hidden><h3>行业背景</h3><p>手机吃掉日常拍照、分享和轻视频；Pocket 类设备吃掉稳定视频、Vlog 和随手记录。L10 要回答：为什么还要多带一台相机？</p></article><article class="tab-panel" id="position-panel-2" role="tabpanel" aria-labelledby="position-tab-2" hidden><h3>成立逻辑</h3><p>不靠大底碾压手机，不靠极致便携赢 GR，不靠画质上限赢 S9，也不靠性价比赢 X-M5。L10 靠完整随身相机方案成立。</p></article><article class="tab-panel" id="position-panel-3" role="tabpanel" aria-labelledby="position-tab-3" hidden><h3>完整方案</h3><p>真实 24-75mm 光学变焦、EVF、实体操作、翻转屏、Real Time LUT、美肤、RAW 工作流和低决策成本。</p></article></div>
       <div class="tabs" data-tabs="boundary"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="boundary-tab-0" aria-controls="boundary-panel-0" aria-selected="true">手机 / 一英寸</button><button class="tab-button" type="button" role="tab" id="boundary-tab-1" aria-controls="boundary-panel-1" aria-selected="false">GR</button><button class="tab-button" type="button" role="tab" id="boundary-tab-2" aria-controls="boundary-panel-2" aria-selected="false">X-M5</button><button class="tab-button" type="button" role="tab" id="boundary-tab-3" aria-controls="boundary-panel-3" aria-selected="false">S9</button><button class="tab-button" type="button" role="tab" id="boundary-tab-4" aria-controls="boundary-panel-4" aria-selected="false">Type109 / LX100</button></div><article class="tab-panel" id="boundary-panel-0" role="tabpanel" aria-labelledby="boundary-tab-0"><h3>手机 / 一英寸</h3><p>不要写手机没有一英寸。顶级手机 23/24mm 主摄已经很强，L10 的区别是 24-75mm 真实光学变焦、焦段一致性、EVF、实体操作、LUT 和 RAW。</p></article><article class="tab-panel" id="boundary-panel-1" role="tabpanel" aria-labelledby="boundary-tab-1" hidden><h3>GR</h3><p>GR 几乎没有真正竞品。GR 是 APS-C、28mm、262g 级别、裤兜机、Snap 快拍、单手操作和街拍文化认同。GR4 的体积和重量无可替代。GR 是纯粹，L10 是完整。</p></article><article class="tab-panel" id="boundary-panel-2" role="tabpanel" aria-labelledby="boundary-tab-2" hidden><h3>X-M5</h3><p>X-M5 不能写弱。它是 APS-C 可换镜头系统的高性价比入口，可重可轻；但这类小机身一般不会长期搭配太大的镜头。L10 不赢性价比和系统上限，赢一体化、少决策和固定 24-75mm 闭环。</p></article><article class="tab-panel" id="boundary-panel-3" role="tabpanel" aria-labelledby="boundary-tab-3" hidden><h3>S9</h3><p>S9 是全幅上限机，画质、高感、宽容度、虚化、镜头系统都强于 L10。L10 不替代 S9，而是 S9 之外的低决策随身机。</p></article><article class="tab-panel" id="boundary-panel-4" role="tabpanel" aria-labelledby="boundary-tab-4" hidden><h3>Type109 / LX100</h3><p>Type109 是血统参照。L10 是 Type109 / LX100 逻辑的现代版本：传感器、对焦、屏幕、视频和 LUT 工作流更现代，不写成更有味道。</p></article></div>
       <div class="tabs" data-tabs="lifecycle"><div class="tab-list" role="tablist"><button class="tab-button is-active" type="button" role="tab" id="lifecycle-tab-0" aria-controls="lifecycle-panel-0" aria-selected="true">生命周期价值</button><button class="tab-button" type="button" role="tab" id="lifecycle-tab-1" aria-controls="lifecycle-panel-1" aria-selected="false">钛合金色情绪</button><button class="tab-button" type="button" role="tab" id="lifecycle-tab-2" aria-controls="lifecycle-panel-2" aria-selected="false">视频边界</button><button class="tab-button" type="button" role="tab" id="lifecycle-tab-3" aria-controls="lifecycle-panel-3" aria-selected="false">美肤边界</button></div><article class="tab-panel" id="lifecycle-panel-0" role="tabpanel" aria-labelledby="lifecycle-tab-0"><h3>生命周期价值</h3><p>不围绕首发价写。价格会下降，固件会更新，LUT / 美肤 / App 联动可能逐渐成熟。L10 可能不是首发最香，而是价格回落、固件成熟后进入真香点。</p></article><article class="tab-panel" id="lifecycle-panel-1" role="tabpanel" aria-labelledby="lifecycle-tab-1" hidden><h3>钛合金色情绪</h3><p>钛合金色可以联系 Minolta TC-1 这类老高端旗舰卡片机的情绪：高级随身机、金属感、精密感、实体操作和把玩属性。它是产品情绪，不是硬参数优势。</p></article><article class="tab-panel" id="lifecycle-panel-2" role="tabpanel" aria-labelledby="lifecycle-tab-2" hidden><h3>视频边界</h3><p>视频参数不弱，但不是 Pocket 类稳定视频设备，也不是 S9 / X-M5 那种系统视频机。更适合固定机位、轻微手持、咖啡静物、环境空镜和人物小段落。</p></article><article class="tab-panel" id="lifecycle-panel-3" role="tabpanel" aria-labelledby="lifecycle-tab-3" hidden><h3>美肤边界</h3><p>美肤不是网红磨皮，而是直出人像流程的一部分：LUT 负责风格，美肤负责避免人脸被 LUT 带灰、带脏、带硬。开到明显看出来就是过头。</p></article></div>
+    </section>
+    <section id="sensor">
+      <h2>传感器尺寸比例</h2>
+      <p>这张图只讲物理尺寸，不直接等同于最终画质。它能帮助解释：L10 的 M43 明显大于一英寸，但也明显小于 APS-C 和全画幅。</p>
+      
+      <figure class="sensor-figure">
+        <svg class="sensor-svg" viewBox="0 0 410 320" role="img" aria-label="一英寸、M43、APS-C、全画幅传感器尺寸比例图">
+          <rect x="0.5" y="0.5" width="409" height="319" fill="none" stroke="var(--line)"/>
+          <g><rect x="24.0" y="26.0" width="360.0" height="240.0" rx="0" fill="none" stroke="#ff2a2a" stroke-width="2" vector-effect="non-scaling-stroke"/><rect x="86.5" y="68.0" width="235.0" height="156.0" rx="0" fill="none" stroke="#f2f2f2" stroke-width="2" vector-effect="non-scaling-stroke"/><rect x="117.5" y="81.0" width="173.0" height="130.0" rx="0" fill="none" stroke="#f2f2f2" stroke-width="2" vector-effect="non-scaling-stroke"/><rect x="138.0" y="102.0" width="132.0" height="88.0" rx="0" fill="none" stroke="#8a8a8a" stroke-width="2" vector-effect="non-scaling-stroke"/></g>
+          <line x1="24" y1="284.0" x2="384.0" y2="284.0" stroke="var(--line)"/>
+          <text x="24" y="304.0" class="sensor-axis">0</text>
+          <text x="384.0" y="304.0" text-anchor="end" class="sensor-axis">36mm</text>
+        </svg>
+        <figcaption>按实际毫米尺寸等比例绘制；APS-C 使用常见 1.5x 规格 23.5 x 15.6mm，不代表 Canon 1.6x APS-C。</figcaption>
+      </figure>
+      <table><thead><tr><th>规格</th><th>尺寸</th><th>面积</th></tr></thead><tbody><tr><td>全画幅</td><td>36 x 24 mm</td><td>864 mm2</td></tr><tr><td>APS-C</td><td>23.5 x 15.6 mm</td><td>367 mm2</td></tr><tr><td>L10 / M43</td><td>17.3 x 13 mm</td><td>225 mm2</td></tr><tr><td>一英寸</td><td>13.2 x 8.8 mm</td><td>116 mm2</td></tr></tbody></table>
+    
     </section>
     <section id="lutstory">
       <h2>Y2000-LX LUT 创作线索</h2>

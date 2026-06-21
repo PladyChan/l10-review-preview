@@ -54,6 +54,9 @@
     h2 { margin:0 0 12px; font-family:var(--font-display); font-size:24px; line-height:1.25; letter-spacing:0; }
     h2::before { content:""; display:inline-block; width:18px; height:8px; margin-right:10px; background:var(--accent); vertical-align:middle; }
     h3 { margin:0 0 8px; font-family:var(--font-display); font-size:18px; line-height:1.35; }
+    section > h3 { margin-top:24px; }
+    section > h3:first-child { margin-top:0; }
+    .tabs + h3,.tab-panel + h3,.sensor-compare + h3,table + h3 { margin-top:28px; }
     p { margin:0 0 12px; color:var(--muted); }
     strong { color:var(--text); }
     .article-block { margin-top:12px; }
@@ -109,6 +112,8 @@
       h1 { font-size:28px; }
       h2 { font-size:21px; }
       section { padding:20px 0; }
+      section > h3 { margin-top:22px; }
+      .tabs + h3,.tab-panel + h3,.sensor-compare + h3,table + h3 { margin-top:26px; }
       .readout strong { font-size:18px; }
       .readout div { padding:9px 10px; }
       .sensor-controls { grid-template-columns:repeat(2,minmax(0,1fr)); }

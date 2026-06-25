@@ -621,21 +621,35 @@
       opacity: .45;
     }
     .aspect-m43-frame,
+    .aspect-image-circle,
     .aspect-css-box {
       position: absolute;
       left: 50%;
       top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .aspect-css-box {
       width: calc(var(--w-mm) / 17.3 * 100%);
       height: calc(var(--h-mm) / 13 * 100%);
-      transform: translate(-50%, -50%);
     }
     .aspect-m43-frame {
       --w-mm: 17.3;
       --h-mm: 13;
+      width: 100%;
+      height: 100%;
       border: 2px dashed var(--muted);
       z-index: 1;
     }
+    .aspect-image-circle {
+      width: calc(var(--circle-mm) / 17.3 * 100%);
+      aspect-ratio: 1;
+      border: 1px dashed var(--line);
+      border-radius: 50%;
+      z-index: 0;
+      opacity: .9;
+    }
     .aspect-m43-frame span,
+    .aspect-image-circle span,
     .aspect-css-box span {
       position: absolute;
       left: 7px;
@@ -646,6 +660,13 @@
       white-space: nowrap;
     }
     .aspect-m43-frame span { color: var(--muted); }
+    .aspect-image-circle span {
+      left: 50%;
+      top: auto;
+      bottom: 8px;
+      transform: translateX(-50%);
+      color: var(--muted);
+    }
     .aspect-css-box {
       border: 1.5px solid var(--muted);
       background: color-mix(in srgb, var(--surface) 78%, transparent);
@@ -791,16 +812,17 @@
 <aside class="insert-module aspect-module" id="visual-aspect">
   <div class="module-kicker">ASPECT TOOL / L10</div>
   <h3>内置比例面积示意：矩形不是同一个 4:3 裁切</h3>
-  <p>这张图画 L10 自己的四个内置比例，并加上标准 M43 的 17.3 x 13.0mm 外框作为参照。这里按毫米尺寸直接绘制，不用 SVG。16:9 的宽度按 17.3mm 处理，因此会和标准 M43 外框同宽；这些仍是基于当前规格和同像素密度的估算，不是官方公布的物理开窗尺寸。</p>
+  <p>这张图画 L10 自己的四个内置比例，并加上标准 M43 的 17.3 x 13.0mm 外框作为参照。这里按毫米尺寸直接绘制，不用 SVG。16:9 的宽度按 17.3mm 处理，因此会和标准 M43 外框同宽；几何面积和有效像素占比在表格里分开列，避免混成一个口径。</p>
   <div class="aspect-controls" aria-label="选择 L10 内置比例">
-    <button class="aspect-button is-active" type="button" data-aspect-target="43" aria-pressed="true" data-name="4:3" data-size="15.20 x 11.40 mm" data-area="173.28" data-resolution="5184 x 3888" data-note="默认照片比例"><strong>4:3</strong><span>15.20 x 11.40mm</span></button><button class="aspect-button" type="button" data-aspect-target="32" aria-pressed="false" data-name="3:2" data-size="16.60 x 11.07 mm" data-area="183.71" data-resolution="5392 x 3600" data-note="更接近全幅 / APS-C 观看习惯"><strong>3:2</strong><span>16.60 x 11.07mm</span></button><button class="aspect-button" type="button" data-aspect-target="169" aria-pressed="false" data-name="16:9" data-size="17.30 x 9.73 mm" data-area="168.35" data-resolution="5632 x 3168" data-note="与标准 M43 同宽的横幅比例"><strong>16:9</strong><span>17.30 x 9.73mm</span></button><button class="aspect-button" type="button" data-aspect-target="11" aria-pressed="false" data-name="1:1" data-size="11.40 x 11.40 mm" data-area="129.96" data-resolution="3888 x 3888" data-note="方形构图"><strong>1:1</strong><span>11.40 x 11.40mm</span></button>
+    <button class="aspect-button is-active" type="button" data-aspect-target="43" aria-pressed="true" data-name="4:3" data-size="15.20 x 11.40 mm" data-area="173.28" data-resolution="5184 x 3888" data-note="默认照片比例"><strong>4:3</strong><span>15.20 x 11.40mm</span></button><button class="aspect-button" type="button" data-aspect-target="32" aria-pressed="false" data-name="3:2" data-size="15.81 x 10.56 mm" data-area="166.88" data-resolution="5392 x 3600" data-note="更接近全幅 / APS-C 观看习惯"><strong>3:2</strong><span>15.81 x 10.56mm</span></button><button class="aspect-button" type="button" data-aspect-target="169" aria-pressed="false" data-name="16:9" data-size="17.30 x 9.73 mm" data-area="168.35" data-resolution="5632 x 3168" data-note="与标准 M43 同宽的横幅比例"><strong>16:9</strong><span>17.30 x 9.73mm</span></button><button class="aspect-button" type="button" data-aspect-target="11" aria-pressed="false" data-name="1:1" data-size="11.40 x 11.40 mm" data-area="129.96" data-resolution="3888 x 3888" data-note="方形构图"><strong>1:1</strong><span>11.40 x 11.40mm</span></button>
   </div>
   <figure class="aspect-figure">
     <div class="aspect-css-stage" role="img" aria-label="L10 四个内置画幅比例示意">
+      <div class="aspect-image-circle" style="--circle-mm:19.84911;"><span>像场圆 约 19.85mm</span></div>
       <div class="aspect-m43-frame"><span>标准 M43 17.3 x 13.0mm</span></div>
-      <div class="aspect-css-box aspect-43 is-active" data-aspect-box="43" style="--w-mm:15.20000; --h-mm:11.40000; --z:20;"><span>4:3</span></div><div class="aspect-css-box aspect-32" data-aspect-box="32" style="--w-mm:16.60000; --h-mm:11.06667; --z:21;"><span>3:2</span></div><div class="aspect-css-box aspect-169" data-aspect-box="169" style="--w-mm:17.30000; --h-mm:9.73125; --z:22;"><span>16:9</span></div><div class="aspect-css-box aspect-11" data-aspect-box="11" style="--w-mm:11.40000; --h-mm:11.40000; --z:23;"><span>1:1</span></div>
+      <div class="aspect-css-box aspect-43 is-active" data-aspect-box="43" style="--w-mm:15.20000; --h-mm:11.40000; --z:20;"><span>4:3</span></div><div class="aspect-css-box aspect-32" data-aspect-box="32" style="--w-mm:15.80988; --h-mm:10.55556; --z:21;"><span>3:2</span></div><div class="aspect-css-box aspect-169" data-aspect-box="169" style="--w-mm:17.30000; --h-mm:9.73125; --z:22;"><span>16:9</span></div><div class="aspect-css-box aspect-11" data-aspect-box="11" style="--w-mm:11.40000; --h-mm:11.40000; --z:23;"><span>1:1</span></div>
     </div>
-    <figcaption>虚线外框是标准 M43 面积参照。点击上方比例按钮会高亮对应画幅，并更新下方读数；16:9 横幅会和标准 M43 外框同宽。</figcaption>
+    <figcaption>虚线外框是标准 M43 面积参照；圆形是覆盖这些比例所需的最小像场圆，按最大对角线约 19.85mm 绘制，标准 M43 对角线约 21.64mm。点击上方比例按钮会高亮对应画幅，并更新下方读数；16:9 横幅会和标准 M43 外框同宽。</figcaption>
   </figure>
   <div class="aspect-readout" aria-live="polite">
     <strong data-aspect-readout-name>4:3</strong>
@@ -809,7 +831,7 @@
     <span data-aspect-readout-resolution>5184 x 3888</span>
     <span data-aspect-readout-note>默认照片比例</span>
   </div>
-  <table><thead><tr><th>比例</th><th>分辨率</th><th>约像素</th><th>约使用尺寸</th><th>约面积</th><th>约对角线</th><th>相对 4:3</th><th>相对标准 M43</th></tr></thead><tbody><tr><td>4:3</td><td>5184 x 3888</td><td>20.2MP</td><td>15.20 x 11.40 mm</td><td>173.28 mm²</td><td>19.00 mm</td><td>100.0%</td><td>77.0%</td></tr><tr><td>3:2</td><td>5392 x 3600</td><td>19.4MP</td><td>16.60 x 11.07 mm</td><td>183.71 mm²</td><td>19.95 mm</td><td>106.0%</td><td>81.7%</td></tr><tr><td>16:9</td><td>5632 x 3168</td><td>17.8MP</td><td>17.30 x 9.73 mm</td><td>168.35 mm²</td><td>19.85 mm</td><td>97.2%</td><td>74.9%</td></tr><tr><td>1:1</td><td>3888 x 3888</td><td>15.1MP</td><td>11.40 x 11.40 mm</td><td>129.96 mm²</td><td>16.12 mm</td><td>75.0%</td><td>57.8%</td></tr></tbody></table>
+  <table><thead><tr><th>比例</th><th>分辨率</th><th>约像素</th><th>约使用尺寸</th><th>几何面积</th><th>约对角线</th><th>有效像素相对 4:3</th><th>几何面积相对 4:3</th><th>几何面积相对标准 M43</th></tr></thead><tbody><tr><td>4:3</td><td>5184 x 3888</td><td>20.2MP</td><td>15.20 x 11.40 mm</td><td>173.28 mm²</td><td>19.00 mm</td><td>100.0%</td><td>100.0%</td><td>77.0%</td></tr><tr><td>3:2</td><td>5392 x 3600</td><td>19.4MP</td><td>15.81 x 10.56 mm</td><td>166.88 mm²</td><td>19.01 mm</td><td>96.3%</td><td>96.3%</td><td>74.2%</td></tr><tr><td>16:9</td><td>5632 x 3168</td><td>17.8MP</td><td>17.30 x 9.73 mm</td><td>168.35 mm²</td><td>19.85 mm</td><td>88.5%</td><td>97.2%</td><td>74.9%</td></tr><tr><td>1:1</td><td>3888 x 3888</td><td>15.1MP</td><td>11.40 x 11.40 mm</td><td>129.96 mm²</td><td>16.12 mm</td><td>75.0%</td><td>75.0%</td><td>57.8%</td></tr></tbody></table>
 </aside>
 
 <p>L10 的 4:3、3:2、16:9、1:1 不是同一个 4:3 画面简单裁掉上下或左右。按当前尺寸口径绘制，16:9 的横向宽度和标准 M43 同为 17.3mm；3:2 也会用到比 4:3 更宽的范围；1:1 则更接近从 4:3 高度里取正方形。</p>

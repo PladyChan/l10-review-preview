@@ -413,26 +413,79 @@
     .sensor-button.is-compare-b { box-shadow: inset 0 0 0 2px var(--ok); }
     .sensor-button.is-compare-b em { border-color: var(--ok); color: var(--ink); }
     .sensor-figure { margin: 16px 0 14px; }
-    .sensor-svg { display: block; width: 100%; height: auto; background: var(--surface); }
-    .sensor-svg text {
-      fill: var(--muted);
+    .sensor-css-stage {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 36 / 24;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+    .sensor-css-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px);
+      background-size: calc(100% / 18) calc(100% / 12);
+      pointer-events: none;
+      opacity: .5;
+    }
+    :root[data-theme="light"] .sensor-css-stage::before {
+      background:
+        linear-gradient(rgba(0,0,0,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.045) 1px, transparent 1px);
+    }
+    .sensor-css-scale {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
       font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: .04em;
+      font-size: 10px;
+      z-index: 20;
     }
-    .sensor-box {
-      stroke: var(--muted);
-      stroke-width: 1.5;
-      opacity: .62;
-      transition: stroke .12s linear, opacity .12s linear, stroke-width .12s linear;
+    .sensor-css-box {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: calc(var(--w-mm) / 36 * 100%);
+      height: calc(var(--h-mm) / 24 * 100%);
+      transform: translate(-50%, -50%);
+      border: 1.5px solid var(--muted);
+      background: color-mix(in srgb, var(--surface) 82%, transparent);
+      opacity: .7;
+      z-index: var(--z);
+      transition: border-color .12s linear, border-width .12s linear, opacity .12s linear, background .12s linear;
     }
-    .sensor-box.is-active { stroke: var(--accent); stroke-width: 3; opacity: 1; }
-    .sensor-box.is-compare-a { stroke: var(--accent); stroke-width: 3.5; opacity: 1; }
-    .sensor-box.is-compare-b { stroke: var(--ok); stroke-width: 2.5; stroke-dasharray: 7 5; opacity: 1; }
-    .sensor-label { opacity: .42; transition: opacity .12s linear, fill .12s linear; }
-    .sensor-label.is-active { fill: var(--ink); opacity: 1; }
-    .sensor-label.is-compare-a { fill: var(--accent); opacity: 1; }
-    .sensor-label.is-compare-b { fill: var(--ink); opacity: 1; }
+    .sensor-css-box span {
+      position: absolute;
+      left: 6px;
+      top: 5px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .sensor-css-box.is-active,
+    .sensor-css-box.is-compare-a {
+      border-color: var(--accent);
+      border-width: 3px;
+      opacity: 1;
+    }
+    .sensor-css-box.is-compare-a span { color: var(--accent); }
+    .sensor-css-box.is-compare-b {
+      border-color: var(--ok);
+      border-style: dashed;
+      border-width: 2px;
+      opacity: 1;
+    }
+    .sensor-css-box.is-compare-b span { color: var(--ink); }
     .sensor-readout {
       display: grid;
       grid-template-columns: 1fr auto auto auto;
@@ -509,32 +562,128 @@
     .aspect-module {
       border-left-color: var(--ok);
     }
+    .aspect-controls {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      background: var(--surface);
+      margin: 14px 0 12px;
+    }
+    .aspect-button {
+      min-width: 0;
+      padding: 10px;
+      border: 0;
+      border-right: 1px solid var(--line);
+      background: transparent;
+      color: var(--ink);
+      text-align: left;
+      cursor: pointer;
+    }
+    .aspect-button:last-child { border-right: 0; }
+    .aspect-button strong {
+      display: block;
+      font-family: var(--font-display);
+      font-size: 18px;
+      line-height: 1;
+    }
+    .aspect-button span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+    .aspect-button.is-active {
+      background: var(--accent);
+      color: #fff;
+    }
+    .aspect-button.is-active span { color: #fff; }
     .aspect-figure {
       margin: 16px 0 14px;
     }
-    .aspect-svg {
-      display: block;
+    .aspect-css-stage {
+      position: relative;
       width: 100%;
-      height: auto;
+      aspect-ratio: 17.3 / 13;
       background: var(--surface);
+      border: 1px solid var(--line);
+      overflow: hidden;
     }
-    .aspect-svg text {
+    .aspect-css-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(255,255,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: calc(100% / 17.3 * 2) calc(100% / 13 * 2);
+      opacity: .45;
+    }
+    .aspect-m43-frame,
+    .aspect-css-box {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: calc(var(--w-mm) / 17.3 * 100%);
+      height: calc(var(--h-mm) / 13 * 100%);
+      transform: translate(-50%, -50%);
+    }
+    .aspect-m43-frame {
+      --w-mm: 17.3;
+      --h-mm: 13;
+      border: 2px dashed var(--muted);
+      z-index: 1;
+    }
+    .aspect-m43-frame span,
+    .aspect-css-box span {
+      position: absolute;
+      left: 7px;
+      top: 6px;
       font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: .04em;
+      font-size: 10px;
+      line-height: 1.2;
+      white-space: nowrap;
     }
-    .image-circle {
-      opacity: .85;
+    .aspect-m43-frame span { color: var(--muted); }
+    .aspect-css-box {
+      border: 1.5px solid var(--muted);
+      background: color-mix(in srgb, var(--surface) 78%, transparent);
+      opacity: .62;
+      z-index: var(--z);
+      transition: border-color .12s linear, border-width .12s linear, opacity .12s linear, background .12s linear;
     }
-    .aspect-label {
+    .aspect-css-box span { color: var(--muted); }
+    .aspect-css-box.is-active {
+      border-color: var(--accent);
+      border-width: 3px;
+      background: color-mix(in srgb, var(--accent) 11%, transparent);
+      opacity: 1;
+      z-index: 60;
+    }
+    .aspect-css-box.is-active span {
+      color: var(--accent);
       font-weight: 700;
     }
-    .aspect-m43-label {
-      fill: var(--muted);
-      font-weight: 700;
+    .aspect-readout {
+      display: grid;
+      grid-template-columns: .7fr 1fr auto auto 1.3fr;
+      gap: 10px;
+      align-items: center;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      padding: 10px 12px;
+      margin-bottom: 12px;
     }
-    .aspect-circle-label {
-      fill: var(--muted);
+    .aspect-readout strong {
+      font-family: var(--font-display);
+      font-size: 20px;
+      line-height: 1;
+    }
+    .aspect-readout span {
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
     }
     figcaption {
       margin-top: 8px;
@@ -567,6 +716,11 @@
       .sensor-readout { grid-template-columns: 1fr; gap: 5px; }
       .sensor-compare { grid-template-columns: 1fr; }
       .sensor-compare div { border-right: 0; border-bottom: 1px solid var(--line); }
+      .aspect-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .aspect-button { border-bottom: 1px solid var(--line); }
+      .aspect-button:nth-child(2n) { border-right: 0; }
+      .aspect-button:nth-last-child(-n+2) { border-bottom: 0; }
+      .aspect-readout { grid-template-columns: 1fr; gap: 5px; }
     }
   </style>
 </head>
@@ -602,14 +756,11 @@
     <button class="sensor-button" type="button" data-sensor-target="one-inch" aria-pressed="false" data-name="一英寸" data-size="13.2 x 8.8 mm" data-area="116.16" data-note="传感器规格口径"><em data-compare-marker></em><strong>一英寸</strong><span>13.2 x 8.8 mm</span></button><button class="sensor-button is-compare-b" type="button" data-sensor-target="l10-used" aria-pressed="false" data-name="L10 可用" data-size="15.2 x 11.4 mm" data-area="173.28" data-note="按 20.4MP / 26.5MP 推算"><em data-compare-marker>B</em><strong>L10 可用</strong><span>15.2 x 11.4 mm</span></button><button class="sensor-button is-active is-compare-a" type="button" data-sensor-target="m43" aria-pressed="true" data-name="标准 M43" data-size="17.3 x 13 mm" data-area="224.90" data-note="传感器规格口径"><em data-compare-marker>A</em><strong>标准 M43</strong><span>17.3 x 13 mm</span></button><button class="sensor-button" type="button" data-sensor-target="aps-c" aria-pressed="false" data-name="APS-C" data-size="23.5 x 15.6 mm" data-area="366.60" data-note="传感器规格口径"><em data-compare-marker></em><strong>APS-C</strong><span>23.5 x 15.6 mm</span></button><button class="sensor-button" type="button" data-sensor-target="full-frame" aria-pressed="false" data-name="全画幅" data-size="36 x 24 mm" data-area="864.00" data-note="传感器规格口径"><em data-compare-marker></em><strong>全画幅</strong><span>36 x 24 mm</span></button>
   </div>
   <figure class="sensor-figure" data-sensor-visual>
-    <svg class="sensor-svg" viewBox="0 0 410 320" role="img" aria-label="一英寸、M43、APS-C、全画幅传感器尺寸比例图">
-      <rect x="0.5" y="0.5" width="409" height="319" fill="none" stroke="var(--line)"/>
-      <g><rect class="sensor-box" data-sensor-box="full-frame" x="24.0" y="26.0" width="360.0" height="240.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="aps-c" x="86.5" y="68.0" width="235.0" height="156.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box is-active is-compare-a" data-sensor-box="m43" x="117.5" y="81.0" width="173.0" height="130.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box is-compare-b" data-sensor-box="l10-used" x="128.0" y="89.0" width="152.0" height="114.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><rect class="sensor-box" data-sensor-box="one-inch" x="138.0" y="102.0" width="132.0" height="88.0" rx="0" fill="none" vector-effect="non-scaling-stroke"/><text class="sensor-label" data-sensor-label="full-frame" x="32.0" y="43.0">全画幅 · 36x24</text><text class="sensor-label" data-sensor-label="aps-c" x="94.5" y="85.0">APS-C · 23.5x15.6</text><text class="sensor-label is-active is-compare-a" data-sensor-label="m43" x="125.5" y="98.0">标准 M43 · 17.3x13</text><text class="sensor-label is-compare-b" data-sensor-label="l10-used" x="136.0" y="106.0">L10 可用 · 15.2x11.4</text><text class="sensor-label" data-sensor-label="one-inch" x="146.0" y="119.0">一英寸 · 13.2x8.8</text></g>
-      <line x1="24" y1="284.0" x2="384.0" y2="284.0" stroke="var(--line)"/>
-      <text x="24" y="304.0" class="sensor-axis">0</text>
-      <text x="384.0" y="304.0" text-anchor="end" class="sensor-axis">36mm</text>
-    </svg>
-    <figcaption>按毫米尺寸等比例绘制。L10 可用面积按 20.4MP 有效照片 / 26.5MP 总像素，从标准 M43 面积推算；不是官方公布的物理尺寸。</figcaption>
+    <div class="sensor-css-stage" role="img" aria-label="一英寸、L10 可用、标准 M43、APS-C、全画幅传感器尺寸比例图">
+      <div class="sensor-css-scale" aria-hidden="true"><span>0</span><span>36mm</span></div>
+      <div class="sensor-css-box" data-sensor-box="one-inch" style="--w-mm:13.2; --h-mm:8.8; --z:884;"><span data-sensor-label="one-inch">一英寸 · 13.2 x 8.8</span></div><div class="sensor-css-box is-compare-b" data-sensor-box="l10-used" style="--w-mm:15.2; --h-mm:11.4; --z:827;"><span data-sensor-label="l10-used">L10 可用 · 15.2 x 11.4</span></div><div class="sensor-css-box is-active is-compare-a" data-sensor-box="m43" style="--w-mm:17.3; --h-mm:13; --z:776;"><span data-sensor-label="m43">标准 M43 · 17.3 x 13</span></div><div class="sensor-css-box" data-sensor-box="aps-c" style="--w-mm:23.5; --h-mm:15.6; --z:634;"><span data-sensor-label="aps-c">APS-C · 23.5 x 15.6</span></div><div class="sensor-css-box" data-sensor-box="full-frame" style="--w-mm:36; --h-mm:24; --z:136;"><span data-sensor-label="full-frame">全画幅 · 36 x 24</span></div>
+    </div>
+    <figcaption>CSS 按真实毫米尺寸等比例绘制：宽度用实际宽度 / 36mm，高度用实际高度 / 24mm。L10 可用面积按 20.4MP 有效照片 / 26.5MP 总像素，从标准 M43 面积推算；不是官方公布的物理尺寸。</figcaption>
   </figure>
   <div class="sensor-readout" aria-live="polite">
     <strong data-sensor-readout-name>L10 可用</strong>
@@ -627,7 +778,7 @@
     <p>全画幅：36 x 24 = 864mm²；APS-C：23.5 x 15.6 = 366.6mm²；标准 M43：17.3 x 13 = 224.9mm²；L10 可用：15.2 x 11.4 = 173.28mm²；一英寸：13.2 x 8.8 = 116.16mm²。</p>
     <p>L10 的传感器位置其实很清楚：它比一英寸大一档，但不是碾压；比标准 M43 小一圈；和 APS-C 差距明显；和全画幅差距更大。所以 L10 不能靠“大底”来讲优势，它真正要讲的是 24-75mm 光学变焦、EVF、Real Time LUT 和完整相机体验。</p>
   </div>
-  <table><thead><tr><th>规格</th><th>尺寸</th><th>面积</th><th>口径</th></tr></thead><tbody><tr><td>全画幅</td><td>36 x 24 mm</td><td>864.00 mm²</td><td>常用规格</td></tr><tr><td>APS-C</td><td>23.5 x 15.6 mm</td><td>366.60 mm²</td><td>常用规格</td></tr><tr><td>标准 M43</td><td>17.3 x 13 mm</td><td>224.90 mm²</td><td>常用规格</td></tr><tr><td>L10 可用</td><td>15.2 x 11.4 mm</td><td>173.28 mm²</td><td>推算</td></tr><tr><td>一英寸</td><td>13.2 x 8.8 mm</td><td>116.16 mm²</td><td>常用规格</td></tr></tbody></table>
+  <table><thead><tr><th>规格</th><th>尺寸</th><th>面积</th><th>口径</th></tr></thead><tbody><tr><td>一英寸</td><td>13.2 x 8.8 mm</td><td>116.16 mm²</td><td>常用规格</td></tr><tr><td>L10 可用</td><td>15.2 x 11.4 mm</td><td>173.28 mm²</td><td>推算</td></tr><tr><td>标准 M43</td><td>17.3 x 13 mm</td><td>224.90 mm²</td><td>常用规格</td></tr><tr><td>APS-C</td><td>23.5 x 15.6 mm</td><td>366.60 mm²</td><td>常用规格</td></tr><tr><td>全画幅</td><td>36 x 24 mm</td><td>864.00 mm²</td><td>常用规格</td></tr></tbody></table>
 
 </aside>
 
@@ -640,23 +791,28 @@
 <aside class="insert-module aspect-module" id="visual-aspect">
   <div class="module-kicker">ASPECT TOOL / L10</div>
   <h3>内置比例面积示意：矩形不是同一个 4:3 裁切</h3>
-  <p>这张图画 L10 自己的四个内置比例，并加上标准 M43 的 17.3 x 13.0mm 外框作为参照。数据口径：以 4:3 的 5184 x 3888 和约 15.2 x 11.4mm 为基准，按像素宽高比例反推其他比例的使用尺寸；它是基于当前规格和同像素密度的估算，不是官方公布的物理开窗尺寸。</p>
+  <p>这张图画 L10 自己的四个内置比例，并加上标准 M43 的 17.3 x 13.0mm 外框作为参照。这里按毫米尺寸直接绘制，不用 SVG。16:9 的宽度按 17.3mm 处理，因此会和标准 M43 外框同宽；这些仍是基于当前规格和同像素密度的估算，不是官方公布的物理开窗尺寸。</p>
+  <div class="aspect-controls" aria-label="选择 L10 内置比例">
+    <button class="aspect-button is-active" type="button" data-aspect-target="43" aria-pressed="true" data-name="4:3" data-size="15.20 x 11.40 mm" data-area="173.28" data-resolution="5184 x 3888" data-note="默认照片比例"><strong>4:3</strong><span>15.20 x 11.40mm</span></button><button class="aspect-button" type="button" data-aspect-target="32" aria-pressed="false" data-name="3:2" data-size="16.60 x 11.07 mm" data-area="183.71" data-resolution="5392 x 3600" data-note="更接近全幅 / APS-C 观看习惯"><strong>3:2</strong><span>16.60 x 11.07mm</span></button><button class="aspect-button" type="button" data-aspect-target="169" aria-pressed="false" data-name="16:9" data-size="17.30 x 9.73 mm" data-area="168.35" data-resolution="5632 x 3168" data-note="与标准 M43 同宽的横幅比例"><strong>16:9</strong><span>17.30 x 9.73mm</span></button><button class="aspect-button" type="button" data-aspect-target="11" aria-pressed="false" data-name="1:1" data-size="11.40 x 11.40 mm" data-area="129.96" data-resolution="3888 x 3888" data-note="方形构图"><strong>1:1</strong><span>11.40 x 11.40mm</span></button>
+  </div>
   <figure class="aspect-figure">
-    <svg class="aspect-svg" viewBox="0 0 420 340" role="img" aria-label="L10 四个内置画幅比例和镜头像场圆示意">
-      <rect x="0.5" y="0.5" width="419" height="339" fill="none" stroke="var(--line)"/>
-      <circle class="image-circle" cx="210.0" cy="160.0" r="152.1" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 4"/>
-      <text class="aspect-circle-label" x="210.0" y="332.1" text-anchor="middle">估算镜头像场圆：直径约 19.01mm</text>
-      <rect class="aspect-m43-box" x="71.6" y="56.0" width="276.8" height="208.0" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="10 6" vector-effect="non-scaling-stroke"/>
-      <text class="aspect-m43-label" x="79.6" y="74.0">标准 M43 17.3 x 13.0mm</text>
-      <rect class="aspect-rect aspect-43" x="88.4" y="68.8" width="243.2" height="182.4" fill="none" stroke="var(--accent)" stroke-width="3"  vector-effect="non-scaling-stroke"/><rect class="aspect-rect aspect-32" x="83.5" y="75.6" width="253.0" height="168.9" fill="none" stroke="var(--ok)" stroke-width="2" stroke-dasharray="8 5" vector-effect="non-scaling-stroke"/><rect class="aspect-rect aspect-169" x="77.9" y="85.7" width="264.2" height="148.6" fill="none" stroke="#9a9a9a" stroke-width="2" stroke-dasharray="8 5" vector-effect="non-scaling-stroke"/><rect class="aspect-rect aspect-11" x="118.8" y="68.8" width="182.4" height="182.4" fill="none" stroke="#f2f2f2" stroke-width="2" stroke-dasharray="8 5" vector-effect="non-scaling-stroke"/>
-      <text class="aspect-label" x="95.4" y="84.8" fill="var(--accent)">4:3</text><text class="aspect-label" x="90.5" y="93.6" fill="var(--ok)">3:2</text><text class="aspect-label" x="84.9" y="105.7" fill="#9a9a9a">16:9</text><text class="aspect-label" x="125.8" y="90.8" fill="#f2f2f2">1:1</text>
-    </svg>
-    <figcaption>虚线外框是标准 M43 面积参照；圆形表示镜头至少需要覆盖四个比例里最大的对角线，约等于 3:2 的 19.01mm。实际镜头像场通常会留余量，这里只用于解释多画幅取景关系。</figcaption>
+    <div class="aspect-css-stage" role="img" aria-label="L10 四个内置画幅比例示意">
+      <div class="aspect-m43-frame"><span>标准 M43 17.3 x 13.0mm</span></div>
+      <div class="aspect-css-box aspect-43 is-active" data-aspect-box="43" style="--w-mm:15.20000; --h-mm:11.40000; --z:20;"><span>4:3</span></div><div class="aspect-css-box aspect-32" data-aspect-box="32" style="--w-mm:16.60000; --h-mm:11.06667; --z:21;"><span>3:2</span></div><div class="aspect-css-box aspect-169" data-aspect-box="169" style="--w-mm:17.30000; --h-mm:9.73125; --z:22;"><span>16:9</span></div><div class="aspect-css-box aspect-11" data-aspect-box="11" style="--w-mm:11.40000; --h-mm:11.40000; --z:23;"><span>1:1</span></div>
+    </div>
+    <figcaption>虚线外框是标准 M43 面积参照。点击上方比例按钮会高亮对应画幅，并更新下方读数；16:9 横幅会和标准 M43 外框同宽。</figcaption>
   </figure>
-  <table><thead><tr><th>比例</th><th>分辨率</th><th>约像素</th><th>约使用尺寸</th><th>约面积</th><th>约对角线</th><th>相对 4:3</th><th>相对标准 M43</th></tr></thead><tbody><tr><td>4:3</td><td>5184 x 3888</td><td>20.2MP</td><td>15.20 x 11.40 mm</td><td>173.28 mm²</td><td>19.00 mm</td><td>100.0%</td><td>77.0%</td></tr><tr><td>3:2</td><td>5392 x 3600</td><td>19.4MP</td><td>15.81 x 10.56 mm</td><td>166.88 mm²</td><td>19.01 mm</td><td>96.3%</td><td>74.2%</td></tr><tr><td>16:9</td><td>5632 x 3168</td><td>17.8MP</td><td>16.51 x 9.29 mm</td><td>153.39 mm²</td><td>18.95 mm</td><td>88.5%</td><td>68.2%</td></tr><tr><td>1:1</td><td>3888 x 3888</td><td>15.1MP</td><td>11.40 x 11.40 mm</td><td>129.96 mm²</td><td>16.12 mm</td><td>75.0%</td><td>57.8%</td></tr></tbody></table>
+  <div class="aspect-readout" aria-live="polite">
+    <strong data-aspect-readout-name>4:3</strong>
+    <span data-aspect-readout-size>15.20 x 11.40 mm</span>
+    <span data-aspect-readout-area>173.28 mm²</span>
+    <span data-aspect-readout-resolution>5184 x 3888</span>
+    <span data-aspect-readout-note>默认照片比例</span>
+  </div>
+  <table><thead><tr><th>比例</th><th>分辨率</th><th>约像素</th><th>约使用尺寸</th><th>约面积</th><th>约对角线</th><th>相对 4:3</th><th>相对标准 M43</th></tr></thead><tbody><tr><td>4:3</td><td>5184 x 3888</td><td>20.2MP</td><td>15.20 x 11.40 mm</td><td>173.28 mm²</td><td>19.00 mm</td><td>100.0%</td><td>77.0%</td></tr><tr><td>3:2</td><td>5392 x 3600</td><td>19.4MP</td><td>16.60 x 11.07 mm</td><td>183.71 mm²</td><td>19.95 mm</td><td>106.0%</td><td>81.7%</td></tr><tr><td>16:9</td><td>5632 x 3168</td><td>17.8MP</td><td>17.30 x 9.73 mm</td><td>168.35 mm²</td><td>19.85 mm</td><td>97.2%</td><td>74.9%</td></tr><tr><td>1:1</td><td>3888 x 3888</td><td>15.1MP</td><td>11.40 x 11.40 mm</td><td>129.96 mm²</td><td>16.12 mm</td><td>75.0%</td><td>57.8%</td></tr></tbody></table>
 </aside>
 
-<p>L10 的 4:3、3:2、16:9、1:1 不是同一个 4:3 画面简单裁掉上下或左右。按 4:3 的 5184 x 3888 和约 15.2 x 11.4mm 作为基准反推，3:2 和 16:9 会用到更宽的横向范围，1:1 则更接近从 4:3 高度里取正方形。</p>
+<p>L10 的 4:3、3:2、16:9、1:1 不是同一个 4:3 画面简单裁掉上下或左右。按当前尺寸口径绘制，16:9 的横向宽度和标准 M43 同为 17.3mm；3:2 也会用到比 4:3 更宽的范围；1:1 则更接近从 4:3 高度里取正方形。</p>
 <p>这也是多画幅路线的意义：它不是让所有比例共用同一个最大矩形，而是在镜头可覆盖的像场圆里，为不同画幅比例安排不同的有效取景范围。</p>
 <h3>多画幅不是装饰：不同比例适合什么题材？</h3>
 
@@ -973,6 +1129,37 @@
       });
 
       renderCompare();
+    })();
+    (() => {
+      const buttons = Array.from(document.querySelectorAll("[data-aspect-target]"));
+      const boxes = Array.from(document.querySelectorAll("[data-aspect-box]"));
+      const name = document.querySelector("[data-aspect-readout-name]");
+      const size = document.querySelector("[data-aspect-readout-size]");
+      const area = document.querySelector("[data-aspect-readout-area]");
+      const resolution = document.querySelector("[data-aspect-readout-resolution]");
+      const note = document.querySelector("[data-aspect-readout-note]");
+      if (!buttons.length || !name || !size || !area || !resolution || !note) return;
+
+      const selectAspect = (id) => {
+        const activeButton = buttons.find((button) => button.dataset.aspectTarget === id);
+        if (!activeButton) return;
+        buttons.forEach((button) => {
+          const active = button === activeButton;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+        boxes.forEach((box) => box.classList.toggle("is-active", box.dataset.aspectBox === id));
+        name.textContent = activeButton.dataset.name;
+        size.textContent = activeButton.dataset.size;
+        area.textContent = `${Number(activeButton.dataset.area).toFixed(2)} mm²`;
+        resolution.textContent = activeButton.dataset.resolution;
+        note.textContent = activeButton.dataset.note;
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => selectAspect(button.dataset.aspectTarget));
+      });
+      selectAspect("43");
     })();
   </script>
 </body>

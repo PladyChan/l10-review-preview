@@ -103,7 +103,7 @@
       grid-template-columns: clamp(220px, 18vw, 260px) minmax(0, 1fr);
       min-height: 100vh;
     }
-    aside {
+    .layout > aside {
       position: sticky;
       top: 0;
       height: 100vh;
@@ -715,7 +715,7 @@
     }
     @media (max-width: 820px) {
       .layout { display: block; }
-      aside { position: relative; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+      .layout > aside { position: relative; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
       main { width: 100%; padding: 28px 18px 60px; }
       section { max-width: none; }
       h1 { font-size: 32px; }

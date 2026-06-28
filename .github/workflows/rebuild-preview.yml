@@ -1,0 +1,36 @@
+name: Rebuild preview
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "source/**.md"
+      - "build_l10_html_preview.py"
+      - ".github/workflows/rebuild-preview.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Rebuild static preview
+        run: python3 build_l10_html_preview.py
+
+      - name: Commit regenerated page
+        run: |
+          if git diff --quiet -- index.html; then
+            echo "index.html already up to date"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Rebuild preview from markdown"
+          git push

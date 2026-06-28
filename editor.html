@@ -286,6 +286,21 @@
       gap: 10px;
       padding: 12px;
     }
+    .check-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--body);
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.4;
+      text-transform: none;
+    }
+    .check-row input {
+      width: 16px;
+      min-height: 16px;
+      accent-color: var(--accent);
+    }
     label {
       display: grid;
       gap: 5px;
@@ -451,6 +466,7 @@
       <label>Path<input data-path value="source/L10_测评对比草稿.md" autocomplete="off"></label>
       <label>Commit message<input data-message value="Update L10 markdown draft" autocomplete="off"></label>
       <label>GitHub token<input data-token type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="粘贴 github_pat_... token"></label>
+      <label class="check-row"><input data-remember-token type="checkbox">在这台设备记住 token</label>
       <button class="button primary" type="button" data-commit>提交当前 Markdown</button>
       <div class="status" data-github-status>Token 只在本页本次会话使用。</div>
     </div>
@@ -460,12 +476,15 @@
     const SOURCE_PATH = "source/L10_测评对比草稿.md";
     const FILE_NAME = "L10_测评对比草稿.md";
     const DRAFT_KEY = "l10-md-editor-draft";
+    const TOKEN_KEY = "l10-md-editor-github-token";
     const editor = document.querySelector("[data-editor]");
     const preview = document.querySelector("[data-preview]");
     const statusEl = document.querySelector("[data-status]");
     const statsEl = document.querySelector("[data-stats]");
     const savedEl = document.querySelector("[data-saved]");
     const drawer = document.querySelector("[data-drawer]");
+    const tokenInput = document.querySelector("[data-token]");
+    const rememberToken = document.querySelector("[data-remember-token]");
     const topbar = document.querySelector(".topbar");
     const mobileSwitch = document.querySelector(".mobile-switch");
     const editorPaneHead = document.querySelector(".editor-pane .pane-head");
@@ -636,13 +655,34 @@
 
     const base64Encode = (text) => btoa(unescape(encodeURIComponent(text)));
 
+    const loadRememberedToken = () => {
+      try {
+        const savedToken = localStorage.getItem(TOKEN_KEY);
+        if (savedToken) {
+          tokenInput.value = savedToken;
+          rememberToken.checked = true;
+          document.querySelector("[data-github-status]").textContent = "已从这台设备载入保存的 token。";
+        }
+      } catch (error) {}
+    };
+
+    const syncRememberedToken = () => {
+      try {
+        if (rememberToken.checked && tokenInput.value.trim()) {
+          localStorage.setItem(TOKEN_KEY, tokenInput.value.trim());
+        } else if (!rememberToken.checked) {
+          localStorage.removeItem(TOKEN_KEY);
+        }
+      } catch (error) {}
+    };
+
     const commitToGithub = async () => {
       const owner = document.querySelector("[data-owner]").value.trim();
       const repo = document.querySelector("[data-repo]").value.trim();
       const branch = document.querySelector("[data-branch]").value.trim();
       const path = document.querySelector("[data-path]").value.trim();
       const message = document.querySelector("[data-message]").value.trim();
-      const token = document.querySelector("[data-token]").value.trim();
+      const token = tokenInput.value.trim();
       const githubStatus = document.querySelector("[data-github-status]");
       const missing = [
         [owner, "Owner"],
@@ -691,6 +731,7 @@
       }
       lastSaved = getEditorValue();
       localStorage.removeItem(DRAFT_KEY);
+      syncRememberedToken();
       update();
       githubStatus.innerHTML = `<strong>已提交：</strong><a href="${result.content.html_url}" target="_blank" rel="noreferrer">打开文件</a>`;
       statusEl.textContent = "已提交到 GitHub";
@@ -718,6 +759,7 @@
       statusEl.textContent = error.message;
     }));
     document.querySelector("[data-open-github]").addEventListener("click", () => {
+      loadRememberedToken();
       drawer.hidden = false;
     });
     document.querySelector("[data-close]").addEventListener("click", () => {
@@ -728,6 +770,10 @@
         document.querySelector("[data-github-status]").innerHTML = `<span class="danger">${escapeHtml(error.message)}</span>`;
       });
     });
+    tokenInput.addEventListener("input", () => {
+      if (rememberToken.checked) syncRememberedToken();
+    });
+    rememberToken.addEventListener("change", syncRememberedToken);
     document.querySelectorAll("[data-view]").forEach((button) => {
       button.addEventListener("click", () => {
         document.body.dataset.mobileView = button.dataset.view;
@@ -738,6 +784,7 @@
     });
 
     queueViewportSync();
+    loadRememberedToken();
     loadSource().catch((error) => {
       statusEl.textContent = `载入失败：${error.message}`;
       setEditorValue(localStorage.getItem(DRAFT_KEY) || "");

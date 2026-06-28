@@ -1,0 +1,608 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>L10 Markdown Editor</title>
+  <style>
+    :root {
+      color-scheme: dark light;
+      --bg: #050505;
+      --panel: #0d0d0d;
+      --panel-2: #171717;
+      --ink: #f1f1f1;
+      --body: #c9c9c9;
+      --muted: #8a8a8a;
+      --line: #2b2b2b;
+      --accent: #ff2a2a;
+      --ok: #d7d7d7;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f3f1ea;
+        --panel: #fffdf6;
+        --panel-2: #ebe7dc;
+        --ink: #111;
+        --body: #36322c;
+        --muted: #706b62;
+        --line: #cbc4b5;
+        --accent: #d71920;
+        --ok: #111;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+    }
+    button, input, textarea { font: inherit; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--bg) 92%, transparent);
+      backdrop-filter: blur(14px);
+    }
+    .mobile-switch {
+      display: none;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      padding: 8px;
+      border-bottom: 1px solid var(--line);
+      background: var(--bg);
+    }
+    .mobile-switch button {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .mobile-switch button:first-child {
+      border-radius: 6px 0 0 6px;
+      border-right: 0;
+    }
+    .mobile-switch button:last-child { border-radius: 0 6px 6px 0; }
+    .mobile-switch button.is-active {
+      background: var(--ink);
+      color: var(--bg);
+    }
+    .brand {
+      min-width: 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+    .brand strong {
+      display: block;
+      overflow: hidden;
+      color: var(--ink);
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+    .brand span { color: var(--muted); }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+    .button {
+      display: inline-flex;
+      min-height: 36px;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel);
+      color: var(--ink);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .button:hover { border-color: var(--accent); }
+    .button.primary {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      min-height: calc(100vh - 61px);
+    }
+    .pane {
+      min-width: 0;
+      border-right: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .pane:last-child { border-right: 0; }
+    .pane-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      min-height: 46px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-2);
+    }
+    .pane-head h1,
+    .pane-head h2 {
+      margin: 0;
+      overflow: hidden;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+    }
+    .stats {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    textarea {
+      display: block;
+      width: 100%;
+      min-height: calc(100vh - 107px);
+      padding: 18px;
+      border: 0;
+      outline: 0;
+      resize: vertical;
+      background: var(--panel);
+      color: var(--body);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+    .preview {
+      height: calc(100vh - 107px);
+      overflow: auto;
+      padding: 22px;
+      color: var(--body);
+      line-height: 1.78;
+    }
+    .preview h1,
+    .preview h2,
+    .preview h3,
+    .preview h4 {
+      color: var(--ink);
+      line-height: 1.35;
+    }
+    .preview h1 { font-size: 28px; }
+    .preview h2 {
+      margin-top: 34px;
+      padding-top: 18px;
+      border-top: 1px solid var(--line);
+      font-size: 22px;
+    }
+    .preview h3 { margin-top: 26px; font-size: 18px; }
+    .preview p { margin: 0 0 14px; }
+    .preview blockquote {
+      margin: 16px 0;
+      padding: 10px 14px;
+      border-left: 3px solid var(--accent);
+      background: var(--panel-2);
+    }
+    .preview code {
+      padding: 1px 5px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 0.92em;
+    }
+    .preview table {
+      width: 100%;
+      margin: 18px 0;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    .preview th,
+    .preview td {
+      padding: 8px;
+      border: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    .preview th {
+      color: var(--ink);
+      background: var(--panel-2);
+    }
+    .drawer {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 20;
+      width: min(520px, calc(100vw - 32px));
+      max-height: min(620px, calc(100vh - 32px));
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 20px 70px rgba(0, 0, 0, 0.35);
+    }
+    .drawer[hidden] { display: none; }
+    .drawer header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-2);
+    }
+    .drawer h2 {
+      margin: 0;
+      font-family: var(--mono);
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    .form {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+    }
+    label {
+      display: grid;
+      gap: 5px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+    input {
+      width: 100%;
+      min-height: 38px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    .status {
+      min-height: 20px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+    .status strong { color: var(--ok); }
+    .danger { color: var(--accent); }
+    @media (max-width: 900px) {
+      .topbar {
+        position: relative;
+        grid-template-columns: 1fr;
+        padding: 10px;
+      }
+      .actions {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        justify-content: stretch;
+      }
+      .button {
+        min-width: 0;
+        padding: 0 8px;
+        font-size: 12px;
+      }
+      .mobile-switch {
+        position: sticky;
+        top: 0;
+        z-index: 9;
+        display: grid;
+      }
+      .workspace { grid-template-columns: 1fr; }
+      .pane {
+        border-right: 0;
+        border-bottom: 0;
+      }
+      .pane-head { min-height: 40px; }
+      textarea {
+        min-height: calc(100vh - 185px);
+        font-size: 15px;
+        line-height: 1.8;
+      }
+      .preview {
+        height: auto;
+        min-height: calc(100vh - 185px);
+        padding: 18px;
+      }
+      body[data-mobile-view="edit"] .pane.preview-pane,
+      body[data-mobile-view="preview"] .pane.editor-pane {
+        display: none;
+      }
+      .drawer {
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        max-height: 82vh;
+        border-right: 0;
+        border-bottom: 0;
+        border-left: 0;
+        border-radius: 8px 8px 0 0;
+      }
+    }
+  </style>
+</head>
+<body data-mobile-view="edit">
+  <header class="topbar">
+    <div class="brand">
+      <strong>L10_测评对比草稿.md</strong>
+      <span data-status>正在载入 source/L10_测评对比草稿.md</span>
+    </div>
+    <div class="actions">
+      <a class="button" href="index.html" title="回到阅读版">阅读版</a>
+      <a class="button" href="https://github.com/PladyChan/l10-review-preview/edit/main/source/L10_%E6%B5%8B%E8%AF%84%E5%AF%B9%E6%AF%94%E8%8D%89%E7%A8%BF.md" title="打开 GitHub 网页编辑">GitHub</a>
+      <button class="button" type="button" data-copy>复制</button>
+      <button class="button" type="button" data-download>下载</button>
+      <button class="button primary" type="button" data-open-github>提交</button>
+    </div>
+  </header>
+
+  <div class="mobile-switch" aria-label="切换编辑和预览">
+    <button class="is-active" type="button" data-view="edit">编辑</button>
+    <button type="button" data-view="preview">预览</button>
+  </div>
+
+  <main class="workspace">
+    <section class="pane editor-pane">
+      <div class="pane-head">
+        <h1>Markdown</h1>
+        <div class="stats" data-stats>-</div>
+      </div>
+      <textarea data-editor spellcheck="false"></textarea>
+    </section>
+    <section class="pane preview-pane">
+      <div class="pane-head">
+        <h2>Preview</h2>
+        <div class="stats" data-saved>未保存</div>
+      </div>
+      <article class="preview" data-preview></article>
+    </section>
+  </main>
+
+  <aside class="drawer" data-drawer hidden>
+    <header>
+      <h2>Commit to GitHub</h2>
+      <button class="button" type="button" data-close>关闭</button>
+    </header>
+    <div class="form">
+      <label>Owner<input data-owner value="PladyChan" autocomplete="off"></label>
+      <label>Repo<input data-repo value="l10-review-preview" autocomplete="off"></label>
+      <label>Branch<input data-branch value="main" autocomplete="off"></label>
+      <label>Path<input data-path value="source/L10_测评对比草稿.md" autocomplete="off"></label>
+      <label>Commit message<input data-message value="Update L10 markdown draft" autocomplete="off"></label>
+      <label>GitHub token<input data-token type="password" autocomplete="off" placeholder="fine-grained token with contents write"></label>
+      <button class="button primary" type="button" data-commit>提交当前 Markdown</button>
+      <div class="status" data-github-status>Token 只在本页本次会话使用。</div>
+    </div>
+  </aside>
+
+  <script>
+    const SOURCE_PATH = "source/L10_测评对比草稿.md";
+    const FILE_NAME = "L10_测评对比草稿.md";
+    const DRAFT_KEY = "l10-md-editor-draft";
+    const editor = document.querySelector("[data-editor]");
+    const preview = document.querySelector("[data-preview]");
+    const statusEl = document.querySelector("[data-status]");
+    const statsEl = document.querySelector("[data-stats]");
+    const savedEl = document.querySelector("[data-saved]");
+    const drawer = document.querySelector("[data-drawer]");
+    let lastSaved = "";
+
+    const escapeHtml = (value) => value
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+
+    const inline = (value) => escapeHtml(value)
+      .replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+
+    const tableHtml = (rows) => {
+      const parsed = rows.map((row) => row.trim().replace(/^\||\|$/g, "").split("|").map((cell) => cell.trim()));
+      if (parsed.length < 2) return "";
+      const isDivider = parsed[1].every((cell) => /^:?-{3,}:?$/.test(cell));
+      const bodyRows = isDivider ? parsed.slice(2) : parsed.slice(1);
+      const head = parsed[0].map((cell) => `<th>${inline(cell)}</th>`).join("");
+      const body = bodyRows.map((row) => `<tr>${row.map((cell) => `<td>${inline(cell)}</td>`).join("")}</tr>`).join("");
+      return `<table><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table>`;
+    };
+
+    const markdownToHtml = (markdown) => {
+      const lines = markdown.split(/\r?\n/);
+      const out = [];
+      let inUl = false;
+      let inOl = false;
+      const closeLists = () => {
+        if (inUl) out.push("</ul>");
+        if (inOl) out.push("</ol>");
+        inUl = false;
+        inOl = false;
+      };
+
+      for (let index = 0; index < lines.length; index += 1) {
+        const line = lines[index].trim();
+        if (!line) {
+          closeLists();
+          continue;
+        }
+        if (line.startsWith("|")) {
+          closeLists();
+          const rows = [];
+          while (index < lines.length && lines[index].trim().startsWith("|")) {
+            rows.push(lines[index]);
+            index += 1;
+          }
+          index -= 1;
+          out.push(tableHtml(rows));
+          continue;
+        }
+        const heading = line.match(/^(#{1,4})\s+(.+)$/);
+        if (heading) {
+          closeLists();
+          out.push(`<h${heading[1].length}>${inline(heading[2])}</h${heading[1].length}>`);
+          continue;
+        }
+        if (line.startsWith("- ")) {
+          if (!inUl) {
+            closeLists();
+            out.push("<ul>");
+            inUl = true;
+          }
+          out.push(`<li>${inline(line.slice(2))}</li>`);
+          continue;
+        }
+        if (/^\d+\.\s+/.test(line)) {
+          if (!inOl) {
+            closeLists();
+            out.push("<ol>");
+            inOl = true;
+          }
+          out.push(`<li>${inline(line.replace(/^\d+\.\s+/, ""))}</li>`);
+          continue;
+        }
+        closeLists();
+        if (line.startsWith(">")) out.push(`<blockquote>${inline(line.replace(/^>\s?/, ""))}</blockquote>`);
+        else out.push(`<p>${inline(line)}</p>`);
+      }
+      closeLists();
+      return out.join("\n");
+    };
+
+    const update = () => {
+      const value = editor.value;
+      preview.innerHTML = markdownToHtml(value);
+      const chars = value.length;
+      const lines = value ? value.split(/\r?\n/).length : 0;
+      statsEl.textContent = `${chars} 字符 / ${lines} 行`;
+      savedEl.textContent = value === lastSaved ? "已同步" : "浏览器草稿";
+      try {
+        localStorage.setItem(DRAFT_KEY, value);
+      } catch (error) {}
+    };
+
+    const loadSource = async () => {
+      const draft = localStorage.getItem(DRAFT_KEY);
+      const response = await fetch(`${SOURCE_PATH}?v=${Date.now()}`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const source = await response.text();
+      lastSaved = source;
+      editor.value = draft && draft !== source ? draft : source;
+      statusEl.textContent = draft && draft !== source ? "已恢复浏览器草稿" : "已载入线上 Markdown";
+      update();
+    };
+
+    const download = () => {
+      const blob = new Blob([editor.value], { type: "text/markdown;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = FILE_NAME;
+      link.click();
+      URL.revokeObjectURL(url);
+    };
+
+    const copyText = async () => {
+      await navigator.clipboard.writeText(editor.value);
+      statusEl.textContent = "Markdown 已复制";
+    };
+
+    const base64Encode = (text) => btoa(unescape(encodeURIComponent(text)));
+
+    const commitToGithub = async () => {
+      const owner = document.querySelector("[data-owner]").value.trim();
+      const repo = document.querySelector("[data-repo]").value.trim();
+      const branch = document.querySelector("[data-branch]").value.trim();
+      const path = document.querySelector("[data-path]").value.trim();
+      const message = document.querySelector("[data-message]").value.trim();
+      const token = document.querySelector("[data-token]").value.trim();
+      const githubStatus = document.querySelector("[data-github-status]");
+      if (!owner || !repo || !branch || !path || !message || !token) {
+        githubStatus.innerHTML = "<span class='danger'>缺少提交字段。</span>";
+        return;
+      }
+      const apiPath = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path).replace(/%2F/g, "/")}`;
+      githubStatus.textContent = "读取当前文件 SHA...";
+      const getResponse = await fetch(`${apiPath}?ref=${encodeURIComponent(branch)}`, {
+        headers: {
+          "Accept": "application/vnd.github+json",
+          "Authorization": `Bearer ${token}`,
+          "X-GitHub-Api-Version": "2022-11-28"
+        }
+      });
+      const current = getResponse.ok ? await getResponse.json() : null;
+      githubStatus.textContent = "提交中...";
+      const putResponse = await fetch(apiPath, {
+        method: "PUT",
+        headers: {
+          "Accept": "application/vnd.github+json",
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          "X-GitHub-Api-Version": "2022-11-28"
+        },
+        body: JSON.stringify({
+          message,
+          content: base64Encode(editor.value),
+          branch,
+          sha: current && current.sha ? current.sha : undefined
+        })
+      });
+      const result = await putResponse.json();
+      if (!putResponse.ok) throw new Error(result.message || `HTTP ${putResponse.status}`);
+      lastSaved = editor.value;
+      localStorage.removeItem(DRAFT_KEY);
+      update();
+      githubStatus.innerHTML = `<strong>已提交：</strong><a href="${result.content.html_url}" target="_blank" rel="noreferrer">打开文件</a>`;
+      statusEl.textContent = "已提交到 GitHub";
+    };
+
+    editor.addEventListener("input", update);
+    document.querySelector("[data-download]").addEventListener("click", download);
+    document.querySelector("[data-copy]").addEventListener("click", () => copyText().catch((error) => {
+      statusEl.textContent = error.message;
+    }));
+    document.querySelector("[data-open-github]").addEventListener("click", () => {
+      drawer.hidden = false;
+    });
+    document.querySelector("[data-close]").addEventListener("click", () => {
+      drawer.hidden = true;
+    });
+    document.querySelector("[data-commit]").addEventListener("click", () => {
+      commitToGithub().catch((error) => {
+        document.querySelector("[data-github-status]").innerHTML = `<span class="danger">${escapeHtml(error.message)}</span>`;
+      });
+    });
+    document.querySelectorAll("[data-view]").forEach((button) => {
+      button.addEventListener("click", () => {
+        document.body.dataset.mobileView = button.dataset.view;
+        document.querySelectorAll("[data-view]").forEach((item) => {
+          item.classList.toggle("is-active", item === button);
+        });
+      });
+    });
+
+    loadSource().catch((error) => {
+      statusEl.textContent = `载入失败：${error.message}`;
+      editor.value = localStorage.getItem(DRAFT_KEY) || "";
+      update();
+    });
+  </script>
+</body>
+</html>

@@ -114,6 +114,7 @@
       text-decoration: none;
       cursor: pointer;
     }
+    .button-icon { display: none; }
     .button:hover { border-color: var(--accent); }
     .button.primary {
       border-color: var(--accent);
@@ -298,17 +299,40 @@
       .topbar {
         position: relative;
         grid-template-columns: 1fr;
-        padding: 10px;
+        gap: 8px;
+        padding: 8px;
+      }
+      .brand {
+        font-size: 11px;
+        line-height: 1.2;
       }
       .actions {
         display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: repeat(7, minmax(0, 1fr));
         justify-content: stretch;
+        gap: 6px;
       }
       .button {
         min-width: 0;
-        padding: 0 8px;
-        font-size: 12px;
+        min-height: 34px;
+        padding: 0;
+        font-size: 17px;
+        line-height: 1;
+      }
+      .button-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+      }
+      .button-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.2em;
+        height: 1.2em;
       }
       .mobile-switch {
         position: sticky;
@@ -343,16 +367,12 @@
         display: none;
       }
       body.keyboard-open .actions {
-        display: flex;
-        flex-wrap: nowrap;
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
         gap: 6px;
-        overflow-x: auto;
-        padding-bottom: 2px;
-        -webkit-overflow-scrolling: touch;
       }
       body.keyboard-open .button {
-        flex: 0 0 auto;
-        min-height: 34px;
+        min-height: 32px;
       }
       body.keyboard-open .mobile-switch {
         display: none;
@@ -385,13 +405,13 @@
       <span data-status>正在载入 source/L10_测评对比草稿.md</span>
     </div>
     <div class="actions">
-      <a class="button" href="index.html" title="回到阅读版">阅读版</a>
-      <a class="button" href="https://github.com/PladyChan/l10-review-preview/edit/main/source/L10_%E6%B5%8B%E8%AF%84%E5%AF%B9%E6%AF%94%E8%8D%89%E7%A8%BF.md" title="打开 GitHub 网页编辑">GitHub</a>
-      <button class="button" type="button" data-undo>撤销</button>
-      <button class="button" type="button" data-redo>重做</button>
-      <button class="button" type="button" data-copy>复制</button>
-      <button class="button" type="button" data-download>下载</button>
-      <button class="button primary" type="button" data-open-github>提交</button>
+      <a class="button" href="index.html" title="回到阅读版" aria-label="回到阅读版"><span class="button-icon" aria-hidden="true">←</span><span class="button-label">阅读版</span></a>
+      <a class="button" href="https://github.com/PladyChan/l10-review-preview/edit/main/source/L10_%E6%B5%8B%E8%AF%84%E5%AF%B9%E6%AF%94%E8%8D%89%E7%A8%BF.md" title="打开 GitHub 网页编辑" aria-label="打开 GitHub 网页编辑"><span class="button-icon" aria-hidden="true">⌘</span><span class="button-label">GitHub</span></a>
+      <button class="button" type="button" data-undo title="撤销" aria-label="撤销"><span class="button-icon" aria-hidden="true">↶</span><span class="button-label">撤销</span></button>
+      <button class="button" type="button" data-redo title="重做" aria-label="重做"><span class="button-icon" aria-hidden="true">↷</span><span class="button-label">重做</span></button>
+      <button class="button" type="button" data-copy title="复制" aria-label="复制"><span class="button-icon" aria-hidden="true">⧉</span><span class="button-label">复制</span></button>
+      <button class="button" type="button" data-download title="下载" aria-label="下载"><span class="button-icon" aria-hidden="true">↓</span><span class="button-label">下载</span></button>
+      <button class="button primary" type="button" data-open-github title="提交" aria-label="提交"><span class="button-icon" aria-hidden="true">↑</span><span class="button-label">提交</span></button>
     </div>
   </header>
 

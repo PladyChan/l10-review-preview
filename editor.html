@@ -94,6 +94,16 @@
       text-overflow: ellipsis;
     }
     .brand span { color: var(--muted); }
+    .status-action {
+      margin-left: 8px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--accent);
+      font: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+    }
     .actions {
       display: grid;
       grid-template-columns: repeat(7, minmax(42px, 1fr));
@@ -494,6 +504,7 @@
     const editorPaneHead = document.querySelector(".editor-pane .pane-head");
     let lastSaved = "";
     let viewportTimer = 0;
+    let pendingDraft = "";
 
     const getEditorValue = () => editor.innerText.replace(/\n$/, "");
     const setEditorValue = (value) => {
@@ -631,8 +642,13 @@
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const source = await response.text();
       lastSaved = source;
-      setEditorValue(draft && draft !== source ? draft : source);
-      statusEl.textContent = draft && draft !== source ? "已恢复浏览器草稿" : "已载入线上 Markdown";
+      pendingDraft = draft && draft !== source ? draft : "";
+      setEditorValue(source);
+      if (pendingDraft) {
+        statusEl.innerHTML = '已载入线上 Markdown，发现本机草稿 <button class="status-action" type="button" data-restore-draft>恢复草稿</button>';
+      } else {
+        statusEl.textContent = "已载入线上 Markdown";
+      }
       update();
     };
 
@@ -763,6 +779,14 @@
     document.querySelector("[data-copy]").addEventListener("click", () => copyText().catch((error) => {
       statusEl.textContent = error.message;
     }));
+    statusEl.addEventListener("click", (event) => {
+      if (!event.target.matches("[data-restore-draft]")) return;
+      if (!pendingDraft) return;
+      setEditorValue(pendingDraft);
+      pendingDraft = "";
+      update();
+      statusEl.textContent = "已恢复本机草稿";
+    });
     document.querySelector("[data-open-github]").addEventListener("click", () => {
       loadRememberedToken();
       drawer.hidden = false;

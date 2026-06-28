@@ -781,7 +781,7 @@
       <div class="sensor-css-scale" aria-hidden="true"><span>0</span><span>36mm</span></div>
       <div class="sensor-css-box" data-sensor-box="one-inch" style="--w-mm:13.2; --h-mm:8.8; --z:884;"><span data-sensor-label="one-inch">一英寸 · 13.2 x 8.8</span></div><div class="sensor-css-box is-compare-b" data-sensor-box="l10-used" style="--w-mm:15.2; --h-mm:11.4; --z:827;"><span data-sensor-label="l10-used">L10 可用 · 15.2 x 11.4</span></div><div class="sensor-css-box is-active is-compare-a" data-sensor-box="m43" style="--w-mm:17.3; --h-mm:13; --z:776;"><span data-sensor-label="m43">标准 M43 · 17.3 x 13</span></div><div class="sensor-css-box" data-sensor-box="aps-c" style="--w-mm:23.5; --h-mm:15.6; --z:634;"><span data-sensor-label="aps-c">APS-C · 23.5 x 15.6</span></div><div class="sensor-css-box" data-sensor-box="full-frame" style="--w-mm:36; --h-mm:24; --z:136;"><span data-sensor-label="full-frame">全画幅 · 36 x 24</span></div>
     </div>
-    <figcaption>CSS 按真实毫米尺寸等比例绘制：宽度用实际宽度 / 36mm，高度用实际高度 / 24mm。L10 可用面积按 20.4MP 有效照片 / 26.5MP 总像素，从标准 M43 面积推算；不是官方公布的物理尺寸。</figcaption>
+    <figcaption>按毫米尺寸等比例显示。L10 可用面积按 20.4MP 有效照片 / 26.5MP 总像素，从标准 M43 面积推算；不是官方公布的物理尺寸。</figcaption>
   </figure>
   <div class="sensor-readout" aria-live="polite">
     <strong data-sensor-readout-name>L10 可用</strong>
@@ -816,7 +816,7 @@
 <aside class="insert-module aspect-module" id="visual-aspect">
   <div class="module-kicker">ASPECT TOOL / L10</div>
   <h3>内置比例面积示意：矩形不是同一个 4:3 裁切</h3>
-  <p>这张图画 L10 自己的四个内置比例，并加上标准 M43 的 17.3 x 13.0mm 外框作为参照。这里按有效像素和同像素密度估算毫米尺寸，再用 CSS 按真实比例绘制，不用 SVG。16:9 比 4:3 更宽，但不是标准 M43 全宽。</p>
+  <p>这张图画 L10 自己的四个内置比例，并加上标准 M43 的 17.3 x 13.0mm 外框作为参照。尺寸按有效像素和同像素密度估算；16:9 比 4:3 更宽，但不是标准 M43 全宽。</p>
   <div class="aspect-controls" aria-label="选择 L10 内置比例">
     <button class="aspect-button is-active" type="button" data-aspect-target="43" aria-pressed="true" data-name="4:3" data-size="15.20 x 11.40 mm" data-area="173.28" data-resolution="5184 x 3888" data-note="默认照片比例"><strong>4:3</strong><span>15.20 x 11.40mm</span></button><button class="aspect-button" type="button" data-aspect-target="32" aria-pressed="false" data-name="3:2" data-size="15.81 x 10.56 mm" data-area="166.88" data-resolution="5392 x 3600" data-note="更接近全幅 / APS-C 观看习惯"><strong>3:2</strong><span>15.81 x 10.56mm</span></button><button class="aspect-button" type="button" data-aspect-target="169" aria-pressed="false" data-name="16:9" data-size="16.51 x 9.29 mm" data-area="153.39" data-resolution="5632 x 3168" data-note="更宽但不是标准 M43 全宽"><strong>16:9</strong><span>16.51 x 9.29mm</span></button><button class="aspect-button" type="button" data-aspect-target="11" aria-pressed="false" data-name="1:1" data-size="11.40 x 11.40 mm" data-area="129.96" data-resolution="3888 x 3888" data-note="方形构图"><strong>1:1</strong><span>11.40 x 11.40mm</span></button>
   </div>

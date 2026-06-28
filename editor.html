@@ -36,6 +36,7 @@
     body {
       margin: 0;
       min-height: 100vh;
+      min-height: var(--app-height, 100dvh);
       background: var(--bg);
       color: var(--ink);
       font-family: var(--font);
@@ -123,6 +124,7 @@
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       min-height: calc(100vh - 61px);
+      min-height: calc(var(--app-height, 100dvh) - 61px);
     }
     .pane {
       min-width: 0;
@@ -161,6 +163,7 @@
       display: block;
       width: 100%;
       min-height: calc(100vh - 107px);
+      min-height: calc(var(--app-height, 100dvh) - 107px);
       padding: 18px;
       border: 0;
       outline: 0;
@@ -173,6 +176,7 @@
     }
     .preview {
       height: calc(100vh - 107px);
+      height: calc(var(--app-height, 100dvh) - 107px);
       overflow: auto;
       padding: 22px;
       color: var(--body);
@@ -231,6 +235,7 @@
       z-index: 20;
       width: min(520px, calc(100vw - 32px));
       max-height: min(620px, calc(100vh - 32px));
+      max-height: min(620px, calc(var(--app-height, 100dvh) - 32px));
       overflow: auto;
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -285,6 +290,11 @@
     .status strong { color: var(--ok); }
     .danger { color: var(--accent); }
     @media (max-width: 900px) {
+      html,
+      body {
+        height: var(--app-height, 100dvh);
+        overflow: hidden;
+      }
       .topbar {
         position: relative;
         grid-template-columns: 1fr;
@@ -313,14 +323,43 @@
       }
       .pane-head { min-height: 40px; }
       textarea {
-        min-height: calc(100vh - 185px);
+        height: var(--editor-height, calc(var(--app-height, 100dvh) - 185px));
+        min-height: var(--editor-height, calc(var(--app-height, 100dvh) - 185px));
         font-size: 15px;
         line-height: 1.8;
+        resize: none;
       }
       .preview {
-        height: auto;
-        min-height: calc(100vh - 185px);
+        height: var(--editor-height, calc(var(--app-height, 100dvh) - 185px));
+        min-height: var(--editor-height, calc(var(--app-height, 100dvh) - 185px));
+        overflow: auto;
         padding: 18px;
+      }
+      body.keyboard-open .topbar {
+        padding: 6px 8px;
+        gap: 6px;
+      }
+      body.keyboard-open .brand {
+        display: none;
+      }
+      body.keyboard-open .actions {
+        display: flex;
+        flex-wrap: nowrap;
+        gap: 6px;
+        overflow-x: auto;
+        padding-bottom: 2px;
+        -webkit-overflow-scrolling: touch;
+      }
+      body.keyboard-open .button {
+        flex: 0 0 auto;
+        min-height: 34px;
+      }
+      body.keyboard-open .mobile-switch {
+        display: none;
+      }
+      body.keyboard-open .pane-head {
+        min-height: 34px;
+        padding: 5px 10px;
       }
       body[data-mobile-view="edit"] .pane.preview-pane,
       body[data-mobile-view="preview"] .pane.editor-pane {
@@ -405,7 +444,11 @@
     const statsEl = document.querySelector("[data-stats]");
     const savedEl = document.querySelector("[data-saved]");
     const drawer = document.querySelector("[data-drawer]");
+    const topbar = document.querySelector(".topbar");
+    const mobileSwitch = document.querySelector(".mobile-switch");
+    const editorPaneHead = document.querySelector(".editor-pane .pane-head");
     let lastSaved = "";
+    let viewportTimer = 0;
 
     const escapeHtml = (value) => value
       .replace(/&/g, "&amp;")
@@ -500,6 +543,36 @@
       } catch (error) {}
     };
 
+    const isMobileLayout = () => window.matchMedia("(max-width: 900px)").matches;
+
+    const syncViewportSize = () => {
+      const visualHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+      document.documentElement.style.setProperty("--app-height", `${visualHeight}px`);
+
+      if (!isMobileLayout()) {
+        document.body.classList.remove("keyboard-open");
+        document.documentElement.style.removeProperty("--editor-height");
+        return;
+      }
+
+      const keyboardOpen = document.activeElement === editor
+        && window.visualViewport
+        && window.innerHeight - window.visualViewport.height > 80;
+      document.body.classList.toggle("keyboard-open", Boolean(keyboardOpen));
+
+      const topbarHeight = topbar ? topbar.offsetHeight : 0;
+      const switchHeight = keyboardOpen || !mobileSwitch ? 0 : mobileSwitch.offsetHeight;
+      const paneHeadHeight = editorPaneHead ? editorPaneHead.offsetHeight : 0;
+      const editorHeight = Math.max(180, Math.floor(visualHeight - topbarHeight - switchHeight - paneHeadHeight));
+      document.documentElement.style.setProperty("--editor-height", `${editorHeight}px`);
+    };
+
+    const queueViewportSync = () => {
+      window.clearTimeout(viewportTimer);
+      syncViewportSize();
+      viewportTimer = window.setTimeout(syncViewportSize, 120);
+    };
+
     const loadSource = async () => {
       const draft = localStorage.getItem(DRAFT_KEY);
       const response = await fetch(`${SOURCE_PATH}?v=${Date.now()}`);
@@ -583,6 +656,14 @@
     };
 
     editor.addEventListener("input", update);
+    editor.addEventListener("focus", queueViewportSync);
+    editor.addEventListener("blur", queueViewportSync);
+    window.addEventListener("resize", queueViewportSync);
+    window.addEventListener("orientationchange", queueViewportSync);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", queueViewportSync);
+      window.visualViewport.addEventListener("scroll", queueViewportSync);
+    }
     document.querySelector("[data-undo]").addEventListener("click", () => runEditCommand("undo", "撤销"));
     document.querySelector("[data-redo]").addEventListener("click", () => runEditCommand("redo", "重做"));
     document.querySelector("[data-download]").addEventListener("click", download);
@@ -609,6 +690,7 @@
       });
     });
 
+    queueViewportSync();
     loadSource().catch((error) => {
       statusEl.textContent = `载入失败：${error.message}`;
       editor.value = localStorage.getItem(DRAFT_KEY) || "";

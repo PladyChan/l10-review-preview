@@ -95,26 +95,43 @@
     }
     .brand span { color: var(--muted); }
     .actions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 8px;
+      display: grid;
+      grid-template-columns: repeat(7, minmax(42px, 1fr));
+      justify-content: stretch;
+      gap: 6px;
     }
     .button {
       display: inline-flex;
-      min-height: 36px;
+      min-width: 0;
+      min-height: 34px;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      padding: 0 12px;
+      padding: 0;
       border: 1px solid var(--line);
       border-radius: 6px;
       background: var(--panel);
       color: var(--ink);
+      font-size: 17px;
+      line-height: 1;
       text-decoration: none;
       cursor: pointer;
     }
-    .button-icon { display: none; }
+    .button-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+    .button-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.2em;
+      height: 1.2em;
+    }
     .button:hover { border-color: var(--accent); }
     .button.primary {
       border-color: var(--accent);
@@ -313,26 +330,7 @@
         gap: 6px;
       }
       .button {
-        min-width: 0;
         min-height: 34px;
-        padding: 0;
-        font-size: 17px;
-        line-height: 1;
-      }
-      .button-label {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        overflow: hidden;
-        clip: rect(0 0 0 0);
-        white-space: nowrap;
-      }
-      .button-icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.2em;
-        height: 1.2em;
       }
       .mobile-switch {
         position: sticky;

@@ -198,8 +198,8 @@
       user-select: text;
     }
     .preview {
-      height: calc(100vh - 107px);
-      height: calc(var(--app-height, 100dvh) - 107px);
+      min-height: calc(100vh - 107px);
+      min-height: calc(var(--app-height, 100dvh) - 107px);
       overflow: auto;
       padding: 22px;
       color: var(--body);
@@ -333,6 +333,11 @@
         height: var(--app-height, 100dvh);
         overflow: hidden;
       }
+      body[data-mobile-view="preview"] {
+        height: auto;
+        min-height: var(--app-height, 100dvh);
+        overflow: auto;
+      }
       .topbar {
         position: sticky;
         grid-template-columns: 1fr;
@@ -371,9 +376,8 @@
         line-height: 1.8;
       }
       .preview {
-        height: var(--editor-height, calc(var(--app-height, 100dvh) - 185px));
-        min-height: var(--editor-height, calc(var(--app-height, 100dvh) - 185px));
-        overflow: auto;
+        min-height: 0;
+        overflow: visible;
         padding: 18px;
       }
       body.keyboard-open .topbar {
@@ -593,9 +597,11 @@
 
     const syncViewportSize = () => {
       const visualHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      document.documentElement.style.setProperty("--app-height", `${visualHeight}px`);
+      const previewMode = document.body.dataset.mobileView === "preview";
+      const appHeight = previewMode ? window.innerHeight : visualHeight;
+      document.documentElement.style.setProperty("--app-height", `${appHeight}px`);
 
-      if (!isMobileLayout()) {
+      if (!isMobileLayout() || previewMode) {
         document.body.classList.remove("keyboard-open");
         document.documentElement.style.removeProperty("--editor-height");
         return;
@@ -611,7 +617,6 @@
       const paneHeadHeight = editorPaneHead ? editorPaneHead.offsetHeight : 0;
       const editorHeight = Math.max(180, Math.floor(visualHeight - topbarHeight - switchHeight - paneHeadHeight));
       document.documentElement.style.setProperty("--editor-height", `${editorHeight}px`);
-      if (keyboardOpen) window.setTimeout(() => window.scrollTo(0, 0), 0);
     };
 
     const queueViewportSync = () => {
@@ -774,13 +779,24 @@
       if (rememberToken.checked) syncRememberedToken();
     });
     rememberToken.addEventListener("change", syncRememberedToken);
-    document.querySelectorAll("[data-view]").forEach((button) => {
-      button.addEventListener("click", () => {
-        document.body.dataset.mobileView = button.dataset.view;
-        document.querySelectorAll("[data-view]").forEach((item) => {
-          item.classList.toggle("is-active", item === button);
-        });
+    const setMobileView = (view) => {
+      if (view === "preview") {
+        editor.blur();
+        document.body.classList.remove("keyboard-open");
+        document.documentElement.style.removeProperty("--editor-height");
+      }
+      document.body.dataset.mobileView = view;
+      document.querySelectorAll("[data-view]").forEach((item) => {
+        item.classList.toggle("is-active", item.dataset.view === view);
       });
+      window.setTimeout(() => {
+        queueViewportSync();
+        if (view === "preview") window.scrollTo(0, 0);
+      }, view === "preview" ? 160 : 0);
+    };
+
+    document.querySelectorAll("[data-view]").forEach((button) => {
+      button.addEventListener("click", () => setMobileView(button.dataset.view));
     });
 
     queueViewportSync();

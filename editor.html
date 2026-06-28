@@ -450,7 +450,7 @@
       <label>Branch<input data-branch value="main" autocomplete="off"></label>
       <label>Path<input data-path value="source/L10_测评对比草稿.md" autocomplete="off"></label>
       <label>Commit message<input data-message value="Update L10 markdown draft" autocomplete="off"></label>
-      <label>GitHub token<input data-token type="password" autocomplete="off" placeholder="fine-grained token with contents write"></label>
+      <label>GitHub token<input data-token type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="粘贴 github_pat_... token"></label>
       <button class="button primary" type="button" data-commit>提交当前 Markdown</button>
       <div class="status" data-github-status>Token 只在本页本次会话使用。</div>
     </div>
@@ -644,8 +644,16 @@
       const message = document.querySelector("[data-message]").value.trim();
       const token = document.querySelector("[data-token]").value.trim();
       const githubStatus = document.querySelector("[data-github-status]");
-      if (!owner || !repo || !branch || !path || !message || !token) {
-        githubStatus.innerHTML = "<span class='danger'>缺少提交字段。</span>";
+      const missing = [
+        [owner, "Owner"],
+        [repo, "Repo"],
+        [branch, "Branch"],
+        [path, "Path"],
+        [message, "Commit message"],
+        [token, "GitHub token"]
+      ].filter(([value]) => !value).map(([, label]) => label);
+      if (missing.length) {
+        githubStatus.innerHTML = `<span class='danger'>还没填：${missing.join("、")}。GitHub token 不是 GitHub 密码，要粘贴 github_pat_... 这类授权字符串。</span>`;
         return;
       }
       const apiPath = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(path).replace(/%2F/g, "/")}`;
@@ -675,7 +683,12 @@
         })
       });
       const result = await putResponse.json();
-      if (!putResponse.ok) throw new Error(result.message || `HTTP ${putResponse.status}`);
+      if (!putResponse.ok) {
+        if (putResponse.status === 403 && /Resource not accessible/i.test(result.message || "")) {
+          throw new Error("这个 token 没有写入仓库文件的权限。请重新生成 token：Repository access 选 l10-review-preview，Repository permissions 里的 Contents 设为 Read and write。");
+        }
+        throw new Error(result.message || `HTTP ${putResponse.status}`);
+      }
       lastSaved = getEditorValue();
       localStorage.removeItem(DRAFT_KEY);
       update();

@@ -41,7 +41,7 @@
       color: var(--ink);
       font-family: var(--font);
     }
-    button, input, textarea { font: inherit; }
+    button, input, .editor-surface { font: inherit; }
     .topbar {
       position: sticky;
       top: 0;
@@ -177,20 +177,25 @@
       font-size: 11px;
       white-space: nowrap;
     }
-    textarea {
+    .editor-surface {
       display: block;
       width: 100%;
       min-height: calc(100vh - 107px);
       min-height: calc(var(--app-height, 100dvh) - 107px);
+      overflow: auto;
       padding: 18px;
       border: 0;
       outline: 0;
-      resize: vertical;
       background: var(--panel);
       color: var(--body);
       font-family: var(--mono);
       font-size: 14px;
       line-height: 1.75;
+      white-space: pre-wrap;
+      word-break: break-word;
+      -webkit-overflow-scrolling: touch;
+      caret-color: var(--accent);
+      user-select: text;
     }
     .preview {
       height: calc(100vh - 107px);
@@ -314,7 +319,7 @@
         overflow: hidden;
       }
       .topbar {
-        position: relative;
+        position: sticky;
         grid-template-columns: 1fr;
         gap: 8px;
         padding: 8px;
@@ -344,12 +349,11 @@
         border-bottom: 0;
       }
       .pane-head { min-height: 40px; }
-      textarea {
+      .editor-surface {
         height: var(--editor-height, calc(var(--app-height, 100dvh) - 185px));
         min-height: var(--editor-height, calc(var(--app-height, 100dvh) - 185px));
         font-size: 15px;
         line-height: 1.8;
-        resize: none;
       }
       .preview {
         height: var(--editor-height, calc(var(--app-height, 100dvh) - 185px));
@@ -424,7 +428,7 @@
         <h1>Markdown</h1>
         <div class="stats" data-stats>-</div>
       </div>
-      <textarea data-editor spellcheck="false"></textarea>
+      <div class="editor-surface" data-editor contenteditable="plaintext-only" role="textbox" aria-label="Markdown 编辑器" spellcheck="false" autocorrect="off" autocapitalize="off"></div>
     </section>
     <section class="pane preview-pane">
       <div class="pane-head">
@@ -467,6 +471,11 @@
     const editorPaneHead = document.querySelector(".editor-pane .pane-head");
     let lastSaved = "";
     let viewportTimer = 0;
+
+    const getEditorValue = () => editor.innerText.replace(/\n$/, "");
+    const setEditorValue = (value) => {
+      editor.textContent = value;
+    };
 
     const escapeHtml = (value) => value
       .replace(/&/g, "&amp;")
@@ -550,7 +559,7 @@
     };
 
     const update = () => {
-      const value = editor.value;
+      const value = getEditorValue();
       preview.innerHTML = markdownToHtml(value);
       const chars = value.length;
       const lines = value ? value.split(/\r?\n/).length : 0;
@@ -583,6 +592,7 @@
       const paneHeadHeight = editorPaneHead ? editorPaneHead.offsetHeight : 0;
       const editorHeight = Math.max(180, Math.floor(visualHeight - topbarHeight - switchHeight - paneHeadHeight));
       document.documentElement.style.setProperty("--editor-height", `${editorHeight}px`);
+      if (keyboardOpen) window.setTimeout(() => window.scrollTo(0, 0), 0);
     };
 
     const queueViewportSync = () => {
@@ -597,13 +607,13 @@
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const source = await response.text();
       lastSaved = source;
-      editor.value = draft && draft !== source ? draft : source;
+      setEditorValue(draft && draft !== source ? draft : source);
       statusEl.textContent = draft && draft !== source ? "已恢复浏览器草稿" : "已载入线上 Markdown";
       update();
     };
 
     const download = () => {
-      const blob = new Blob([editor.value], { type: "text/markdown;charset=utf-8" });
+      const blob = new Blob([getEditorValue()], { type: "text/markdown;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
@@ -613,7 +623,7 @@
     };
 
     const copyText = async () => {
-      await navigator.clipboard.writeText(editor.value);
+      await navigator.clipboard.writeText(getEditorValue());
       statusEl.textContent = "Markdown 已复制";
     };
 
@@ -659,14 +669,14 @@
         },
         body: JSON.stringify({
           message,
-          content: base64Encode(editor.value),
+          content: base64Encode(getEditorValue()),
           branch,
           sha: current && current.sha ? current.sha : undefined
         })
       });
       const result = await putResponse.json();
       if (!putResponse.ok) throw new Error(result.message || `HTTP ${putResponse.status}`);
-      lastSaved = editor.value;
+      lastSaved = getEditorValue();
       localStorage.removeItem(DRAFT_KEY);
       update();
       githubStatus.innerHTML = `<strong>已提交：</strong><a href="${result.content.html_url}" target="_blank" rel="noreferrer">打开文件</a>`;
@@ -674,6 +684,12 @@
     };
 
     editor.addEventListener("input", update);
+    editor.addEventListener("paste", (event) => {
+      event.preventDefault();
+      const text = event.clipboardData ? event.clipboardData.getData("text/plain") : "";
+      document.execCommand("insertText", false, text);
+      update();
+    });
     editor.addEventListener("focus", queueViewportSync);
     editor.addEventListener("blur", queueViewportSync);
     window.addEventListener("resize", queueViewportSync);
@@ -711,7 +727,7 @@
     queueViewportSync();
     loadSource().catch((error) => {
       statusEl.textContent = `载入失败：${error.message}`;
-      editor.value = localStorage.getItem(DRAFT_KEY) || "";
+      setEditorValue(localStorage.getItem(DRAFT_KEY) || "");
       update();
     });
   </script>

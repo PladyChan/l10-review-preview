@@ -397,7 +397,7 @@ def inject_modules(body: str) -> str:
         "<h3>L10 vs S9：全幅上限和低决策</h3>": s9_module,
         "<h3>爱群大酒店室内人像</h3>": hotel_module,
         "<h2>09 云南旅行：500g 的 L10 会不会成为负担？</h2>": travel_module,
-        "<h2>07 视频能力</h2>": video_workflow_module,
+        "<h2>06 视频能力</h2>": video_workflow_module,
         "<h3>外观、携带和操作</h3>": handling_module,
     }
     for marker, module in insertions.items():

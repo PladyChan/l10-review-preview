@@ -408,6 +408,45 @@ def inject_modules(body: str) -> str:
 
 sections = [(title, file, inject_modules(body)) for title, file, body in sections]
 
+
+def add_outline(body: str):
+    items = []
+    counter = 0
+
+    def replace_heading(match):
+        nonlocal counter
+        counter += 1
+        heading = match.group(1)
+        anchor = f"outline-{counter:02d}"
+        items.append((anchor, heading))
+        return f'<h2 id="{anchor}">{heading}</h2>'
+
+    body = re.sub(r"<h2>(.*?)</h2>", replace_heading, body)
+    if not items:
+        return body
+
+    def outline_label(heading):
+        return re.sub(r"^\d+\s+", "", heading)
+
+    links = "".join(
+        f'<a href="#{anchor}"><span>{idx:02d}</span>{outline_label(heading)}</a>'
+        for idx, (anchor, heading) in enumerate(items, 1)
+    )
+    outline = (
+        '<details class="article-outline">'
+        '<summary><span>文章大纲</span><em>展开章节</em></summary>'
+        f'<nav aria-label="文章大纲">{links}</nav>'
+        '</details>'
+    )
+    body = body.replace("</h1>", f"</h1>\n{outline}", 1)
+    return body
+
+
+sections = [
+    (title, file, add_outline(body))
+    for title, file, body in sections
+]
+
 nav = "\n".join(
     f'<a href="#sec-{idx}">{html.escape(title)}</a>' for idx, (title, _, _) in enumerate(sections)
 )
@@ -613,6 +652,87 @@ out = f"""<!doctype html>
       letter-spacing: .04em;
       text-transform: uppercase;
       margin-bottom: 14px;
+    }}
+    .article-outline {{
+      margin: 0 0 28px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }}
+    .article-outline summary {{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      min-height: 44px;
+      padding: 11px 12px;
+      color: var(--ink);
+      cursor: pointer;
+      list-style: none;
+      font-family: var(--font-display);
+      font-size: 16px;
+      line-height: 1.2;
+    }}
+    .article-outline summary::-webkit-details-marker {{ display: none; }}
+    .article-outline summary::before {{
+      content: "";
+      width: 12px;
+      height: 12px;
+      border: 1px solid var(--accent);
+      background: transparent;
+      grid-column: 1;
+      grid-row: 1;
+    }}
+    .article-outline summary span {{
+      padding-left: 24px;
+      grid-column: 1;
+      grid-row: 1;
+    }}
+    .article-outline summary em {{
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-style: normal;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }}
+    .article-outline[open] summary {{
+      border-bottom: 1px solid var(--line);
+    }}
+    .article-outline[open] summary::before {{
+      background: var(--accent);
+    }}
+    .article-outline nav {{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin: 0;
+    }}
+    .article-outline nav a {{
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 11px 12px;
+      border-top: 0;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: var(--body-text);
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.35;
+      letter-spacing: 0;
+      text-decoration: none;
+    }}
+    .article-outline nav a:nth-child(2n) {{ border-right: 0; }}
+    .article-outline nav a:nth-last-child(-n+2) {{ border-bottom: 0; }}
+    .article-outline nav a:hover {{
+      color: var(--ink);
+      background: var(--surface-2);
+    }}
+    .article-outline nav a span {{
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      line-height: 1.6;
     }}
     h1 {{
       font-family: var(--font-display);
@@ -1138,6 +1258,16 @@ out = f"""<!doctype html>
       section {{ max-width: none; }}
       h1 {{ font-size: 32px; }}
       h2 {{ font-size: 22px; }}
+      .article-outline {{ margin-bottom: 22px; }}
+      .article-outline summary {{ min-height: 42px; padding: 10px 11px; }}
+      .article-outline nav {{ grid-template-columns: 1fr; }}
+      .article-outline nav a,
+      .article-outline nav a:nth-child(2n),
+      .article-outline nav a:nth-last-child(-n+2) {{
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }}
+      .article-outline nav a:last-child {{ border-bottom: 0; }}
       table {{ display: block; overflow-x: auto; white-space: nowrap; }}
       .insert-module {{ margin: 24px 0; padding: 14px; }}
       .note-grid {{ grid-template-columns: 1fr; }}

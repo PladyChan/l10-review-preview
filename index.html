@@ -871,6 +871,42 @@
 <p>Y2000-LX LUT 就是在这里接上的，把 LX3 那条千禧年便携机的色彩记忆，接到 L10 的现代取景、直出和分享工作流里。对我来说，这比单纯说“复古”更准确：L10 不是旧机器回来了，而是旧 LUMIX 小相机的感觉，被放进了一台今天能用的相机里。</p>
 <h2 id="outline-02">02 传感器：L10 的真实画幅位置</h2>
 <h3>先确认可用面积</h3>
+
+<aside class="insert-module" id="visual-sensor">
+  <div class="module-kicker">VISUAL TOOL / FORMAT</div>
+  <h3>画幅对比工具：L10 可用面积不是标准 M43 全面积</h3>
+  <p>这块只讲尺寸关系，不直接等同于最终画质。L10 用的是 4/3 多画幅路线，但可用成像面积要和标准 M43 分开看。</p>
+  
+  <div class="sensor-controls" aria-label="选择传感器规格">
+    <button class="sensor-button" type="button" data-sensor-target="one-inch" aria-pressed="false" data-name="一英寸" data-size="13.2 x 8.8 mm" data-area="116.16" data-note="传感器规格口径"><em data-compare-marker></em><strong>一英寸</strong><span>13.2 x 8.8 mm</span></button><button class="sensor-button is-compare-b" type="button" data-sensor-target="l10-used" aria-pressed="false" data-name="L10 可用" data-size="15.2 x 11.4 mm" data-area="173.28" data-note="按 20.4MP / 26.5MP 推算"><em data-compare-marker>B</em><strong>L10 可用</strong><span>15.2 x 11.4 mm</span></button><button class="sensor-button is-active is-compare-a" type="button" data-sensor-target="m43" aria-pressed="true" data-name="标准 M43" data-size="17.3 x 13 mm" data-area="224.90" data-note="传感器规格口径"><em data-compare-marker>A</em><strong>标准 M43</strong><span>17.3 x 13 mm</span></button><button class="sensor-button" type="button" data-sensor-target="aps-c" aria-pressed="false" data-name="APS-C" data-size="23.5 x 15.6 mm" data-area="366.60" data-note="传感器规格口径"><em data-compare-marker></em><strong>APS-C</strong><span>23.5 x 15.6 mm</span></button><button class="sensor-button" type="button" data-sensor-target="full-frame" aria-pressed="false" data-name="全画幅" data-size="36 x 24 mm" data-area="864.00" data-note="传感器规格口径"><em data-compare-marker></em><strong>全画幅</strong><span>36 x 24 mm</span></button>
+  </div>
+  <figure class="sensor-figure" data-sensor-visual>
+    <div class="sensor-css-stage" role="img" aria-label="一英寸、L10 可用、标准 M43、APS-C、全画幅传感器尺寸比例图">
+      <div class="sensor-css-scale" aria-hidden="true"><span>0</span><span>36mm</span></div>
+      <div class="sensor-css-box" data-sensor-box="one-inch" style="--w-mm:13.2; --h-mm:8.8; --z:884;"><span data-sensor-label="one-inch">一英寸 · 13.2 x 8.8</span></div><div class="sensor-css-box is-compare-b" data-sensor-box="l10-used" style="--w-mm:15.2; --h-mm:11.4; --z:827;"><span data-sensor-label="l10-used">L10 可用 · 15.2 x 11.4</span></div><div class="sensor-css-box is-active is-compare-a" data-sensor-box="m43" style="--w-mm:17.3; --h-mm:13; --z:776;"><span data-sensor-label="m43">标准 M43 · 17.3 x 13</span></div><div class="sensor-css-box" data-sensor-box="aps-c" style="--w-mm:23.5; --h-mm:15.6; --z:634;"><span data-sensor-label="aps-c">APS-C · 23.5 x 15.6</span></div><div class="sensor-css-box" data-sensor-box="full-frame" style="--w-mm:36; --h-mm:24; --z:136;"><span data-sensor-label="full-frame">全画幅 · 36 x 24</span></div>
+    </div>
+    <figcaption>按毫米尺寸等比例显示。L10 可用面积按 20.4MP 有效照片 / 26.5MP 总像素，从标准 M43 面积推算；不是官方公布的物理尺寸。</figcaption>
+  </figure>
+  <div class="sensor-readout" aria-live="polite">
+    <strong data-sensor-readout-name>L10 可用</strong>
+    <span data-sensor-readout-size>15.2 x 11.4 mm</span>
+    <span data-sensor-readout-area>173 mm²</span>
+    <span data-sensor-readout-note>按 20.4MP / 26.5MP 推算</span>
+  </div>
+  <div class="sensor-compare" aria-label="传感器面积对比工具">
+    <div><span>A</span><strong data-compare-a-name>标准 M43</strong></div>
+    <div><span>B</span><strong data-compare-b-name>L10 可用</strong></div>
+    <output data-compare-output>A（标准 M43）是 B（L10 可用）的 1.30 倍，面积大约多 30%。</output>
+  </div>
+  <div class="area-summary">
+    <p><strong>面积换算结论：</strong>全画幅约是 APS-C 的 2.36 倍；APS-C 约是 L10 可用面积的 2.12 倍；APS-C 约是标准 M43 的 1.63 倍；L10 可用面积约是一英寸的 1.49 倍。</p>
+    <p>全画幅：36 x 24 = 864mm²；APS-C：23.5 x 15.6 = 366.6mm²；标准 M43：17.3 x 13 = 224.9mm²；L10 可用：15.2 x 11.4 = 173.28mm²；一英寸：13.2 x 8.8 = 116.16mm²。</p>
+    <p>L10 的传感器位置其实很清楚：它比一英寸大一档，但不是碾压；比标准 M43 小一圈；和 APS-C 差距明显；和全画幅差距更大。所以 L10 不能靠“大底”来讲优势，它真正要讲的是 24-75mm 光学变焦、EVF、Real Time LUT 和完整相机体验。</p>
+  </div>
+  <table><thead><tr><th>规格</th><th>尺寸</th><th>面积</th><th>口径</th></tr></thead><tbody><tr><td>一英寸</td><td>13.2 x 8.8 mm</td><td>116.16 mm²</td><td>常用规格</td></tr><tr><td>L10 可用</td><td>15.2 x 11.4 mm</td><td>173.28 mm²</td><td>推算</td></tr><tr><td>标准 M43</td><td>17.3 x 13 mm</td><td>224.90 mm²</td><td>常用规格</td></tr><tr><td>APS-C</td><td>23.5 x 15.6 mm</td><td>366.60 mm²</td><td>常用规格</td></tr><tr><td>全画幅</td><td>36 x 24 mm</td><td>864.00 mm²</td><td>常用规格</td></tr></tbody></table>
+
+</aside>
+
 <p>L10 是 M43 旗舰机 GH7 同底，但可用面积不是全面积，这也是很大争议的一个点。</p>
 <p>APS-C 约是 L10 可用面积的 2.12 倍，约是标准 M43 的 1.63 倍，L10 可用面积约是一英寸的 1.49 倍。</p>
 <p>L10 的传感器位置其实很清楚：它比一英寸大一档，但不是碾压；比标准 M43 小一圈；和 APS-C 差距明显；和全画幅差距更大。</p>

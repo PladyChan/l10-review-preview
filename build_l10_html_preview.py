@@ -391,7 +391,7 @@ video_workflow_module = f"""
 
 def inject_modules(body: str) -> str:
     insertions = {
-        "<p>先把底说清楚。L10 是 4/3 多画幅路线，但可用面积不是标准 M43 全面积，不能直接按完整 M43 来对比 APS-C 或全画幅。</p>": sensor_module,
+        "<h3>先确认可用面积</h3>": sensor_module,
         "<h3>内置比例：不是简单裁切</h3>": aspect_module,
         "<h3>多画幅不是装饰：不同比例适合什么题材？</h3>": aspect_advice_module,
         "<h3>L10 vs S9：全幅上限和低决策</h3>": s9_module,

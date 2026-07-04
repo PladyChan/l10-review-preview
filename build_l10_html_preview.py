@@ -208,10 +208,10 @@ sensor_module = f"""
 
 studio_compare_module = """
 <aside class="insert-module studio-compare-module" id="studio-comparison">
-  <h3>四机位 JPG / RAW 局部对比工具</h3>
-  <p>把 X100VI、L10、S9 和 GR4 的同一区域导出图放进来，可以在同一画质段落里切换 JPG / RAW、同步缩放和拖拽查看。图片只保存在本机浏览器里。</p>
+  <h3>RAW 导出 JPG 局部对比工具</h3>
+  <p>这里读取已经整理好的 RAW 导出 JPG 对比组：L10 28mm 对 GR4 28mm，L10 35mm 分别对 S9 和 X100VI。可以在同一画质段落里切换对比组、ISO、同步缩放和拖拽查看。</p>
   <div class="studio-compare-shell">
-    <iframe data-studio-tool-frame title="四机位 JPG / RAW 局部对比工具"></iframe>
+    <iframe data-studio-tool-frame title="RAW 导出 JPG 局部对比工具"></iframe>
   </div>
   <p class="module-link"><a href="#" data-studio-tool-link>打开独立对比工具</a></p>
 </aside>

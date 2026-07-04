@@ -391,7 +391,7 @@ video_workflow_module = f"""
 
 def inject_modules(body: str) -> str:
     insertions = {
-        "<h3>先把裁切账算清楚</h3>": sensor_module,
+        "<h3>裁切余量和剩余像素</h3>": sensor_module,
         "<h3>比例拨杆：多画幅和自定义入口</h3>": aspect_module,
         "<h3>L10 vs S9：全幅上限和低决策</h3>": s9_module,
         "<h3>爱群大酒店室内人像</h3>": hotel_module,

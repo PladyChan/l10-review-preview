@@ -33,8 +33,7 @@
     }
 
     button,
-    input,
-    select {
+    input {
       font: inherit;
     }
 
@@ -111,22 +110,28 @@
       accent-color: var(--accent);
     }
 
-    select {
-      min-height: 30px;
-      border: 1px solid var(--line);
-      border-radius: 0;
-      background: var(--bg);
-      color: var(--ink);
-      padding: 4px 7px;
-      font-size: 12px;
+    .segmented {
+      display: flex;
+      gap: 4px;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
     }
 
-    [data-preset-group] {
-      width: min(44vw, 270px);
+    .segmented::-webkit-scrollbar {
+      display: none;
     }
 
-    [data-preset-iso] {
-      width: 98px;
+    .segmented button {
+      white-space: nowrap;
+    }
+
+    .group-options {
+      max-width: min(52vw, 520px);
+    }
+
+    .iso-options {
+      max-width: min(36vw, 360px);
     }
 
     .main {
@@ -346,6 +351,11 @@
         width: min(34vw, 150px);
       }
 
+      .group-options,
+      .iso-options {
+        max-width: 100%;
+      }
+
       .toolbar label {
         font-size: 10px;
       }
@@ -400,10 +410,10 @@
   <div class="app">
     <div class="toolbar" aria-label="对比控制">
       <label>对比组
-        <select data-preset-group></select>
+        <div class="segmented group-options" data-preset-group></div>
       </label>
       <label>ISO
-        <select data-preset-iso></select>
+        <div class="segmented iso-options" data-preset-iso></div>
       </label>
       <label>缩放
         <input type="range" min="0.05" max="4" step="0.01" value="1" data-zoom>
@@ -427,7 +437,7 @@
       const presetGroups = [
         {
           id: "L10_28mm_vs_GR4_28mm",
-          label: "L10 28mm vs GR4 28mm",
+          label: "L10 vs GR4",
           cameras: [
             { id: "l10", name: "Panasonic Lumix DC-L10", focal: "28mm", prefix: "01_L10_28mm" },
             { id: "gr4", name: "Ricoh GR IV", focal: "28mm", prefix: "02_GR4_28mm" }
@@ -435,7 +445,7 @@
         },
         {
           id: "L10_35mm_vs_S9_35mm",
-          label: "L10 35mm vs S9 35mm",
+          label: "L10 vs S9",
           cameras: [
             { id: "l10", name: "Panasonic Lumix DC-L10", focal: "35mm", prefix: "01_L10_35mm" },
             { id: "s9", name: "Panasonic Lumix DC-S9", focal: "35mm", prefix: "02_S9_35mm" }
@@ -443,7 +453,7 @@
         },
         {
           id: "L10_35mm_vs_X100VI_35mm",
-          label: "L10 35mm vs X100VI 35mm",
+          label: "L10 vs X100VI",
           cameras: [
             { id: "l10", name: "Panasonic Lumix DC-L10", focal: "35mm", prefix: "01_L10_35mm" },
             { id: "x100vi", name: "Fujifilm X100VI", focal: "35mm", prefix: "02_X100VI_35mm" }
@@ -668,8 +678,7 @@
 
       function render() {
         zoomInput.value = String(state.zoom);
-        presetGroupSelect.value = state.presetGroup;
-        presetIsoSelect.value = state.presetIso;
+        updateOptionButtons();
         renderGrid();
         requestAnimationFrame(positionImages);
       }
@@ -693,11 +702,21 @@
 
       function renderPresetOptions() {
         presetGroupSelect.innerHTML = presetGroups.map((group) => (
-          `<option value="${escapeHtml(group.id)}">${escapeHtml(group.label)}</option>`
+          `<button type="button" data-preset-group-option="${escapeHtml(group.id)}">${escapeHtml(group.label)}</button>`
         )).join("");
         presetIsoSelect.innerHTML = presetIsos.map((iso) => (
-          `<option value="${escapeHtml(iso)}">${escapeHtml(iso.replace("ISO", "ISO "))}</option>`
+          `<button type="button" data-preset-iso-option="${escapeHtml(iso)}">${escapeHtml(iso.replace("ISO", "ISO "))}</button>`
         )).join("");
+        updateOptionButtons();
+      }
+
+      function updateOptionButtons() {
+        document.querySelectorAll("[data-preset-group-option]").forEach((button) => {
+          button.classList.toggle("is-active", button.dataset.presetGroupOption === state.presetGroup);
+        });
+        document.querySelectorAll("[data-preset-iso-option]").forEach((button) => {
+          button.classList.toggle("is-active", button.dataset.presetIsoOption === state.presetIso);
+        });
       }
 
       function escapeHtml(value) {
@@ -719,21 +738,17 @@
         }
       });
 
-      document.addEventListener("change", (event) => {
-        const target = event.target;
-        if (target.matches("[data-preset-group]")) {
-          state.presetGroup = target.value;
-          applyPreset();
-        }
-        if (target.matches("[data-preset-iso]")) {
-          state.presetIso = target.value;
-          applyPreset();
-        }
-      });
-
       document.addEventListener("click", (event) => {
         const target = event.target.closest("button");
         if (!target) return;
+        if (target.matches("[data-preset-group-option]")) {
+          state.presetGroup = target.dataset.presetGroupOption;
+          applyPreset();
+        }
+        if (target.matches("[data-preset-iso-option]")) {
+          state.presetIso = target.dataset.presetIsoOption;
+          applyPreset();
+        }
         if (target.matches("[data-fit]")) {
           setZoom(zoomToFitForStage(currentStage()));
           state.panX = 0;

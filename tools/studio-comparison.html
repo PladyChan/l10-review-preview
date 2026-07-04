@@ -310,43 +310,88 @@
 
     @media (max-width: 720px) {
       body {
-        overflow: auto;
+        overflow: hidden;
       }
 
       .app {
-        height: auto;
-        min-height: 100vh;
-        overflow: visible;
+        height: 100dvh;
+        min-height: 100dvh;
+        overflow: hidden;
       }
 
       .main,
       .compare-grid {
-        overflow: visible;
+        overflow: hidden;
       }
 
       .compare-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 4px;
+        padding: 4px;
+        height: 100%;
       }
 
       .camera-card {
-        min-height: 72vh;
+        min-height: 0;
+        height: 100%;
       }
 
       .toolbar {
-        align-items: stretch;
+        align-items: end;
+        gap: 6px;
+        padding: 6px;
       }
 
       .toolbar input[type="range"] {
-        width: 100%;
+        width: min(34vw, 150px);
       }
 
-      .toolbar button,
+      .toolbar label {
+        font-size: 10px;
+      }
+
+      .toolbar button {
+        min-height: 28px;
+        padding: 3px 7px;
+        font-size: 11px;
+      }
+
       .view-controls {
+        gap: 5px;
+        flex: 1 1 100%;
+      }
+
+      .view-controls button {
         flex: 1 1 auto;
       }
 
       .minimap {
-        width: 112px;
+        right: 42px;
+        bottom: 8px;
+        width: min(82px, 28vw);
+      }
+
+      .corner-control {
+        right: 8px;
+        bottom: 8px;
+        width: 28px;
+        height: 28px;
+        min-height: 28px;
+        font-size: 15px;
+      }
+
+      .image-label {
+        left: 5px;
+        top: 5px;
+        max-width: calc(100% - 10px);
+        gap: 5px;
+        padding: 3px 5px;
+        font-size: 10px;
+      }
+
+      .image-label span,
+      .minimap-meta {
+        font-size: 9px;
       }
     }
   </style>

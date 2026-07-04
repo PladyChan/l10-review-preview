@@ -211,9 +211,9 @@ studio_compare_module = """
   <h3>四机位 JPG / RAW 局部对比工具</h3>
   <p>把 X100VI、L10、S9 和 GR4 的同一区域导出图放进来，可以在同一画质段落里切换 JPG / RAW、同步缩放和拖拽查看。图片只保存在本机浏览器里。</p>
   <div class="studio-compare-shell">
-    <iframe src="tools/studio-comparison.html" title="四机位 JPG / RAW 局部对比工具"></iframe>
+    <iframe data-studio-tool-frame title="四机位 JPG / RAW 局部对比工具"></iframe>
   </div>
-  <p class="module-link"><a href="tools/studio-comparison.html">打开独立对比工具</a></p>
+  <p class="module-link"><a href="#" data-studio-tool-link>打开独立对比工具</a></p>
 </aside>
 """
 
@@ -1186,7 +1186,7 @@ out = f"""<!doctype html>
           <a class="icon-button" href="editor.html" aria-label="编辑 Markdown" title="编辑 Markdown">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l11-11-4-4L4 16v4zM13 7l4 4"/></svg>
           </a>
-          <a class="icon-button" href="tools/studio-comparison.html" aria-label="图片对比工具" title="图片对比工具">
+          <a class="icon-button" href="#" data-studio-tool-link aria-label="图片对比工具" title="图片对比工具">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7v7H4zM13 5h7v7h-7zM4 14h7v5H4zM13 14h7v5h-7z"/></svg>
           </a>
           {outline_controls}
@@ -1197,6 +1197,24 @@ out = f"""<!doctype html>
     <main>{content}</main>
   </div>
   <script>
+    (() => {{
+      const toolPath = "tools/studio-comparison.html";
+      const resolveToolUrl = () => {{
+        const path = window.location.pathname;
+        const pagesRoot = "/l10-review-preview";
+        if (path === pagesRoot || path.startsWith(`${{pagesRoot}}/`)) {{
+          return `${{window.location.origin}}${{pagesRoot}}/${{toolPath}}`;
+        }}
+        return new URL(toolPath, window.location.href.endsWith("/") ? window.location.href : new URL(".", window.location.href)).href;
+      }};
+      const url = resolveToolUrl();
+      document.querySelectorAll("[data-studio-tool-link]").forEach((link) => {{
+        link.href = url;
+      }});
+      document.querySelectorAll("[data-studio-tool-frame]").forEach((frame) => {{
+        frame.src = url;
+      }});
+    }})();
     (() => {{
       const root = document.documentElement;
       const button = document.querySelector("[data-theme-toggle]");

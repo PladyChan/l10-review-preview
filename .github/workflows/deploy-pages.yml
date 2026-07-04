@@ -1,6 +1,15 @@
 name: Deploy Pages
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - "index.html"
+      - "editor.html"
+      - "README.md"
+      - "tools/**"
+      - ".github/workflows/deploy-pages.yml"
   workflow_dispatch:
 
 permissions:

@@ -1,11 +1,6 @@
 name: Deploy Pages
 
 on:
-  workflow_run:
-    workflows:
-      - Rebuild preview
-    types:
-      - completed
   workflow_dispatch:
 
 permissions:
@@ -19,7 +14,6 @@ concurrency:
 
 jobs:
   deploy:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages

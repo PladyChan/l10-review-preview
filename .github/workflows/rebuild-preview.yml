@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: rebuild
@@ -39,3 +40,8 @@ jobs:
           git commit -m "Rebuild preview from markdown"
           git pull --rebase origin main
           git push
+
+      - name: Trigger Pages deploy
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run "Deploy Pages" --ref main

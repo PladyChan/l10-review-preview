@@ -51,8 +51,7 @@
       font: inherit;
     }
 
-    button,
-    .file-button {
+    button {
       min-height: 34px;
       border: 1px solid var(--line);
       border-radius: 0;
@@ -61,8 +60,7 @@
       cursor: pointer;
     }
 
-    button:hover,
-    .file-button:hover {
+    button:hover {
       border-color: var(--accent);
     }
 
@@ -117,8 +115,7 @@
     }
 
     .top-actions button,
-    .toolbar button,
-    .file-button {
+    .toolbar button {
       padding: 6px 11px;
     }
 
@@ -141,6 +138,15 @@
     .toolbar input[type="range"] {
       width: min(34vw, 240px);
       accent-color: var(--accent);
+    }
+
+    select {
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      background: var(--bg);
+      color: var(--ink);
+      padding: 5px 8px;
     }
 
     .segmented {
@@ -317,66 +323,29 @@
       line-height: 1.2;
     }
 
-    .drop-row {
+    .preset-fields {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 8px;
+      gap: 9px;
     }
 
-    .file-button {
-      position: relative;
+    .preset-fields label {
       display: grid;
-      place-items: center;
-      min-height: 42px;
-      color: var(--body);
-      text-align: center;
-      overflow: hidden;
+      gap: 5px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.2;
     }
 
-    .file-button input {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      cursor: pointer;
+    .preset-fields button {
+      width: 100%;
+      padding: 7px 10px;
     }
 
     .help {
       color: var(--muted);
       font-size: 13px;
       margin: 0;
-    }
-
-    .slot-list {
-      display: grid;
-      gap: 10px;
-    }
-
-    .slot {
-      display: grid;
-      gap: 7px;
-      padding: 10px;
-      border: 1px solid var(--line);
-      background: var(--bg);
-    }
-
-    .slot-title {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      align-items: center;
-      font-size: 13px;
-    }
-
-    .slot-title strong {
-      overflow-wrap: anywhere;
-    }
-
-    .slot-title span {
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      white-space: nowrap;
     }
 
     .notes {
@@ -428,8 +397,7 @@
 
       .top-actions button,
       .toolbar button,
-      .segmented,
-      .file-button {
+      .segmented {
         flex: 1 1 auto;
       }
     }
@@ -440,12 +408,10 @@
     <header>
       <div>
         <h1>Studio Scene Image Comparison</h1>
-        <div class="subline">四机位 JPG / RAW 局部对比，支持同步缩放、拖拽取景和本地保存。</div>
+        <div class="subline">固定读取 RAW 导出 JPG 对比组，支持同步缩放和拖拽取景。</div>
       </div>
       <div class="top-actions">
         <button type="button" data-theme>深浅色</button>
-        <button type="button" data-export>导出配置</button>
-        <label class="file-button">导入配置<input type="file" accept="application/json" data-import></label>
       </div>
     </header>
 
@@ -468,12 +434,20 @@
 
     <div class="main">
       <section class="compare-grid" data-grid></section>
-      <aside class="side" aria-label="图片导入和备注">
+      <aside class="side" aria-label="内置对比组和备注">
         <div class="side-section">
-          <h2>图片槽位</h2>
-          <p class="help">每台机器可以放一张 JPG 和一张 RAW 导出的对比图。RAW 建议先用统一流程转成可浏览的 JPEG / PNG / WebP。</p>
+          <h2>内置对比组</h2>
+          <div class="preset-fields">
+            <label>对比组
+              <select data-preset-group></select>
+            </label>
+            <label>ISO
+              <select data-preset-iso></select>
+            </label>
+            <button type="button" data-load-preset>加载这组</button>
+          </div>
+          <p class="help" data-preset-summary></p>
         </div>
-        <div class="side-section slot-list" data-slots></div>
         <div class="side-section">
           <h2>观察记录</h2>
           <textarea class="notes" data-notes placeholder="比如：同一位置看黑白线条边缘、颜色摩尔纹、RAW 粒状感、JPG 涂抹、不同 ISO 的细节损失。"></textarea>
@@ -484,29 +458,57 @@
 
   <script>
     (() => {
-      const defaultCameras = [
-        { id: "x100vi", name: "Fujifilm X100VI", iso: "125", jpg: "", raw: "" },
-        { id: "l10", name: "Panasonic Lumix DC-L10", iso: "100", jpg: "", raw: "" },
-        { id: "s9", name: "Panasonic Lumix DC-S9", iso: "100", jpg: "", raw: "" },
-        { id: "gr4", name: "Ricoh GR IV", iso: "100", jpg: "", raw: "" }
+      const presetGroups = [
+        {
+          id: "L10_28mm_vs_GR4_28mm",
+          label: "L10 28mm vs GR4 28mm",
+          summary: "L10 28mm RAW 导出 JPG 对 GR4 28mm RAW 导出 JPG。",
+          cameras: [
+            { id: "l10", name: "Panasonic Lumix DC-L10", focal: "28mm", prefix: "01_L10_28mm" },
+            { id: "gr4", name: "Ricoh GR IV", focal: "28mm", prefix: "02_GR4_28mm" }
+          ]
+        },
+        {
+          id: "L10_35mm_vs_S9_35mm",
+          label: "L10 35mm vs S9 35mm",
+          summary: "L10 35mm RAW 导出 JPG 对 S9 35mm RAW 导出 JPG。",
+          cameras: [
+            { id: "l10", name: "Panasonic Lumix DC-L10", focal: "35mm", prefix: "01_L10_35mm" },
+            { id: "s9", name: "Panasonic Lumix DC-S9", focal: "35mm", prefix: "02_S9_35mm" }
+          ]
+        },
+        {
+          id: "L10_35mm_vs_X100VI_35mm",
+          label: "L10 35mm vs X100VI 35mm",
+          summary: "L10 35mm RAW 导出 JPG 对 X100VI 35mm RAW 导出 JPG。",
+          cameras: [
+            { id: "l10", name: "Panasonic Lumix DC-L10", focal: "35mm", prefix: "01_L10_35mm" },
+            { id: "x100vi", name: "Fujifilm X100VI", focal: "35mm", prefix: "02_X100VI_35mm" }
+          ]
+        }
       ];
-
-      const storageKey = "l10-studio-comparison-v1";
+      const presetIsos = ["ISO1600", "ISO3200", "ISO6400", "ISO12800"];
+      const assetBase = "studio-assets/raw";
+      const storageKey = "l10-studio-comparison-view-v2";
       const state = {
         format: "raw",
+        presetGroup: "L10_28mm_vs_GR4_28mm",
+        presetIso: "ISO1600",
         zoom: 1,
         panX: 0,
         panY: 0,
         reticle: true,
         pixelated: false,
         notes: "",
-        cameras: structuredClone(defaultCameras)
+        cameras: []
       };
 
       const grid = document.querySelector("[data-grid]");
-      const slots = document.querySelector("[data-slots]");
       const zoomInput = document.querySelector("[data-zoom]");
       const notes = document.querySelector("[data-notes]");
+      const presetGroupSelect = document.querySelector("[data-preset-group]");
+      const presetIsoSelect = document.querySelector("[data-preset-iso]");
+      const presetSummary = document.querySelector("[data-preset-summary]");
 
       const save = () => {
         try {
@@ -516,20 +518,42 @@
         }
       };
 
-      const readFileAsDataUrl = (file) => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.addEventListener("load", () => resolve(reader.result));
-        reader.addEventListener("error", () => reject(reader.error));
-        reader.readAsDataURL(file);
-      });
-
-      const formatSize = (dataUrl) => {
-        if (!dataUrl) return "未导入";
-        const size = Math.round((dataUrl.length * 3 / 4) / 1024 / 1024 * 10) / 10;
-        return `${size}MB`;
+      const formatSource = (camera) => {
+        if (!activeSrc(camera)) return "无素材";
+        return "内置 RAW 导出 JPG";
       };
 
       const activeSrc = (camera) => camera[state.format] || "";
+
+      function groupFor(id) {
+        return presetGroups.find((group) => group.id === id) || presetGroups[0];
+      }
+
+      function assetPath(groupId, iso, camera) {
+        return `${assetBase}/${groupId}/${iso}/${camera.prefix}_${iso}.jpg`;
+      }
+
+      function buildPresetCameras(groupId, iso) {
+        const group = groupFor(groupId);
+        return group.cameras.map((camera) => ({
+          id: camera.id,
+          name: camera.name,
+          iso: iso.replace("ISO", ""),
+          focal: camera.focal,
+          jpg: "",
+          raw: assetPath(group.id, iso, camera)
+        }));
+      }
+
+      function applyPreset() {
+        state.cameras = buildPresetCameras(state.presetGroup, state.presetIso);
+        state.format = "raw";
+        state.panX = 0;
+        state.panY = 0;
+        state.zoom = 1;
+        save();
+        render();
+      }
 
       function renderGrid() {
         grid.innerHTML = state.cameras.map((camera) => {
@@ -538,63 +562,66 @@
           return `
             <article class="camera-card" data-card="${camera.id}">
               <div class="camera-head">
-                <input class="camera-name" value="${escapeHtml(camera.name)}" data-name="${camera.id}" aria-label="机型名称">
+                <input class="camera-name" value="${escapeHtml(camera.name)}" readonly aria-label="机型名称">
                 <div class="camera-controls">
                   <label>格式<input value="${label}" readonly></label>
-                  <label>ISO<input value="${escapeHtml(camera.iso)}" data-iso="${camera.id}" aria-label="${escapeHtml(camera.name)} ISO"></label>
+                  <label>焦段<input value="${escapeHtml(camera.focal || "-")}" readonly></label>
+                  <label>ISO<input value="${escapeHtml(camera.iso)}" readonly aria-label="${escapeHtml(camera.name)} ISO"></label>
                 </div>
               </div>
               <div class="stage ${state.reticle ? "reticle" : ""} ${state.pixelated ? "is-pixelated" : ""}" data-stage style="--zoom:${state.zoom}; --pan-x:${state.panX}px; --pan-y:${state.panY}px;">
-                ${src ? `<img src="${src}" alt="${escapeHtml(camera.name)} ${label} crop">` : `<div class="empty-state">导入 ${escapeHtml(camera.name)} 的 ${label} 图片</div>`}
+                ${src ? `<img src="${src}" alt="${escapeHtml(camera.name)} ${label} crop">` : `<div class="empty-state">没有找到 ${escapeHtml(camera.name)} 的 ${label} 内置素材</div>`}
               </div>
               <div class="camera-foot">
-                <span><strong>${label}</strong> ${formatSize(src)}</span>
-                <span>ISO ${escapeHtml(camera.iso)}</span>
+                <span><strong>${label}</strong> ${formatSource(camera)}</span>
+                <span>${escapeHtml(camera.focal || "-")} · ISO ${escapeHtml(camera.iso)}</span>
               </div>
             </article>
           `;
         }).join("");
       }
 
-      function renderSlots() {
-        slots.innerHTML = state.cameras.map((camera) => `
-          <div class="slot">
-            <div class="slot-title">
-              <strong>${escapeHtml(camera.name)}</strong>
-              <span>ISO ${escapeHtml(camera.iso)}</span>
-            </div>
-            <div class="drop-row">
-              <label class="file-button">JPG ${formatSize(camera.jpg)}<input type="file" accept="image/*" data-file="${camera.id}" data-kind="jpg"></label>
-              <label class="file-button">RAW ${formatSize(camera.raw)}<input type="file" accept="image/*" data-file="${camera.id}" data-kind="raw"></label>
-            </div>
-          </div>
-        `).join("");
-      }
-
       function render() {
         zoomInput.value = String(state.zoom);
         notes.value = state.notes;
+        presetGroupSelect.value = state.presetGroup;
+        presetIsoSelect.value = state.presetIso;
+        presetSummary.textContent = groupFor(state.presetGroup).summary;
         document.querySelectorAll("[data-format]").forEach((button) => {
           button.classList.toggle("is-active", button.dataset.format === state.format);
         });
         document.querySelector("[data-reticle]").classList.toggle("is-active", state.reticle);
         document.querySelector("[data-pixel]").classList.toggle("is-active", state.pixelated);
         renderGrid();
-        renderSlots();
       }
 
       function hydrate() {
         try {
           const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
-          if (!saved) return;
-          Object.assign(state, saved);
-          state.cameras = defaultCameras.map((camera, index) => ({
-            ...camera,
-            ...(saved.cameras && saved.cameras[index] ? saved.cameras[index] : {})
-          }));
+          if (saved) {
+            state.presetGroup = saved.presetGroup || state.presetGroup;
+            state.presetIso = saved.presetIso || state.presetIso;
+            state.zoom = Number(saved.zoom || state.zoom);
+            state.panX = Number(saved.panX || 0);
+            state.panY = Number(saved.panY || 0);
+            state.reticle = saved.reticle !== undefined ? Boolean(saved.reticle) : state.reticle;
+            state.pixelated = Boolean(saved.pixelated);
+            state.notes = saved.notes || "";
+          }
+          state.cameras = buildPresetCameras(state.presetGroup, state.presetIso);
         } catch (error) {
           console.warn("Local restore failed", error);
+          state.cameras = buildPresetCameras(state.presetGroup, state.presetIso);
         }
+      }
+
+      function renderPresetOptions() {
+        presetGroupSelect.innerHTML = presetGroups.map((group) => (
+          `<option value="${escapeHtml(group.id)}">${escapeHtml(group.label)}</option>`
+        )).join("");
+        presetIsoSelect.innerHTML = presetIsos.map((iso) => (
+          `<option value="${escapeHtml(iso)}">${escapeHtml(iso.replace("ISO", "ISO "))}</option>`
+        )).join("");
       }
 
       function escapeHtml(value) {
@@ -620,40 +647,21 @@
           });
           save();
         }
-        if (target.matches("[data-name]")) {
-          const camera = cameraById(target.dataset.name);
-          if (camera) camera.name = target.value;
-          save();
-          renderSlots();
-        }
-        if (target.matches("[data-iso]")) {
-          const camera = cameraById(target.dataset.iso);
-          if (camera) camera.iso = target.value;
-          save();
-          renderSlots();
-          renderGrid();
-        }
         if (target.matches("[data-notes]")) {
           state.notes = target.value;
           save();
         }
       });
 
-      document.addEventListener("change", async (event) => {
+      document.addEventListener("change", (event) => {
         const target = event.target;
-        if (target.matches("[data-file]") && target.files && target.files[0]) {
-          const camera = cameraById(target.dataset.file);
-          if (!camera) return;
-          camera[target.dataset.kind] = await readFileAsDataUrl(target.files[0]);
-          save();
-          render();
+        if (target.matches("[data-preset-group]")) {
+          state.presetGroup = target.value;
+          applyPreset();
         }
-        if (target.matches("[data-import]") && target.files && target.files[0]) {
-          const text = await target.files[0].text();
-          const imported = JSON.parse(text);
-          Object.assign(state, imported);
-          save();
-          render();
+        if (target.matches("[data-preset-iso]")) {
+          state.presetIso = target.value;
+          applyPreset();
         }
       });
 
@@ -697,14 +705,8 @@
           const root = document.documentElement;
           root.dataset.theme = root.dataset.theme === "light" ? "dark" : "light";
         }
-        if (target.matches("[data-export]")) {
-          const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = url;
-          link.download = "l10-studio-comparison.json";
-          link.click();
-          URL.revokeObjectURL(url);
+        if (target.matches("[data-load-preset]")) {
+          applyPreset();
         }
       });
 
@@ -743,6 +745,7 @@
         save();
       }, { passive: false });
 
+      renderPresetOptions();
       hydrate();
       render();
     })();

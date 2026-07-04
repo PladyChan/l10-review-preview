@@ -442,10 +442,30 @@
           ISO12800: { l10: [2650, 1888], x100vi: [3845, 2570] }
         }
       };
+      const cornerAnchors = {
+        L10_28mm_vs_GR4_28mm: {
+          l10: [4970, 3460],
+          gr4: [5750, 3780]
+        },
+        L10_35mm_vs_S9_35mm: {
+          l10: [4470, 2920],
+          s9: [5050, 2920]
+        },
+        L10_35mm_vs_X100VI_35mm: {
+          l10: [4470, 2920],
+          x100vi: [6500, 3780]
+        }
+      };
+      const normalizedScales = {
+        L10_28mm_vs_GR4_28mm: { l10: 1, gr4: 5200 / 6192 },
+        L10_35mm_vs_S9_35mm: { l10: 1, s9: 5200 / 6000 },
+        L10_35mm_vs_X100VI_35mm: { l10: 1, x100vi: 5200 / 7728 }
+      };
       const state = {
         format: "raw",
         presetGroup: "L10_28mm_vs_GR4_28mm",
         presetIso: "ISO1600",
+        anchorMode: "ifc",
         zoom: 1,
         panX: 0,
         panY: 0,
@@ -488,6 +508,8 @@
           iso: iso.replace("ISO", ""),
           focal: camera.focal,
           anchor: ifcAnchors[group.id]?.[iso]?.[camera.id] || null,
+          corner: cornerAnchors[group.id]?.[camera.id] || null,
+          scale: normalizedScales[group.id]?.[camera.id] || 1,
           jpg: "",
           raw: assetPath(group.id, iso, camera)
         }));
@@ -496,6 +518,7 @@
       function applyPreset() {
         state.cameras = buildPresetCameras(state.presetGroup, state.presetIso);
         state.format = "raw";
+        state.anchorMode = "ifc";
         state.panX = 0;
         state.panY = 0;
         state.zoom = 1;
@@ -511,23 +534,27 @@
         const img = stage?.querySelector("img");
         if (!stage || !img || !img.naturalWidth || !img.naturalHeight) return null;
         const rect = stage.getBoundingClientRect();
-        const anchorX = Number(img.dataset.anchorX) || img.naturalWidth / 2;
-        const anchorY = Number(img.dataset.anchorY) || img.naturalHeight / 2;
-        const left = rect.width / 2 + state.panX - anchorX * state.zoom;
-        const top = rect.height / 2 + state.panY - anchorY * state.zoom;
-        return { img, rect, anchorX, anchorY, left, top };
+        const anchor = activeAnchorForImage(img);
+        const anchorX = anchor[0];
+        const anchorY = anchor[1];
+        const effectiveZoom = effectiveZoomForImage(img);
+        const left = rect.width / 2 + state.panX - anchorX * effectiveZoom;
+        const top = rect.height / 2 + state.panY - anchorY * effectiveZoom;
+        return { img, rect, anchorX, anchorY, effectiveZoom, left, top };
       }
 
       function zoomToFitForStage(stage) {
         const info = stageInfo(stage);
         if (!info) return 1;
-        return Math.min(info.rect.width / info.img.naturalWidth, info.rect.height / info.img.naturalHeight);
+        const scale = Number(info.img.dataset.scale) || 1;
+        return Math.min(info.rect.width / (info.img.naturalWidth * scale), info.rect.height / (info.img.naturalHeight * scale));
       }
 
       function zoomToMaxVisibleForStage(stage) {
         const info = stageInfo(stage);
         if (!info) return 1;
-        return Math.max(info.rect.width / info.img.naturalWidth, info.rect.height / info.img.naturalHeight);
+        const scale = Number(info.img.dataset.scale) || 1;
+        return Math.max(info.rect.width / (info.img.naturalWidth * scale), info.rect.height / (info.img.naturalHeight * scale));
       }
 
       function currentStage() {
@@ -539,19 +566,32 @@
         zoomInput.value = String(state.zoom);
       }
 
+      function activeAnchorForImage(img) {
+        const xKey = state.anchorMode === "corner" ? "cornerX" : "anchorX";
+        const yKey = state.anchorMode === "corner" ? "cornerY" : "anchorY";
+        return [
+          Number(img.dataset[xKey]) || img.naturalWidth / 2,
+          Number(img.dataset[yKey]) || img.naturalHeight / 2
+        ];
+      }
+
+      function effectiveZoomForImage(img) {
+        return state.zoom * (Number(img.dataset.scale) || 1);
+      }
+
       function positionImage(img) {
         if (!img || !img.naturalWidth || !img.naturalHeight) return;
         const stage = img.closest("[data-stage]");
         if (!stage) return;
         const rect = stage.getBoundingClientRect();
-        const anchorX = Number(img.dataset.anchorX) || img.naturalWidth / 2;
-        const anchorY = Number(img.dataset.anchorY) || img.naturalHeight / 2;
-        const width = img.naturalWidth * state.zoom;
-        const height = img.naturalHeight * state.zoom;
+        const [anchorX, anchorY] = activeAnchorForImage(img);
+        const effectiveZoom = effectiveZoomForImage(img);
+        const width = img.naturalWidth * effectiveZoom;
+        const height = img.naturalHeight * effectiveZoom;
         img.style.width = `${width}px`;
         img.style.height = `${height}px`;
-        img.style.left = `${rect.width / 2 + state.panX - anchorX * state.zoom}px`;
-        img.style.top = `${rect.height / 2 + state.panY - anchorY * state.zoom}px`;
+        img.style.left = `${rect.width / 2 + state.panX - anchorX * effectiveZoom}px`;
+        img.style.top = `${rect.height / 2 + state.panY - anchorY * effectiveZoom}px`;
       }
 
       function positionImages() {
@@ -612,10 +652,10 @@
             mapW = mapH * imageAspect;
             mapX = (frameRect.width - mapW) / 2;
           }
-          const visibleX = Math.min(info.img.naturalWidth, Math.max(0, -info.left / state.zoom));
-          const visibleY = Math.min(info.img.naturalHeight, Math.max(0, -info.top / state.zoom));
-          const visibleW = Math.max(0, Math.min(info.img.naturalWidth - visibleX, info.rect.width / state.zoom));
-          const visibleH = Math.max(0, Math.min(info.img.naturalHeight - visibleY, info.rect.height / state.zoom));
+          const visibleX = Math.min(info.img.naturalWidth, Math.max(0, -info.left / info.effectiveZoom));
+          const visibleY = Math.min(info.img.naturalHeight, Math.max(0, -info.top / info.effectiveZoom));
+          const visibleW = Math.max(0, Math.min(info.img.naturalWidth - visibleX, info.rect.width / info.effectiveZoom));
+          const visibleH = Math.max(0, Math.min(info.img.naturalHeight - visibleY, info.rect.height / info.effectiveZoom));
           const vpX = mapX + (visibleX / info.img.naturalWidth) * mapW;
           const vpY = mapY + (visibleY / info.img.naturalHeight) * mapH;
           const vpW = Math.max(6, (visibleW / info.img.naturalWidth) * mapW);
@@ -637,7 +677,7 @@
           return `
             <article class="camera-card" data-card="${camera.id}">
               <div class="stage" data-stage>
-                ${src ? `<img src="${src}" alt="${escapeHtml(camera.name)} ${label} crop" data-anchor-x="${camera.anchor ? camera.anchor[0] : ""}" data-anchor-y="${camera.anchor ? camera.anchor[1] : ""}">` : `<div class="empty-state">没有找到 ${escapeHtml(camera.name)} 的 ${label} 内置素材</div>`}
+                ${src ? `<img src="${src}" alt="${escapeHtml(camera.name)} ${label} crop" data-anchor-x="${camera.anchor ? camera.anchor[0] : ""}" data-anchor-y="${camera.anchor ? camera.anchor[1] : ""}" data-corner-x="${camera.corner ? camera.corner[0] : ""}" data-corner-y="${camera.corner ? camera.corner[1] : ""}" data-scale="${camera.scale}">` : `<div class="empty-state">没有找到 ${escapeHtml(camera.name)} 的 ${label} 内置素材</div>`}
                 <div class="image-label"><strong>${escapeHtml(camera.name)}</strong><span>${escapeHtml(camera.focal || "-")} · ISO ${escapeHtml(camera.iso)}</span></div>
                 ${src ? `<div class="minimap"><div class="minimap-frame" data-minimap-frame><img src="${src}" alt=""><div class="minimap-viewport" data-minimap-viewport></div></div><div class="minimap-meta" data-minimap-meta><span>${formatZoom()}</span><span>X50 Y50</span></div></div>` : ""}
               </div>
@@ -660,6 +700,7 @@
             state.presetGroup = saved.presetGroup || state.presetGroup;
             state.presetIso = saved.presetIso || state.presetIso;
             state.zoom = Number(saved.zoom || state.zoom);
+            state.anchorMode = saved.anchorMode || state.anchorMode;
             state.panX = Number(saved.panX || 0);
             state.panY = Number(saved.panY || 0);
           }
@@ -720,6 +761,7 @@
           applyPreset();
         }
         if (target.matches("[data-fit]")) {
+          state.anchorMode = "ifc";
           setZoom(zoomToFitForStage(currentStage()));
           state.panX = 0;
           state.panY = 0;
@@ -739,17 +781,16 @@
           positionImages();
         }
         if (target.matches("[data-center]")) {
+          state.anchorMode = "ifc";
           state.panX = 0;
           state.panY = 0;
           save();
           positionImages();
         }
         if (target.matches("[data-corner]")) {
-          const stage = currentStage();
-          const info = stageInfo(stage);
-          if (!info) return;
-          state.panX = info.anchorX * state.zoom + info.rect.width / 2 - info.img.naturalWidth * state.zoom;
-          state.panY = info.anchorY * state.zoom + info.rect.height / 2 - info.img.naturalHeight * state.zoom;
+          state.anchorMode = "corner";
+          state.panX = 0;
+          state.panY = 0;
           save();
           positionImages();
         }

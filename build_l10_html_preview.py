@@ -87,6 +87,22 @@ def md_to_html(md: str):
             i += 1
             continue
 
+        image_match = re.match(r"^!\[([^\]]*)\]\(([^)]+)\)$", line)
+        if image_match:
+            if in_ul:
+                out.append("</ul>")
+                in_ul = False
+            if in_ol:
+                out.append("</ol>")
+                in_ol = False
+            alt, src = image_match.groups()
+            out.append(
+                f'<figure class="article-image"><img src="{html.escape(src)}" alt="{html.escape(alt)}" loading="lazy">'
+                f'<figcaption>{inline(alt)}</figcaption></figure>'
+            )
+            i += 1
+            continue
+
         if line.startswith("- "):
             if not in_ul:
                 out.append("<ul>")
@@ -285,7 +301,7 @@ aspect_module = aspect_ratio_visual()
 
 def inject_modules(body: str) -> str:
     insertions = {
-        "<h2>04 和几台参照对象具体比一比</h2>": studio_compare_module,
+        "<h3>夜晚 ISO 噪点对比</h3>": studio_compare_module,
         "<h3>裁切余量和剩余像素</h3>": sensor_module,
         "<h3>比例拨杆：多画幅和自定义入口</h3>": aspect_module,
     }
@@ -682,6 +698,23 @@ out = f"""<!doctype html>
       text-transform: uppercase;
     }}
     td {{ color: var(--body-text); }}
+    .article-image {{
+      margin: 18px 0 24px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      overflow: hidden;
+    }}
+    .article-image img {{
+      display: block;
+      width: 100%;
+      height: auto;
+    }}
+    .article-image figcaption {{
+      margin: 0;
+      padding: 8px 10px;
+      border-top: 1px solid var(--line);
+      background: var(--surface-2);
+    }}
     code {{
       background: var(--surface-2);
       padding: 1px 5px;

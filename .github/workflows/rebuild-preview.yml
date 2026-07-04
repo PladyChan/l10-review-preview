@@ -12,6 +12,12 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   rebuild:
@@ -34,3 +40,14 @@ jobs:
           git add index.html
           git commit -m "Rebuild preview from markdown"
           git push
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

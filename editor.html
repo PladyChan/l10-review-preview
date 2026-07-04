@@ -213,9 +213,12 @@
       min-height: calc(100vh - 107px);
       min-height: calc(var(--app-height, 100dvh) - 107px);
       overflow: auto;
+      resize: none;
       padding: 18px;
       border: 0;
+      border-radius: 0;
       outline: 0;
+      appearance: none;
       background: var(--panel);
       color: var(--body);
       font-family: var(--mono);
@@ -381,6 +384,8 @@
         overflow: hidden;
       }
       body {
+        position: fixed;
+        inset: 0;
         display: flex;
         flex-direction: column;
       }
@@ -488,7 +493,7 @@
         <h1>Markdown</h1>
         <div class="stats" data-stats>-</div>
       </div>
-      <div class="editor-surface" data-editor contenteditable="plaintext-only" role="textbox" aria-label="Markdown 编辑器" spellcheck="false" autocorrect="off" autocapitalize="off"></div>
+      <textarea class="editor-surface" data-editor aria-label="Markdown 编辑器" spellcheck="false" autocorrect="off" autocapitalize="off" wrap="soft"></textarea>
     </section>
     <section class="pane preview-pane">
       <div class="pane-head">
@@ -534,9 +539,9 @@
     let viewportTimer = 0;
     let pendingDraft = "";
 
-    const getEditorValue = () => editor.innerText.replace(/\n$/, "");
+    const getEditorValue = () => editor.value;
     const setEditorValue = (value) => {
-      editor.textContent = value;
+      editor.value = value;
     };
 
     const escapeHtml = (value) => value
@@ -774,7 +779,9 @@
     editor.addEventListener("paste", (event) => {
       event.preventDefault();
       const text = event.clipboardData ? event.clipboardData.getData("text/plain") : "";
-      document.execCommand("insertText", false, text);
+      const start = editor.selectionStart;
+      const end = editor.selectionEnd;
+      editor.setRangeText(text, start, end, "end");
       update();
     });
     editor.addEventListener("focus", queueViewportSync);

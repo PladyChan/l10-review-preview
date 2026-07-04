@@ -243,13 +243,12 @@
 
     .stage img {
       position: absolute;
-      left: 50%;
-      top: 50%;
+      left: 0;
+      top: 0;
       max-width: none;
       width: auto;
       height: auto;
-      transform: translate(calc(-50% + var(--pan-x, 0px)), calc(-50% + var(--pan-y, 0px))) scale(var(--zoom, 1));
-      transform-origin: center;
+      transform: none;
       user-select: none;
       pointer-events: none;
       image-rendering: auto;
@@ -432,7 +431,7 @@
     <header>
       <div>
         <h1>L10 RAW Export Comparison</h1>
-        <div class="subline">固定读取 RAW 导出 JPG 对比组，支持同步缩放和拖拽取景。</div>
+        <div class="subline">固定读取 RAW 导出 JPG 对比组，以 IFC 字样为锚点同步对齐。</div>
       </div>
       <div class="top-actions">
         <button type="button" data-theme>深浅色</button>
@@ -510,6 +509,26 @@
       const presetIsos = ["ISO1600", "ISO3200", "ISO6400", "ISO12800"];
       const assetBase = "studio-assets/raw";
       const storageKey = "l10-studio-comparison-view-v2";
+      const ifcAnchors = {
+        L10_28mm_vs_GR4_28mm: {
+          ISO1600: { l10: [1831, 1286], gr4: [1762, 1253] },
+          ISO3200: { l10: [1828, 1290], gr4: [1760, 1254] },
+          ISO6400: { l10: [1824, 1286], gr4: [1761, 1253] },
+          ISO12800: { l10: [1828, 1283], gr4: [1760, 1251] }
+        },
+        L10_35mm_vs_S9_35mm: {
+          ISO1600: { l10: [1846, 1272], s9: [1798, 1126] },
+          ISO3200: { l10: [1850, 1273], s9: [1802, 1119] },
+          ISO6400: { l10: [1846, 1274], s9: [1794, 1125] },
+          ISO12800: { l10: [1856, 1268], s9: [1798, 1126] }
+        },
+        L10_35mm_vs_X100VI_35mm: {
+          ISO1600: { l10: [1846, 1272], x100vi: [1787, 1198] },
+          ISO3200: { l10: [1850, 1273], x100vi: [1788, 1200] },
+          ISO6400: { l10: [1846, 1274], x100vi: [1786, 1194] },
+          ISO12800: { l10: [1856, 1268], x100vi: [1796, 1192] }
+        }
+      };
       const state = {
         format: "raw",
         presetGroup: "L10_28mm_vs_GR4_28mm",
@@ -560,6 +579,7 @@
           name: camera.name,
           iso: iso.replace("ISO", ""),
           focal: camera.focal,
+          anchor: ifcAnchors[group.id]?.[iso]?.[camera.id] || null,
           jpg: "",
           raw: assetPath(group.id, iso, camera)
         }));
@@ -573,6 +593,25 @@
         state.zoom = 1;
         save();
         render();
+      }
+
+      function positionImage(img) {
+        if (!img || !img.naturalWidth || !img.naturalHeight) return;
+        const stage = img.closest("[data-stage]");
+        if (!stage) return;
+        const rect = stage.getBoundingClientRect();
+        const anchorX = Number(img.dataset.anchorX) || img.naturalWidth / 2;
+        const anchorY = Number(img.dataset.anchorY) || img.naturalHeight / 2;
+        const width = img.naturalWidth * state.zoom;
+        const height = img.naturalHeight * state.zoom;
+        img.style.width = `${width}px`;
+        img.style.height = `${height}px`;
+        img.style.left = `${rect.width / 2 + state.panX - anchorX * state.zoom}px`;
+        img.style.top = `${rect.height / 2 + state.panY - anchorY * state.zoom}px`;
+      }
+
+      function positionImages() {
+        document.querySelectorAll("[data-stage] img").forEach(positionImage);
       }
 
       function renderGrid() {
@@ -590,7 +629,7 @@
                 </div>
               </div>
               <div class="stage ${state.reticle ? "reticle" : ""} ${state.pixelated ? "is-pixelated" : ""}" data-stage style="--zoom:${state.zoom}; --pan-x:${state.panX}px; --pan-y:${state.panY}px;">
-                ${src ? `<img src="${src}" alt="${escapeHtml(camera.name)} ${label} crop">` : `<div class="empty-state">没有找到 ${escapeHtml(camera.name)} 的 ${label} 内置素材</div>`}
+                ${src ? `<img src="${src}" alt="${escapeHtml(camera.name)} ${label} crop" data-anchor-x="${camera.anchor ? camera.anchor[0] : ""}" data-anchor-y="${camera.anchor ? camera.anchor[1] : ""}">` : `<div class="empty-state">没有找到 ${escapeHtml(camera.name)} 的 ${label} 内置素材</div>`}
               </div>
               <div class="camera-foot">
                 <span><strong>RAW 导出 JPG</strong> ${formatSource(camera)}</span>
@@ -610,6 +649,7 @@
         document.querySelector("[data-reticle]").classList.toggle("is-active", state.reticle);
         document.querySelector("[data-pixel]").classList.toggle("is-active", state.pixelated);
         renderGrid();
+        requestAnimationFrame(positionImages);
       }
 
       function hydrate() {
@@ -659,9 +699,7 @@
         const target = event.target;
         if (target.matches("[data-zoom]")) {
           state.zoom = Number(target.value);
-          document.querySelectorAll("[data-stage]").forEach((stage) => {
-            stage.style.setProperty("--zoom", state.zoom);
-          });
+          positionImages();
           save();
         }
         if (target.matches("[data-notes]")) {
@@ -734,10 +772,7 @@
         if (!drag) return;
         state.panX = drag.panX + event.clientX - drag.x;
         state.panY = drag.panY + event.clientY - drag.y;
-        document.querySelectorAll("[data-stage]").forEach((stage) => {
-          stage.style.setProperty("--pan-x", `${state.panX}px`);
-          stage.style.setProperty("--pan-y", `${state.panY}px`);
-        });
+        positionImages();
       });
 
       document.addEventListener("pointerup", () => {
@@ -753,9 +788,14 @@
         const next = Math.min(4, Math.max(0.35, state.zoom + (event.deltaY > 0 ? -0.08 : 0.08)));
         state.zoom = Math.round(next * 100) / 100;
         zoomInput.value = String(state.zoom);
-        document.querySelectorAll("[data-stage]").forEach((item) => item.style.setProperty("--zoom", state.zoom));
+        positionImages();
         save();
       }, { passive: false });
+
+      document.addEventListener("load", (event) => {
+        if (event.target.matches("[data-stage] img")) positionImage(event.target);
+      }, true);
+      window.addEventListener("resize", positionImages);
 
       renderPresetOptions();
       hydrate();

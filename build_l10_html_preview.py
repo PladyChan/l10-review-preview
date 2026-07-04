@@ -285,7 +285,7 @@ aspect_module = aspect_ratio_visual()
 
 def inject_modules(body: str) -> str:
     insertions = {
-        "<h3>画质表现</h3>": studio_compare_module,
+        "<h2>04 和几台参照对象具体比一比</h2>": studio_compare_module,
         "<h3>裁切余量和剩余像素</h3>": sensor_module,
         "<h3>比例拨杆：多画幅和自定义入口</h3>": aspect_module,
     }

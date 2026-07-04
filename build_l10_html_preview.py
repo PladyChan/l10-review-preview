@@ -423,7 +423,7 @@ def add_outline(body: str):
 
     body = re.sub(r"<h2>(.*?)</h2>", replace_heading, body)
     if not items:
-        return body
+        return body, ""
 
     def outline_label(heading):
         return re.sub(r"^\d+\s+", "", heading)
@@ -438,18 +438,24 @@ def add_outline(body: str):
         f'<nav aria-label="文章大纲">{links}</nav>'
         '</details>'
     )
-    body = body.replace("</h1>", f"</h1>\n{outline}", 1)
-    return body
+    return body, outline
 
 
-sections = [
-    (title, file, add_outline(body))
-    for title, file, body in sections
-]
+outlined_sections = []
+outline_blocks = []
+for title, file, body in sections:
+    outlined_body, outline = add_outline(body)
+    outlined_sections.append((title, file, outlined_body))
+    if outline:
+        outline_blocks.append(outline)
+
+sections = outlined_sections
+outline_controls = "\n".join(outline_blocks)
 
 nav = "\n".join(
     f'<a href="#sec-{idx}">{html.escape(title)}</a>' for idx, (title, _, _) in enumerate(sections)
 )
+section_nav = f"<nav>{nav}</nav>" if len(sections) > 1 else ""
 content = "\n".join(
     f'<section id="sec-{idx}"><div class="file-name">{html.escape(title)}</div>{body}</section>'
     for idx, (_, file, body) in enumerate(sections)
@@ -564,7 +570,7 @@ out = f"""<!doctype html>
       position: sticky;
       top: 0;
       height: 100vh;
-      padding: 26px 20px;
+      padding: 20px 18px;
       border-right: 1px solid var(--line);
       background: var(--surface);
       overflow: auto;
@@ -572,32 +578,38 @@ out = f"""<!doctype html>
     .brand {{
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 22px;
+      font-size: 20px;
       line-height: 1.08;
       letter-spacing: 0;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       text-transform: uppercase;
     }}
     .brand::before {{
       content: "";
       display: block;
-      width: 34px;
-      height: 10px;
-      margin-bottom: 14px;
+      width: 32px;
+      height: 8px;
+      margin-bottom: 12px;
       background: var(--accent);
     }}
     .meta {{
-      margin-bottom: 22px;
+      margin-bottom: 12px;
       color: var(--muted);
       font-family: var(--font-mono);
       font-size: 11px;
       letter-spacing: .04em;
       text-transform: uppercase;
     }}
+    .control-actions {{
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      margin-bottom: 8px;
+    }}
     .theme-toggle {{
       width: 100%;
-      margin: 0 0 18px;
-      padding: 10px 12px;
+      margin: 0;
+      padding: 8px 10px;
       border: 1px solid var(--line);
       border-radius: 0;
       background: var(--surface-2);
@@ -608,6 +620,12 @@ out = f"""<!doctype html>
       text-align: left;
       text-transform: uppercase;
       cursor: pointer;
+    }}
+    a.theme-toggle {{
+      width: auto;
+      min-width: 96px;
+      display: block;
+      white-space: nowrap;
     }}
     .theme-toggle::before {{
       content: "";
@@ -654,7 +672,7 @@ out = f"""<!doctype html>
       margin-bottom: 14px;
     }}
     .article-outline {{
-      margin: 0 0 28px;
+      margin: 0 0 16px;
       border: 1px solid var(--line);
       background: var(--surface);
     }}
@@ -663,27 +681,27 @@ out = f"""<!doctype html>
       grid-template-columns: 1fr auto;
       gap: 12px;
       align-items: center;
-      min-height: 44px;
-      padding: 11px 12px;
+      min-height: 38px;
+      padding: 8px 10px;
       color: var(--ink);
       cursor: pointer;
       list-style: none;
       font-family: var(--font-display);
-      font-size: 16px;
+      font-size: 14px;
       line-height: 1.2;
     }}
     .article-outline summary::-webkit-details-marker {{ display: none; }}
     .article-outline summary::before {{
       content: "";
-      width: 12px;
-      height: 12px;
+      width: 11px;
+      height: 11px;
       border: 1px solid var(--accent);
       background: transparent;
       grid-column: 1;
       grid-row: 1;
     }}
     .article-outline summary span {{
-      padding-left: 24px;
+      padding-left: 22px;
       grid-column: 1;
       grid-row: 1;
     }}
@@ -711,7 +729,7 @@ out = f"""<!doctype html>
       grid-template-columns: 32px 1fr;
       gap: 8px;
       align-items: start;
-      padding: 11px 12px;
+      padding: 9px 10px;
       border-top: 0;
       border-right: 1px solid var(--line);
       border-bottom: 1px solid var(--line);
@@ -733,6 +751,21 @@ out = f"""<!doctype html>
       font-family: var(--font-mono);
       font-size: 11px;
       line-height: 1.6;
+    }}
+    .layout > aside .article-outline {{
+      margin-bottom: 12px;
+    }}
+    .layout > aside .article-outline nav {{
+      grid-template-columns: 1fr;
+    }}
+    .layout > aside .article-outline nav a,
+    .layout > aside .article-outline nav a:nth-child(2n),
+    .layout > aside .article-outline nav a:nth-last-child(-n+2) {{
+      border-right: 0;
+      border-bottom: 1px solid var(--line);
+    }}
+    .layout > aside .article-outline nav a:last-child {{
+      border-bottom: 0;
     }}
     h1 {{
       font-family: var(--font-display);
@@ -1253,13 +1286,18 @@ out = f"""<!doctype html>
     }}
     @media (max-width: 820px) {{
       .layout {{ display: block; }}
-      .layout > aside {{ position: relative; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }}
-      main {{ width: 100%; padding: 28px 18px 60px; }}
+      .layout > aside {{ position: relative; height: auto; padding: 16px 18px 12px; border-right: 0; border-bottom: 1px solid var(--line); }}
+      .brand {{ font-size: 19px; margin-bottom: 7px; }}
+      .brand::before {{ width: 30px; height: 8px; margin-bottom: 10px; }}
+      .meta {{ margin-bottom: 10px; font-size: 10px; }}
+      .control-actions {{ gap: 8px; margin-bottom: 8px; }}
+      .theme-toggle {{ padding: 8px 10px; }}
+      main {{ width: 100%; padding: 22px 18px 60px; }}
       section {{ max-width: none; }}
       h1 {{ font-size: 32px; }}
       h2 {{ font-size: 22px; }}
-      .article-outline {{ margin-bottom: 22px; }}
-      .article-outline summary {{ min-height: 42px; padding: 10px 11px; }}
+      .article-outline {{ margin-bottom: 12px; }}
+      .article-outline summary {{ min-height: 38px; padding: 8px 10px; }}
       .article-outline nav {{ grid-template-columns: 1fr; }}
       .article-outline nav a,
       .article-outline nav a:nth-child(2n),
@@ -1298,9 +1336,12 @@ out = f"""<!doctype html>
     <aside>
       <div class="brand">Panasonic Lumix L10<br>测评阅读版</div>
       <div class="meta">Nothing-inspired full article</div>
-      <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深浅色" aria-pressed="false">THEME AUTO</button>
-      <a class="theme-toggle" href="editor.html">EDIT MD</a>
-      <nav>{nav}</nav>
+      <div class="control-actions">
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深浅色" aria-pressed="false">THEME AUTO</button>
+        <a class="theme-toggle" href="editor.html">EDIT MD</a>
+      </div>
+      {outline_controls}
+      {section_nav}
     </aside>
     <main>{content}</main>
   </div>

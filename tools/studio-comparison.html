@@ -20,19 +20,6 @@
       --mono: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
     }
 
-    :root[data-theme="light"] {
-      color-scheme: light;
-      --bg: #f3f1ea;
-      --panel: #fffdf6;
-      --panel-2: #ebe7dc;
-      --ink: #111;
-      --body: #34312d;
-      --muted: #6d675f;
-      --line: #cbc4b5;
-      --accent: #c91f1a;
-      --focus: #8a6500;
-    }
-
     * { box-sizing: border-box; }
 
     html, body { height: 100%; min-height: 100%; }
@@ -73,38 +60,11 @@
     .app {
       height: 100vh;
       display: grid;
-      grid-template-rows: auto auto minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
       overflow: hidden;
     }
 
-    header {
-      z-index: 20;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 14px;
-      align-items: center;
-      padding: 10px clamp(12px, 2vw, 20px);
-      border-bottom: 1px solid var(--line);
-      background: var(--panel);
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(18px, 1.8vw, 28px);
-      line-height: 1.08;
-      letter-spacing: 0;
-    }
-
-    .subline {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .top-actions,
     .toolbar,
-    .segmented,
-    .camera-controls,
     .view-controls {
       display: flex;
       flex-wrap: wrap;
@@ -112,19 +72,19 @@
       align-items: center;
     }
 
-    .top-actions button,
     .toolbar button {
-      padding: 6px 11px;
+      min-height: 30px;
+      padding: 4px 9px;
+      font-size: 12px;
     }
 
     .toolbar {
-      padding: 8px clamp(12px, 2vw, 20px);
+      padding: 7px 8px;
       border-bottom: 1px solid var(--line);
       background: var(--panel);
     }
 
-    .toolbar label,
-    .camera-controls label {
+    .toolbar label {
       display: grid;
       gap: 4px;
       color: var(--muted);
@@ -134,40 +94,32 @@
     }
 
     .toolbar input[type="range"] {
-      width: min(34vw, 240px);
+      width: min(24vw, 180px);
       accent-color: var(--accent);
     }
 
     select {
-      min-height: 34px;
+      min-height: 30px;
       border: 1px solid var(--line);
       border-radius: 0;
       background: var(--bg);
       color: var(--ink);
-      padding: 5px 8px;
+      padding: 4px 7px;
+      font-size: 12px;
     }
 
-    .segmented {
-      gap: 0;
-      border: 1px solid var(--line);
+    [data-preset-group] {
+      width: min(44vw, 270px);
     }
 
-    .segmented button {
-      min-width: 64px;
-      border: 0;
-      border-right: 1px solid var(--line);
-      background: transparent;
-    }
-
-    .segmented button:last-child {
-      border-right: 0;
+    [data-preset-iso] {
+      width: 98px;
     }
 
     .main {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
-      gap: 0;
+      display: block;
       min-height: 0;
+      height: 100%;
       overflow: hidden;
     }
 
@@ -178,6 +130,7 @@
       gap: 8px;
       padding: 8px;
       min-height: 0;
+      height: 100%;
       overflow: hidden;
     }
 
@@ -186,47 +139,15 @@
       border: 1px solid var(--line);
       background: var(--panel);
       display: grid;
-      grid-template-rows: auto minmax(0, 1fr) auto;
+      grid-template-rows: minmax(0, 1fr);
       min-height: 0;
-    }
-
-    .camera-head {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 8px;
-      align-items: center;
-      padding: 6px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .camera-name {
-      width: 100%;
-      min-height: 28px;
-      border: 1px solid var(--line);
-      border-radius: 0;
-      background: var(--panel-2);
-      color: var(--ink);
-      padding: 4px 7px;
-    }
-
-    .camera-controls {
-      justify-content: space-between;
-      flex-wrap: nowrap;
-    }
-
-    .camera-controls input {
-      width: 76px;
-      min-height: 28px;
-      border: 1px solid var(--line);
-      border-radius: 0;
-      background: var(--bg);
-      color: var(--ink);
-      padding: 5px 7px;
+      height: 100%;
     }
 
     .stage {
       position: relative;
       min-height: 0;
+      height: 100%;
       overflow: hidden;
       background:
         linear-gradient(45deg, color-mix(in srgb, var(--panel-2) 82%, #000) 25%, transparent 25%),
@@ -240,6 +161,32 @@
     }
 
     .stage:active { cursor: grabbing; }
+
+    .image-label {
+      position: absolute;
+      left: 7px;
+      top: 7px;
+      z-index: 5;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      max-width: calc(100% - 16px);
+      padding: 4px 6px;
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      background: color-mix(in srgb, var(--panel) 86%, transparent);
+      color: var(--ink);
+      font-size: 11px;
+      line-height: 1.2;
+      backdrop-filter: blur(8px);
+      pointer-events: none;
+    }
+
+    .image-label span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+      white-space: nowrap;
+    }
 
     .stage img {
       position: absolute;
@@ -292,81 +239,20 @@
       height: 1px;
     }
 
-    .camera-foot {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      align-items: center;
-      padding: 6px 8px;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-    }
-
-    .camera-foot strong {
-      color: var(--ink);
-      font-weight: 700;
-    }
-
-    .side {
-      border-left: 1px solid var(--line);
-      background: var(--panel);
-      min-height: 0;
-      overflow: auto;
-    }
-
-    .side-section {
-      padding: 14px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .side-section h2 {
-      margin: 0 0 10px;
-      font-size: 15px;
-      line-height: 1.2;
-    }
-
-    .preset-fields {
-      display: grid;
-      gap: 9px;
-    }
-
-    .preset-fields label {
-      display: grid;
-      gap: 5px;
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 11px;
-      line-height: 1.2;
-    }
-
-    .preset-fields button {
-      width: 100%;
-      padding: 7px 10px;
-    }
-
-    .help {
-      color: var(--muted);
-      font-size: 13px;
-      margin: 0;
-    }
-
-    .notes {
-      width: 100%;
-      min-height: 110px;
-      resize: vertical;
-      border: 1px solid var(--line);
-      border-radius: 0;
-      background: var(--bg);
-      color: var(--body);
-      padding: 9px;
-      font: 13px/1.55 var(--font);
-    }
-
     .hidden { display: none !important; }
 
     @media (max-width: 980px) {
+      body {
+        overflow: hidden;
+      }
+
+      .app {
+        height: 100vh;
+        overflow: hidden;
+      }
+    }
+
+    @media (max-width: 720px) {
       body {
         overflow: auto;
       }
@@ -377,27 +263,11 @@
         overflow: visible;
       }
 
-      header {
-        position: relative;
-        grid-template-columns: 1fr;
-      }
-
-      .main {
-        display: block;
-        overflow: visible;
-      }
-
+      .main,
       .compare-grid {
         overflow: visible;
       }
 
-      .side {
-        border-left: 0;
-        border-top: 1px solid var(--line);
-      }
-    }
-
-    @media (max-width: 720px) {
       .compare-grid {
         grid-template-columns: 1fr;
       }
@@ -414,13 +284,8 @@
         width: 100%;
       }
 
-      .top-actions {
-        justify-content: stretch;
-      }
-
-      .top-actions button,
       .toolbar button,
-      .segmented {
+      .view-controls {
         flex: 1 1 auto;
       }
     }
@@ -428,17 +293,13 @@
 </head>
 <body>
   <div class="app">
-    <header>
-      <div>
-        <h1>L10 RAW Export Comparison</h1>
-        <div class="subline">固定读取 RAW 导出 JPG 对比组，以 IFC 字样为锚点同步对齐。</div>
-      </div>
-      <div class="top-actions">
-        <button type="button" data-theme>深浅色</button>
-      </div>
-    </header>
-
     <div class="toolbar" aria-label="对比控制">
+      <label>对比组
+        <select data-preset-group></select>
+      </label>
+      <label>ISO
+        <select data-preset-iso></select>
+      </label>
       <label>缩放
         <input type="range" min="0.35" max="4" step="0.05" value="1" data-zoom>
       </label>
@@ -447,31 +308,11 @@
         <button type="button" data-actual>100%</button>
         <button type="button" data-center>回到中心</button>
         <button type="button" data-reticle class="is-active">十字线</button>
-        <button type="button" data-pixel>像素预览</button>
       </div>
     </div>
 
     <div class="main">
       <section class="compare-grid" data-grid></section>
-      <aside class="side" aria-label="内置对比组和备注">
-        <div class="side-section">
-          <h2>内置对比组</h2>
-          <div class="preset-fields">
-            <label>对比组
-              <select data-preset-group></select>
-            </label>
-            <label>ISO
-              <select data-preset-iso></select>
-            </label>
-            <button type="button" data-load-preset>加载这组</button>
-          </div>
-          <p class="help" data-preset-summary></p>
-        </div>
-        <div class="side-section">
-          <h2>观察记录</h2>
-          <textarea class="notes" data-notes placeholder="比如：同一位置看黑白线条边缘、颜色摩尔纹、RAW 粒状感、JPG 涂抹、不同 ISO 的细节损失。"></textarea>
-        </div>
-      </aside>
     </div>
   </div>
 
@@ -481,7 +322,6 @@
         {
           id: "L10_28mm_vs_GR4_28mm",
           label: "L10 28mm vs GR4 28mm",
-          summary: "L10 28mm RAW 导出 JPG 对 GR4 28mm RAW 导出 JPG。",
           cameras: [
             { id: "l10", name: "Panasonic Lumix DC-L10", focal: "28mm", prefix: "01_L10_28mm" },
             { id: "gr4", name: "Ricoh GR IV", focal: "28mm", prefix: "02_GR4_28mm" }
@@ -490,7 +330,6 @@
         {
           id: "L10_35mm_vs_S9_35mm",
           label: "L10 35mm vs S9 35mm",
-          summary: "L10 35mm RAW 导出 JPG 对 S9 35mm RAW 导出 JPG。",
           cameras: [
             { id: "l10", name: "Panasonic Lumix DC-L10", focal: "35mm", prefix: "01_L10_35mm" },
             { id: "s9", name: "Panasonic Lumix DC-S9", focal: "35mm", prefix: "02_S9_35mm" }
@@ -499,7 +338,6 @@
         {
           id: "L10_35mm_vs_X100VI_35mm",
           label: "L10 35mm vs X100VI 35mm",
-          summary: "L10 35mm RAW 导出 JPG 对 X100VI 35mm RAW 导出 JPG。",
           cameras: [
             { id: "l10", name: "Panasonic Lumix DC-L10", focal: "35mm", prefix: "01_L10_35mm" },
             { id: "x100vi", name: "Fujifilm X100VI", focal: "35mm", prefix: "02_X100VI_35mm" }
@@ -537,17 +375,13 @@
         panX: 0,
         panY: 0,
         reticle: true,
-        pixelated: false,
-        notes: "",
         cameras: []
       };
 
       const grid = document.querySelector("[data-grid]");
       const zoomInput = document.querySelector("[data-zoom]");
-      const notes = document.querySelector("[data-notes]");
       const presetGroupSelect = document.querySelector("[data-preset-group]");
       const presetIsoSelect = document.querySelector("[data-preset-iso]");
-      const presetSummary = document.querySelector("[data-preset-summary]");
 
       const save = () => {
         try {
@@ -555,11 +389,6 @@
         } catch (error) {
           console.warn("Local save failed", error);
         }
-      };
-
-      const formatSource = (camera) => {
-        if (!activeSrc(camera)) return "无素材";
-        return "内置 RAW 导出 JPG";
       };
 
       const activeSrc = (camera) => camera[state.format] || "";
@@ -620,20 +449,9 @@
           const label = state.format.toUpperCase();
           return `
             <article class="camera-card" data-card="${camera.id}">
-              <div class="camera-head">
-                <input class="camera-name" value="${escapeHtml(camera.name)}" readonly aria-label="机型名称">
-                <div class="camera-controls">
-                  <label>格式<input value="${label}" readonly></label>
-                  <label>焦段<input value="${escapeHtml(camera.focal || "-")}" readonly></label>
-                  <label>ISO<input value="${escapeHtml(camera.iso)}" readonly aria-label="${escapeHtml(camera.name)} ISO"></label>
-                </div>
-              </div>
-              <div class="stage ${state.reticle ? "reticle" : ""} ${state.pixelated ? "is-pixelated" : ""}" data-stage style="--zoom:${state.zoom}; --pan-x:${state.panX}px; --pan-y:${state.panY}px;">
+              <div class="stage ${state.reticle ? "reticle" : ""}" data-stage>
                 ${src ? `<img src="${src}" alt="${escapeHtml(camera.name)} ${label} crop" data-anchor-x="${camera.anchor ? camera.anchor[0] : ""}" data-anchor-y="${camera.anchor ? camera.anchor[1] : ""}">` : `<div class="empty-state">没有找到 ${escapeHtml(camera.name)} 的 ${label} 内置素材</div>`}
-              </div>
-              <div class="camera-foot">
-                <span><strong>RAW 导出 JPG</strong> ${formatSource(camera)}</span>
-                <span>${escapeHtml(camera.focal || "-")} · ISO ${escapeHtml(camera.iso)}</span>
+                <div class="image-label"><strong>${escapeHtml(camera.name)}</strong><span>${escapeHtml(camera.focal || "-")} · ISO ${escapeHtml(camera.iso)}</span></div>
               </div>
             </article>
           `;
@@ -642,12 +460,9 @@
 
       function render() {
         zoomInput.value = String(state.zoom);
-        notes.value = state.notes;
         presetGroupSelect.value = state.presetGroup;
         presetIsoSelect.value = state.presetIso;
-        presetSummary.textContent = groupFor(state.presetGroup).summary;
         document.querySelector("[data-reticle]").classList.toggle("is-active", state.reticle);
-        document.querySelector("[data-pixel]").classList.toggle("is-active", state.pixelated);
         renderGrid();
         requestAnimationFrame(positionImages);
       }
@@ -662,8 +477,6 @@
             state.panX = Number(saved.panX || 0);
             state.panY = Number(saved.panY || 0);
             state.reticle = saved.reticle !== undefined ? Boolean(saved.reticle) : state.reticle;
-            state.pixelated = Boolean(saved.pixelated);
-            state.notes = saved.notes || "";
           }
           state.cameras = buildPresetCameras(state.presetGroup, state.presetIso);
         } catch (error) {
@@ -691,19 +504,11 @@
         }[char]));
       }
 
-      function cameraById(id) {
-        return state.cameras.find((camera) => camera.id === id);
-      }
-
       document.addEventListener("input", (event) => {
         const target = event.target;
         if (target.matches("[data-zoom]")) {
           state.zoom = Number(target.value);
           positionImages();
-          save();
-        }
-        if (target.matches("[data-notes]")) {
-          state.notes = target.value;
           save();
         }
       });
@@ -745,18 +550,6 @@
           state.reticle = !state.reticle;
           save();
           render();
-        }
-        if (target.matches("[data-pixel]")) {
-          state.pixelated = !state.pixelated;
-          save();
-          render();
-        }
-        if (target.matches("[data-theme]")) {
-          const root = document.documentElement;
-          root.dataset.theme = root.dataset.theme === "light" ? "dark" : "light";
-        }
-        if (target.matches("[data-load-preset]")) {
-          applyPreset();
         }
       });
 

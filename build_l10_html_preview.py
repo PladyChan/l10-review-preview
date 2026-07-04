@@ -207,13 +207,10 @@ sensor_module = f"""
 """
 
 studio_compare_module = """
-<aside class="insert-module studio-compare-module" id="studio-comparison">
-  <h3>RAW 导出 JPG 局部对比工具</h3>
-  <p>这里读取已经整理好的 RAW 导出 JPG 对比组：L10 28mm 对 GR4 28mm，L10 35mm 分别对 S9 和 X100VI。可以在同一画质段落里切换对比组、ISO、同步缩放和拖拽查看。</p>
+<aside class="insert-module studio-compare-module studio-compare-module--compact" id="studio-comparison">
   <div class="studio-compare-shell">
     <iframe data-studio-tool-frame title="RAW 导出 JPG 局部对比工具"></iframe>
   </div>
-  <p class="module-link"><a href="#" data-studio-tool-link>打开独立对比工具</a></p>
 </aside>
 """
 
@@ -712,13 +709,16 @@ out = f"""<!doctype html>
       margin-top: 4px;
     }}
     .studio-compare-module {{
-      width: min(100%, 1080px);
+      width: min(100%, 1180px);
+    }}
+    .studio-compare-module--compact {{
+      padding: 0;
+      border-left-width: 4px;
     }}
     .studio-compare-shell {{
       width: 100%;
-      height: min(86vh, 760px);
-      min-height: 560px;
-      margin-top: 14px;
+      height: min(84vh, 820px);
+      min-height: 640px;
       border: 1px solid var(--line);
       background: var(--surface-2);
       overflow: hidden;
@@ -1158,7 +1158,8 @@ out = f"""<!doctype html>
       .article-outline nav a:last-child {{ border-bottom: 0; }}
       table {{ display: block; overflow-x: auto; white-space: nowrap; }}
       .insert-module {{ margin: 24px 0; padding: 14px; }}
-      .studio-compare-shell {{ height: 78vh; min-height: 620px; }}
+      .studio-compare-module--compact {{ padding: 0; }}
+      .studio-compare-shell {{ height: 76vh; min-height: 560px; }}
       .sensor-controls {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
       .sensor-button {{ border-bottom: 1px solid var(--line); }}
       .sensor-button:nth-child(2n) {{ border-right: 0; }}

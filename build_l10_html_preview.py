@@ -484,7 +484,7 @@ out = f"""<!doctype html>
     .compact-controls {{
       position: relative;
       display: grid;
-      grid-template-columns: repeat(3, 34px);
+      grid-template-columns: repeat(4, 34px);
       gap: 6px;
       align-items: end;
       justify-content: end;
@@ -1097,7 +1097,7 @@ out = f"""<!doctype html>
       .layout > aside {{ position: relative; height: auto; padding: 12px 16px 10px; border-right: 0; border-bottom: 1px solid var(--line); overflow: visible; }}
       .brand {{ font-size: 17px; }}
       .brand::before {{ width: 26px; height: 7px; margin-bottom: 7px; }}
-      .compact-controls {{ grid-template-columns: repeat(3, 32px); gap: 5px; }}
+      .compact-controls {{ grid-template-columns: repeat(4, 32px); gap: 5px; }}
       .icon-button,
       .article-outline summary {{ width: 32px; height: 32px; }}
       .icon-button svg,
@@ -1143,6 +1143,9 @@ out = f"""<!doctype html>
           </button>
           <a class="icon-button" href="editor.html" aria-label="编辑 Markdown" title="编辑 Markdown">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l11-11-4-4L4 16v4zM13 7l4 4"/></svg>
+          </a>
+          <a class="icon-button" href="tools/studio-comparison.html" aria-label="图片对比工具" title="图片对比工具">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7v7H4zM13 5h7v7h-7zM4 14h7v5H4zM13 14h7v5h-7z"/></svg>
           </a>
           {outline_controls}
         </div>

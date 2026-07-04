@@ -44,14 +44,21 @@ jobs:
           git commit -m "Rebuild preview from markdown"
           git push
 
+      - name: Prepare Pages artifact
+        run: |
+          mkdir -p _site/source
+          cp index.html editor.html README.md _site/
+          cp source/L10_测评对比草稿.md _site/source/
+          touch _site/.nojekyll
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "."
+          path: "_site"
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

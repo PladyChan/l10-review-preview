@@ -9,7 +9,7 @@ FILES = [
 ]
 
 DISPLAY_TITLES = {
-    "source/L10_测评对比草稿.md": "测评正文",
+    "source/L10_测评对比草稿.md": "L10",
 }
 
 
@@ -434,7 +434,9 @@ def add_outline(body: str):
     )
     outline = (
         '<details class="article-outline">'
-        '<summary><span>文章大纲</span><em>展开章节</em></summary>'
+        '<summary aria-label="文章大纲" title="文章大纲">'
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>'
+        '</summary>'
         f'<nav aria-label="文章大纲">{links}</nav>'
         '</details>'
     )
@@ -457,7 +459,7 @@ nav = "\n".join(
 )
 section_nav = f"<nav>{nav}</nav>" if len(sections) > 1 else ""
 content = "\n".join(
-    f'<section id="sec-{idx}"><div class="file-name">{html.escape(title)}</div>{body}</section>'
+    f'<section id="sec-{idx}">{body}</section>'
     for idx, (_, file, body) in enumerate(sections)
 )
 
@@ -466,7 +468,7 @@ out = f"""<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Panasonic Lumix L10 测评阅读版</title>
+  <title>Panasonic Lumix L10</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -570,74 +572,73 @@ out = f"""<!doctype html>
       position: sticky;
       top: 0;
       height: 100vh;
-      padding: 20px 18px;
+      padding: 14px 16px;
       border-right: 1px solid var(--line);
       background: var(--surface);
-      overflow: auto;
+      overflow: visible;
     }}
     .brand {{
       font-family: var(--font-display);
       font-weight: 700;
-      font-size: 20px;
+      font-size: 18px;
       line-height: 1.08;
       letter-spacing: 0;
-      margin-bottom: 8px;
+      margin-bottom: 0;
       text-transform: uppercase;
     }}
     .brand::before {{
       content: "";
       display: block;
-      width: 32px;
-      height: 8px;
-      margin-bottom: 12px;
+      width: 28px;
+      height: 7px;
+      margin-bottom: 8px;
       background: var(--accent);
     }}
-    .meta {{
-      margin-bottom: 12px;
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-    }}
-    .control-actions {{
+    .header-row {{
+      position: relative;
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: 8px;
-      margin-bottom: 8px;
+      gap: 12px;
+      align-items: end;
     }}
-    .theme-toggle {{
-      width: 100%;
+    .compact-controls {{
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(3, 34px);
+      gap: 6px;
+      align-items: end;
+      justify-content: end;
+    }}
+    .icon-button,
+    .article-outline summary {{
+      width: 34px;
+      height: 34px;
       margin: 0;
-      padding: 8px 10px;
+      padding: 0;
       border: 1px solid var(--line);
       border-radius: 0;
       background: var(--surface-2);
       color: var(--ink);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: .05em;
-      text-align: left;
-      text-transform: uppercase;
+      display: grid;
+      place-items: center;
       cursor: pointer;
     }}
-    a.theme-toggle {{
-      width: auto;
-      min-width: 96px;
-      display: block;
-      white-space: nowrap;
-    }}
-    .theme-toggle::before {{
-      content: "";
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      margin-right: 8px;
-      background: var(--accent);
-      vertical-align: 0;
-    }}
-    .theme-toggle:hover {{
+    .icon-button:hover,
+    .article-outline summary:hover {{
       border-color: var(--accent);
+    }}
+    .icon-button svg,
+    .article-outline summary svg {{
+      width: 17px;
+      height: 17px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: square;
+      stroke-linejoin: miter;
+    }}
+    a.icon-button {{
+      text-decoration: none;
     }}
     nav a {{
       display: block;
@@ -663,66 +664,32 @@ out = f"""<!doctype html>
       border-bottom: 1px solid var(--line);
       margin-bottom: 52px;
     }}
-    .file-name {{
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: .04em;
-      text-transform: uppercase;
-      margin-bottom: 14px;
-    }}
     .article-outline {{
-      margin: 0 0 16px;
-      border: 1px solid var(--line);
-      background: var(--surface);
+      margin: 0;
+      border: 0;
+      background: transparent;
     }}
     .article-outline summary {{
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: center;
-      min-height: 38px;
-      padding: 8px 10px;
-      color: var(--ink);
-      cursor: pointer;
       list-style: none;
-      font-family: var(--font-display);
-      font-size: 14px;
-      line-height: 1.2;
     }}
     .article-outline summary::-webkit-details-marker {{ display: none; }}
-    .article-outline summary::before {{
-      content: "";
-      width: 11px;
-      height: 11px;
-      border: 1px solid var(--accent);
-      background: transparent;
-      grid-column: 1;
-      grid-row: 1;
-    }}
-    .article-outline summary span {{
-      padding-left: 22px;
-      grid-column: 1;
-      grid-row: 1;
-    }}
-    .article-outline summary em {{
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-size: 10px;
-      font-style: normal;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-    }}
     .article-outline[open] summary {{
-      border-bottom: 1px solid var(--line);
-    }}
-    .article-outline[open] summary::before {{
+      border-color: var(--accent);
       background: var(--accent);
+      color: var(--bg);
     }}
     .article-outline nav {{
+      position: absolute;
+      top: calc(100% + 8px);
+      right: 0;
+      z-index: 10;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-columns: 1fr;
+      width: min(72vw, 320px);
       margin: 0;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: 0 18px 36px rgba(0,0,0,.18);
     }}
     .article-outline nav a {{
       display: grid;
@@ -751,12 +718,6 @@ out = f"""<!doctype html>
       font-family: var(--font-mono);
       font-size: 11px;
       line-height: 1.6;
-    }}
-    .layout > aside .article-outline {{
-      margin-bottom: 12px;
-    }}
-    .layout > aside .article-outline nav {{
-      grid-template-columns: 1fr;
     }}
     .layout > aside .article-outline nav a,
     .layout > aside .article-outline nav a:nth-child(2n),
@@ -1286,18 +1247,19 @@ out = f"""<!doctype html>
     }}
     @media (max-width: 820px) {{
       .layout {{ display: block; }}
-      .layout > aside {{ position: relative; height: auto; padding: 16px 18px 12px; border-right: 0; border-bottom: 1px solid var(--line); }}
-      .brand {{ font-size: 19px; margin-bottom: 7px; }}
-      .brand::before {{ width: 30px; height: 8px; margin-bottom: 10px; }}
-      .meta {{ margin-bottom: 10px; font-size: 10px; }}
-      .control-actions {{ gap: 8px; margin-bottom: 8px; }}
-      .theme-toggle {{ padding: 8px 10px; }}
-      main {{ width: 100%; padding: 22px 18px 60px; }}
+      .layout > aside {{ position: relative; height: auto; padding: 12px 16px 10px; border-right: 0; border-bottom: 1px solid var(--line); overflow: visible; }}
+      .brand {{ font-size: 17px; }}
+      .brand::before {{ width: 26px; height: 7px; margin-bottom: 7px; }}
+      .compact-controls {{ grid-template-columns: repeat(3, 32px); gap: 5px; }}
+      .icon-button,
+      .article-outline summary {{ width: 32px; height: 32px; }}
+      .icon-button svg,
+      .article-outline summary svg {{ width: 16px; height: 16px; }}
+      main {{ width: 100%; padding: 18px 18px 60px; }}
       section {{ max-width: none; }}
       h1 {{ font-size: 32px; }}
       h2 {{ font-size: 22px; }}
-      .article-outline {{ margin-bottom: 12px; }}
-      .article-outline summary {{ min-height: 38px; padding: 8px 10px; }}
+      .article-outline nav {{ width: calc(100vw - 32px); }}
       .article-outline nav {{ grid-template-columns: 1fr; }}
       .article-outline nav a,
       .article-outline nav a:nth-child(2n),
@@ -1334,13 +1296,18 @@ out = f"""<!doctype html>
 <body>
   <div class="layout">
     <aside>
-      <div class="brand">Panasonic Lumix L10<br>测评阅读版</div>
-      <div class="meta">Nothing-inspired full article</div>
-      <div class="control-actions">
-        <button class="theme-toggle" type="button" data-theme-toggle aria-label="切换深浅色" aria-pressed="false">THEME AUTO</button>
-        <a class="theme-toggle" href="editor.html">EDIT MD</a>
+      <div class="header-row">
+        <div class="brand">Panasonic Lumix L10</div>
+        <div class="compact-controls">
+          <button class="icon-button" type="button" data-theme-toggle aria-label="切换深浅色" title="切换深浅色" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v18M12 3a9 9 0 0 1 0 18"/></svg>
+          </button>
+          <a class="icon-button" href="editor.html" aria-label="编辑 Markdown" title="编辑 Markdown">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h4l11-11-4-4L4 16v4zM13 7l4 4"/></svg>
+          </a>
+          {outline_controls}
+        </div>
       </div>
-      {outline_controls}
       {section_nav}
     </aside>
     <main>{content}</main>
@@ -1361,8 +1328,9 @@ out = f"""<!doctype html>
       }};
       const render = () => {{
         const theme = currentTheme();
-        button.textContent = theme === "dark" ? "THEME DARK" : "THEME LIGHT";
         button.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+        button.setAttribute("title", theme === "dark" ? "切换到浅色" : "切换到深色");
+        button.setAttribute("aria-label", theme === "dark" ? "切换到浅色" : "切换到深色");
       }};
       button.addEventListener("click", () => {{
         const next = currentTheme() === "dark" ? "light" : "dark";

@@ -443,28 +443,6 @@
         -webkit-overflow-scrolling: touch;
         touch-action: pan-y;
       }
-      body.keyboard-open .topbar {
-        padding: 6px 8px;
-        gap: 6px;
-      }
-      body.keyboard-open .brand {
-        display: none;
-      }
-      body.keyboard-open .actions {
-        display: grid;
-        grid-template-columns: repeat(7, minmax(0, 1fr));
-        gap: 6px;
-      }
-      body.keyboard-open .button {
-        min-height: 32px;
-      }
-      body.keyboard-open .mobile-switch {
-        display: none;
-      }
-      body.keyboard-open .pane-head {
-        min-height: 34px;
-        padding: 5px 10px;
-      }
       body[data-mobile-view="edit"] .pane.preview-pane,
       body[data-mobile-view="preview"] .pane.editor-pane {
         display: none;
@@ -552,9 +530,6 @@
     const drawer = document.querySelector("[data-drawer]");
     const tokenInput = document.querySelector("[data-token]");
     const rememberToken = document.querySelector("[data-remember-token]");
-    const topbar = document.querySelector(".topbar");
-    const mobileSwitch = document.querySelector(".mobile-switch");
-    const editorPaneHead = document.querySelector(".editor-pane .pane-head");
     let lastSaved = "";
     let viewportTimer = 0;
     let pendingDraft = "";
@@ -660,27 +635,11 @@
     const isMobileLayout = () => window.matchMedia("(max-width: 900px)").matches;
 
     const syncViewportSize = () => {
-      const visualHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
-      const previewMode = document.body.dataset.mobileView === "preview";
-      const appHeight = previewMode ? window.innerHeight : visualHeight;
-      document.documentElement.style.setProperty("--app-height", `${appHeight}px`);
+      document.documentElement.style.setProperty("--app-height", `${window.innerHeight}px`);
 
-      if (!isMobileLayout() || previewMode) {
-        document.body.classList.remove("keyboard-open");
+      if (!isMobileLayout()) {
         document.documentElement.style.removeProperty("--editor-height");
-        return;
       }
-
-      const keyboardOpen = document.activeElement === editor
-        && window.visualViewport
-        && window.innerHeight - window.visualViewport.height > 80;
-      document.body.classList.toggle("keyboard-open", Boolean(keyboardOpen));
-
-      const topbarHeight = topbar ? topbar.offsetHeight : 0;
-      const switchHeight = keyboardOpen || !mobileSwitch ? 0 : mobileSwitch.offsetHeight;
-      const paneHeadHeight = editorPaneHead ? editorPaneHead.offsetHeight : 0;
-      const editorHeight = Math.max(180, Math.floor(visualHeight - topbarHeight - switchHeight - paneHeadHeight));
-      document.documentElement.style.setProperty("--editor-height", `${editorHeight}px`);
     };
 
     const queueViewportSync = () => {
@@ -825,10 +784,6 @@
     ["gesturestart", "gesturechange", "gestureend"].forEach((eventName) => {
       document.addEventListener(eventName, (event) => event.preventDefault(), { passive: false });
     });
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener("resize", queueViewportSync);
-      window.visualViewport.addEventListener("scroll", queueViewportSync);
-    }
     document.querySelector("[data-undo]").addEventListener("click", () => runEditCommand("undo", "撤销"));
     document.querySelector("[data-redo]").addEventListener("click", () => runEditCommand("redo", "重做"));
     document.querySelector("[data-download]").addEventListener("click", download);
@@ -862,7 +817,6 @@
     const setMobileView = (view) => {
       if (view === "preview") {
         editor.blur();
-        document.body.classList.remove("keyboard-open");
         document.documentElement.style.removeProperty("--editor-height");
       }
       document.body.dataset.mobileView = view;

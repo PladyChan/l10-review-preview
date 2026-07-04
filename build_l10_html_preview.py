@@ -201,11 +201,6 @@ def sensor_visual():
     <div><span>B</span><strong data-compare-b-name>L10 可用</strong></div>
     <output data-compare-output>A（标准 M43）是 B（L10 可用）的 1.30 倍，面积大约多 30%。</output>
   </div>
-  <div class="area-summary">
-    <p><strong>面积换算结论：</strong>全画幅约是 APS-C 的 2.36 倍；APS-C 约是 L10 可用面积的 2.12 倍；APS-C 约是标准 M43 的 1.63 倍；L10 可用面积约是一英寸的 1.49 倍。</p>
-    <p>全画幅：36 x 24 = 864mm²；APS-C：23.5 x 15.6 = 366.6mm²；标准 M43：17.3 x 13 = 224.9mm²；L10 可用：15.2 x 11.4 = 173.28mm²；一英寸：13.2 x 8.8 = 116.16mm²。</p>
-    <p>L10 的传感器位置其实很清楚：它比一英寸大一档，提升有限；比标准 M43 小一圈；和 APS-C 差距明显；和全画幅差距更大。L10 的成立点，是 24-75mm 光学变焦、EVF、实时 LUT 和完整相机体验。</p>
-  </div>
   {table(["规格", "尺寸", "面积", "口径"], rows)}
 """
 

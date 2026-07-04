@@ -63,19 +63,6 @@
       overflow: hidden;
     }
 
-    .app.is-fullscreen,
-    .app.is-pseudo-fullscreen {
-      width: 100vw;
-      height: 100vh;
-      background: var(--bg);
-    }
-
-    .app.is-pseudo-fullscreen {
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-    }
-
     .toolbar,
     .view-controls {
       display: flex;
@@ -220,24 +207,6 @@
       image-rendering: pixelated;
     }
 
-    .corner-control {
-      position: absolute;
-      right: 10px;
-      bottom: 10px;
-      z-index: 7;
-      width: 34px;
-      height: 34px;
-      min-height: 34px;
-      padding: 0;
-      display: grid;
-      place-items: center;
-      background: color-mix(in srgb, var(--panel) 88%, transparent);
-      backdrop-filter: blur(8px);
-      font-family: var(--mono);
-      font-size: 18px;
-      line-height: 1;
-    }
-
     .minimap {
       position: absolute;
       right: 52px;
@@ -327,7 +296,8 @@
       }
 
       .compare-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(2, minmax(0, 1fr));
         gap: 4px;
         padding: 4px;
         height: 100%;
@@ -378,15 +348,6 @@
         width: min(82px, 28vw);
       }
 
-      .corner-control {
-        right: 8px;
-        bottom: 8px;
-        width: 28px;
-        height: 28px;
-        min-height: 28px;
-        font-size: 15px;
-      }
-
       .image-label {
         left: 5px;
         top: 5px;
@@ -420,6 +381,7 @@
         <button type="button" data-max-view>最大显示</button>
         <button type="button" data-actual>100%</button>
         <button type="button" data-center>回到中心</button>
+        <button type="button" data-corner>定位边角</button>
         <button type="button" data-fullscreen>全屏</button>
       </div>
     </div>
@@ -459,25 +421,25 @@
       ];
       const presetIsos = ["ISO1600", "ISO3200", "ISO6400", "ISO12800"];
       const assetBase = "studio-assets/raw";
-      const storageKey = "l10-studio-comparison-view-v2";
+      const storageKey = "l10-studio-comparison-view-v3";
       const ifcAnchors = {
         L10_28mm_vs_GR4_28mm: {
-          ISO1600: { l10: [1831, 1286], gr4: [1762, 1253] },
-          ISO3200: { l10: [1828, 1290], gr4: [1760, 1254] },
-          ISO6400: { l10: [1824, 1286], gr4: [1761, 1253] },
-          ISO12800: { l10: [1828, 1283], gr4: [1760, 1251] }
+          ISO1600: { l10: [2630, 1863], gr4: [3035, 2125] },
+          ISO3200: { l10: [2630, 1863], gr4: [3035, 2125] },
+          ISO6400: { l10: [2630, 1863], gr4: [3035, 2125] },
+          ISO12800: { l10: [2630, 1863], gr4: [3035, 2125] }
         },
         L10_35mm_vs_S9_35mm: {
-          ISO1600: { l10: [1846, 1272], s9: [1798, 1126] },
-          ISO3200: { l10: [1850, 1273], s9: [1802, 1119] },
-          ISO6400: { l10: [1846, 1274], s9: [1794, 1125] },
-          ISO12800: { l10: [1856, 1268], s9: [1798, 1126] }
+          ISO1600: { l10: [2650, 1888], s9: [2990, 1860] },
+          ISO3200: { l10: [2650, 1888], s9: [2990, 1860] },
+          ISO6400: { l10: [2650, 1888], s9: [2990, 1860] },
+          ISO12800: { l10: [2650, 1888], s9: [2990, 1860] }
         },
         L10_35mm_vs_X100VI_35mm: {
-          ISO1600: { l10: [1846, 1272], x100vi: [1787, 1198] },
-          ISO3200: { l10: [1850, 1273], x100vi: [1788, 1200] },
-          ISO6400: { l10: [1846, 1274], x100vi: [1786, 1194] },
-          ISO12800: { l10: [1856, 1268], x100vi: [1796, 1192] }
+          ISO1600: { l10: [2650, 1888], x100vi: [3845, 2570] },
+          ISO3200: { l10: [2650, 1888], x100vi: [3845, 2570] },
+          ISO6400: { l10: [2650, 1888], x100vi: [3845, 2570] },
+          ISO12800: { l10: [2650, 1888], x100vi: [3845, 2570] }
         }
       };
       const state = {
@@ -494,9 +456,11 @@
       const zoomInput = document.querySelector("[data-zoom]");
       const presetGroupSelect = document.querySelector("[data-preset-group]");
       const presetIsoSelect = document.querySelector("[data-preset-iso]");
-      const app = document.querySelector(".app");
       const maxViewButton = document.querySelector("[data-max-view]");
       const fullscreenButton = document.querySelector("[data-fullscreen]");
+      const isEmbedded = window.self !== window.top;
+      const params = new URLSearchParams(window.location.search);
+      const isFullPageTool = !isEmbedded;
 
       const save = () => {
         try {
@@ -597,25 +561,34 @@
       }
 
       function updateToolbarLabels() {
-        const maxZoom = zoomToMaxVisibleForStage(currentStage());
-        maxViewButton.textContent = `最大显示 ${formatZoom(maxZoom)}`;
-        fullscreenButton.textContent = isFullscreenView() ? "缩小" : "全屏";
+        maxViewButton.textContent = "最大显示 400%";
+        fullscreenButton.textContent = isFullPageTool ? "缩小" : "全屏";
       }
 
-      function isFullscreenView() {
-        return Boolean(document.fullscreenElement) || app.classList.contains("is-pseudo-fullscreen");
+      function articleUrl() {
+        const fallback = new URL("../#studio-comparison", window.location.href).href;
+        return params.get("return") || fallback;
       }
 
-      async function enterFullscreenView() {
-        app.classList.add("is-pseudo-fullscreen");
-        updateToolbarLabels();
-        positionImages();
+      function toolFullscreenUrl() {
+        const url = new URL(window.location.href);
+        url.searchParams.set("fullscreen", "1");
+        try {
+          const returnUrl = new URL(window.top.location.href);
+          returnUrl.hash = "studio-comparison";
+          url.searchParams.set("return", returnUrl.href);
+        } catch (error) {
+          url.searchParams.set("return", articleUrl());
+        }
+        return url.href;
       }
 
-      async function exitFullscreenView() {
-        app.classList.remove("is-pseudo-fullscreen");
-        updateToolbarLabels();
-        positionImages();
+      function openFullPageTool() {
+        window.top.location.href = toolFullscreenUrl();
+      }
+
+      function returnToArticle() {
+        window.location.href = articleUrl();
       }
 
       function updateOverlays() {
@@ -666,7 +639,7 @@
               <div class="stage" data-stage>
                 ${src ? `<img src="${src}" alt="${escapeHtml(camera.name)} ${label} crop" data-anchor-x="${camera.anchor ? camera.anchor[0] : ""}" data-anchor-y="${camera.anchor ? camera.anchor[1] : ""}">` : `<div class="empty-state">没有找到 ${escapeHtml(camera.name)} 的 ${label} 内置素材</div>`}
                 <div class="image-label"><strong>${escapeHtml(camera.name)}</strong><span>${escapeHtml(camera.focal || "-")} · ISO ${escapeHtml(camera.iso)}</span></div>
-                ${src ? `<div class="minimap"><div class="minimap-frame" data-minimap-frame><img src="${src}" alt=""><div class="minimap-viewport" data-minimap-viewport></div></div><div class="minimap-meta" data-minimap-meta><span>${formatZoom()}</span><span>X50 Y50</span></div></div><button class="corner-control" type="button" data-corner title="定位到画面右下角" aria-label="定位到画面右下角">⌟</button>` : ""}
+                ${src ? `<div class="minimap"><div class="minimap-frame" data-minimap-frame><img src="${src}" alt=""><div class="minimap-viewport" data-minimap-viewport></div></div><div class="minimap-meta" data-minimap-meta><span>${formatZoom()}</span><span>X50 Y50</span></div></div>` : ""}
               </div>
             </article>
           `;
@@ -754,7 +727,7 @@
           positionImages();
         }
         if (target.matches("[data-max-view]")) {
-          setZoom(zoomToMaxVisibleForStage(currentStage()));
+          setZoom(4);
           state.panX = 0;
           state.panY = 0;
           save();
@@ -772,7 +745,7 @@
           positionImages();
         }
         if (target.matches("[data-corner]")) {
-          const stage = target.closest("[data-stage]");
+          const stage = currentStage();
           const info = stageInfo(stage);
           if (!info) return;
           state.panX = info.anchorX * state.zoom + info.rect.width / 2 - info.img.naturalWidth * state.zoom;
@@ -781,10 +754,10 @@
           positionImages();
         }
         if (target.matches("[data-fullscreen]")) {
-          if (isFullscreenView()) {
-            exitFullscreenView();
+          if (isFullPageTool) {
+            returnToArticle();
           } else {
-            enterFullscreenView();
+            openFullPageTool();
           }
         }
       });
@@ -824,12 +797,6 @@
         if (event.target.matches("[data-stage] img")) positionImage(event.target);
       }, true);
       window.addEventListener("resize", positionImages);
-      document.addEventListener("fullscreenchange", () => {
-        app.classList.toggle("is-fullscreen", Boolean(document.fullscreenElement));
-        if (!document.fullscreenElement) app.classList.remove("is-pseudo-fullscreen");
-        positionImages();
-      });
-
       renderPresetOptions();
       hydrate();
       render();

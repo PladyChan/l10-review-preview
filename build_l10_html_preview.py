@@ -206,6 +206,17 @@ sensor_module = f"""
 </aside>
 """
 
+studio_compare_module = """
+<aside class="insert-module studio-compare-module" id="studio-comparison">
+  <h3>四机位 JPG / RAW 局部对比工具</h3>
+  <p>把 X100VI、L10、S9 和 GR4 的同一区域导出图放进来，可以在同一画质段落里切换 JPG / RAW、同步缩放和拖拽查看。图片只保存在本机浏览器里。</p>
+  <div class="studio-compare-shell">
+    <iframe src="tools/studio-comparison.html" title="四机位 JPG / RAW 局部对比工具"></iframe>
+  </div>
+  <p class="module-link"><a href="tools/studio-comparison.html">打开独立对比工具</a></p>
+</aside>
+"""
+
 
 def aspect_ratio_visual():
     standard_m43_area = 17.3 * 13.0
@@ -277,6 +288,7 @@ aspect_module = aspect_ratio_visual()
 
 def inject_modules(body: str) -> str:
     insertions = {
+        "<h3>画质表现</h3>": studio_compare_module,
         "<h3>裁切余量和剩余像素</h3>": sensor_module,
         "<h3>比例拨杆：多画幅和自定义入口</h3>": aspect_module,
     }
@@ -699,6 +711,35 @@ out = f"""<!doctype html>
     .insert-module h3 {{
       margin-top: 4px;
     }}
+    .studio-compare-module {{
+      width: min(100%, 1080px);
+    }}
+    .studio-compare-shell {{
+      width: 100%;
+      height: min(86vh, 760px);
+      min-height: 560px;
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      overflow: hidden;
+    }}
+    .studio-compare-shell iframe {{
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: var(--surface);
+    }}
+    .module-link {{
+      margin: 10px 0 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }}
+    .module-link a {{
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+    }}
     .sensor-bars {{
       display: grid;
       gap: 8px;
@@ -1117,6 +1158,7 @@ out = f"""<!doctype html>
       .article-outline nav a:last-child {{ border-bottom: 0; }}
       table {{ display: block; overflow-x: auto; white-space: nowrap; }}
       .insert-module {{ margin: 24px 0; padding: 14px; }}
+      .studio-compare-shell {{ height: 78vh; min-height: 620px; }}
       .sensor-controls {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
       .sensor-button {{ border-bottom: 1px solid var(--line); }}
       .sensor-button:nth-child(2n) {{ border-right: 0; }}

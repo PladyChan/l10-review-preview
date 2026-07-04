@@ -354,6 +354,35 @@
     .insert-module h3 {
       margin-top: 4px;
     }
+    .studio-compare-module {
+      width: min(100%, 1080px);
+    }
+    .studio-compare-shell {
+      width: 100%;
+      height: min(86vh, 760px);
+      min-height: 560px;
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+    .studio-compare-shell iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: var(--surface);
+    }
+    .module-link {
+      margin: 10px 0 0;
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+    .module-link a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+    }
     .sensor-bars {
       display: grid;
       gap: 8px;
@@ -772,6 +801,7 @@
       .article-outline nav a:last-child { border-bottom: 0; }
       table { display: block; overflow-x: auto; white-space: nowrap; }
       .insert-module { margin: 24px 0; padding: 14px; }
+      .studio-compare-shell { height: 78vh; min-height: 620px; }
       .sensor-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .sensor-button { border-bottom: 1px solid var(--line); }
       .sensor-button:nth-child(2n) { border-right: 0; }
@@ -868,6 +898,16 @@
 <h3>先确认可用面积</h3>
 <p>L10 是 M43 旗舰机 GH7 同底，但可用面积小于全面积，这也是很大争议的一个点。</p>
 <h3>画质表现</h3>
+
+<aside class="insert-module studio-compare-module" id="studio-comparison">
+  <h3>四机位 JPG / RAW 局部对比工具</h3>
+  <p>把 X100VI、L10、S9 和 GR4 的同一区域导出图放进来，可以在同一画质段落里切换 JPG / RAW、同步缩放和拖拽查看。图片只保存在本机浏览器里。</p>
+  <div class="studio-compare-shell">
+    <iframe src="tools/studio-comparison.html" title="四机位 JPG / RAW 局部对比工具"></iframe>
+  </div>
+  <p class="module-link"><a href="tools/studio-comparison.html">打开独立对比工具</a></p>
+</aside>
+
 <p>L10 这颗镜头全开偏柔，边角锐度也一般。收到 F2.8 后，中心会更锐；再收到 F5.6-F8，拍风光和远景会稳很多。边缘表现有限，这个要直接写清楚。</p>
 <p>紫边目前不明显。至少在已有实拍里，高反差边缘没有明显冒紫边，也没有打断观看。它真正需要被讨论的短板，还是全开偏柔和边缘一般。</p>
 <p>焦外比虚化量更值得看。L10 没有全幅大光圈那种浅景深上限，但 50mm、75mm 拍人像和静物时，背景过渡柔润，硬、碎、数字感重的问题不明显。</p>

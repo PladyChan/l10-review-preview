@@ -133,13 +133,6 @@ def table(headers, rows):
     return f"<table><thead><tr>{head}</tr></thead><tbody>{''.join(body)}</tbody></table>"
 
 
-def note_grid(items):
-    return '<div class="note-grid">' + "".join(
-        f'<div class="note"><b>{html.escape(title)}</b><p>{inline(body)}</p></div>'
-        for title, body in items
-    ) + "</div>"
-
-
 sensor_formats = [
     ("one-inch", "一英寸", 13.2, 8.8, "typical"),
     ("l10-used", "L10 可用", 15.2, 11.4, "estimated"),
@@ -207,7 +200,6 @@ def sensor_visual():
 
 sensor_module = f"""
 <aside class="insert-module" id="visual-sensor">
-  <div class="module-kicker">VISUAL TOOL / FORMAT</div>
   <h3>画幅对比工具：L10 可用面积小于标准 M43 全面积</h3>
   <p>这块只讲尺寸关系，不直接等同于最终画质。L10 用的是 4/3 多画幅路线，但可用成像面积要和标准 M43 分开看。</p>
   {sensor_visual()}
@@ -255,7 +247,6 @@ def aspect_ratio_visual():
 
     return f"""
 <aside class="insert-module aspect-module" id="visual-aspect">
-  <div class="module-kicker">ASPECT TOOL / L10</div>
   <h3>内置比例面积示意：四种比例各自取景</h3>
   <p>这张图画 L10 自己的四个内置比例，并加上标准 M43 的 17.3 x 13.0mm 外框作为参照。尺寸按有效像素和同像素密度估算；16:9 比 4:3 更宽，但仍达不到标准 M43 全宽。</p>
   <div class="aspect-controls" aria-label="选择 L10 内置比例">
@@ -283,116 +274,11 @@ def aspect_ratio_visual():
 
 aspect_module = aspect_ratio_visual()
 
-aspect_advice_module = f"""
-<aside class="insert-module" id="visual-aspect-advice">
-  <div class="module-kicker">ASPECT / FIELD USE</div>
-  <h3>多画幅不是装饰</h3>
-  <p>4:3 最稳，16:9 最有电影感。这次打鹰山回来以后，我更明显感觉到，比例本身也可以和 LUT 一起参与表达。</p>
-  {note_grid([
-    ("4:3", "像素利用率最高，后期裁切空间最大。日常、旅行、人物、记录都稳，也是我最常用的默认比例。"),
-    ("3:2", "更接近 APS-C / 全画幅用户熟悉的观看习惯，横竖构图都比较自然。"),
-    ("16:9", "横屏最有电影感，适合山顶、大雾、风景和视频感场景；我会想到搭配电影感 LUT。"),
-    ("1:1", "使用频率最低，裁切幅度最大；但搭配宝丽来方向的 LUT，会变成另一种即时影像感。"),
-  ])}
-</aside>
-"""
-
-phone_module = """
-<aside class="insert-module" id="visual-phone">
-  <div class="module-kicker">REFERENCE / PHONE</div>
-  <h3>手机对比只看概念优势，不做手机评测</h3>
-  <p>手机素材只做概念参照，重点放在 50mm / 75mm：L10 是真实光学长焦，手机可能是主摄裁切、副摄切换或算法融合。</p>
-  <p>观察点放在发丝、文字、织物边缘、背景过渡和肤色有没有明显数字感。这里必须保留三个关键词：不是计算摄影的自然画面、相机的仪式感、情绪价值。</p>
-</aside>
-"""
-
-s9_module = """
-<aside class="insert-module" id="visual-s9">
-  <div class="module-kicker">REFERENCE / S9</div>
-  <h3>S9 的上限更高，但出门前决策更多</h3>
-  <p>S9 画质上限、高感、宽容度和机身防抖都强于 L10。但它机身无内置 EVF、无热靴、无机械快门，4K60 需要裁切。</p>
-  <p>我使用 S9 时经常要先想清楚带什么镜头：手动头、自动定焦蛋糕头、28-70mm 大光圈标变，还是 28-200mm 天涯头。L10 把大光圈标变、EVF、热靴、LUT 和固定镜头闭环放进一台低决策机器里。</p>
-</aside>
-"""
-
-handling_module = f"""
-<aside class="insert-module" id="visual-handling">
-  <div class="module-kicker">BODY / OPERATION</div>
-  <h3>L10 操控和外观细节</h3>
-  <p>这部分不能只写“仪式感”三个字，要落到动作：贴近 EVF、转动变焦环、半按快门、拨轮调整曝光、LUT 键决定画面气质。</p>
-  {note_grid([
-    ("实体控制", "光圈环、自定义环、前后拨盘、快捷按钮、LUT 键、照片 / 视频 / 慢动作拨盘和比例拨杆都在机身上，常用操作不用频繁进菜单。"),
-    ("按键拨盘", "按键和拨盘都非常紧致，反馈好，有高级感。这里可以和金属顶盖、底盖一起写。"),
-    ("快门按钮", "半按 / 全按反馈会直接影响它像不像一台真正拿起来拍照的相机。"),
-    ("变焦速度", "L10 的变焦不算快。我现在习惯在抬手过程中先参与一段变焦，让相机到眼前时焦段已经差不多到位。"),
-    ("外观情绪", "钛合金色、金属外壳、十字纹蒙皮、正面干净设计，共同提供相机的仪式感和情绪价值。"),
-  ])}
-  <p>L10 裸机是一台随身变焦机；加上黑柔和 IT32 这种小闪，它就变成一套很轻的单兵拍摄组合，给日常记录多一个进入轻量创作的入口。</p>
-</aside>
-"""
-
-hotel_module = f"""
-<aside class="insert-module" id="visual-hotel">
-  <div class="module-kicker">SHOOTING LINE / AIQUN HOTEL</div>
-  <h3>爱群大酒店：同一空间从 24mm 收到 75mm</h3>
-  <p>拍摄选在一家很有历史的酒店。窗外自然光和室内暖黄灯混在一起，L10 挂上一支 IT32 小闪和 1/4 黑柔，重点就变成同一个室内空间里，24/35/50/75mm 如何改变构图，以及自然光、直闪、黑柔、ISO 3200 RAW 颗粒分别能把画面带到哪里。</p>
-  {table(
-    ["焦段", "画面任务", "为什么适合爱群这组"],
-    [
-      ("24mm", "环境交代", "交代室内环境、走廊纵深和老建筑氛围，把人放进空间里。"),
-      ("35mm", "半环境人像", "人物更明确，但仍保留酒店背景和光线关系。"),
-      ("50mm", "半身 / 坐姿 / 桌边", "开始压缩空间，把杂乱环境收住。"),
-      ("75mm", "表情 / 手部 / 服装细节", "从同一场景里提取细节，说明这是光学长焦，不是后期裁切。"),
-    ],
-  )}
-  {note_grid([
-    ("室内自然光", "晴天白平衡，让人物靠近窗边，压低 ISO，脸上的明暗过渡会更自然。"),
-    ("室外直闪", "阴天光线平，自动白平衡加 TTL 直闪，无脑直闪就行，把脸、眼神光和衣服先提出来。"),
-    ("室内直闪", "酒店走廊只有昏黄灯光，晴天白平衡配合直闪，保留黄色环境，也让人物从背景里跳出来。"),
-    ("纯室内灯光", "不开闪，晴天白平衡，长焦端 F2.8 可能到 ISO 3200。RAW 黑白噪点不脏，可以保留接近胶片颗粒的质感。"),
-    ("长焦弱光", "L10 只有镜头防抖，50mm / 75mm 昏暗室内不能按 S9 的手感去端。"),
-  ])}
-  <p>一台 L10、一支小闪光灯、一片 1/4 黑柔，已经足够组成一套轻便的人像单兵创作组合。不是专业棚拍方案，也不是弱光万能解，但确实让它从随身记录多走到轻量创作这一步。</p>
-</aside>
-"""
-
-travel_module = f"""
-<aside class="insert-module" id="visual-yunnan">
-  <div class="module-kicker">TRAVEL LINE / YUNNAN</div>
-  <h3>云南旅行：500g 的 L10 会不会成为负担？</h3>
-  <p>端午带 L10 去芒市、腾冲、高黎贡山和打鹰山。远门旅行里 500g 左右可以接受，24-75mm 和微距比 28mm 定焦更像一份保险。</p>
-  {note_grid([
-    ("旅行题材", "风景、植物、昆虫、野生菌、火山口、雾气、人物、路标和局部细节会混在一起出现。"),
-    ("高黎贡山", "大雨、高湿和伸缩镜头结构叠在一起，后半程内部起雾，是一次密封性错误示范。"),
-    ("打鹰山", "大雾能见度只有十米左右，但画面很有电影感；这次让我想到 16:9 + 电影感 LUT，或者 1:1 + 宝丽来 LUT。"),
-    ("主线判断", "GR 适合简单出门，L10 更适合远门旅行。拍得到比拍得好更重要。"),
-  ])}
-</aside>
-"""
-
-video_workflow_module = f"""
-<aside class="insert-module" id="visual-video-workflow">
-  <div class="module-kicker">WORKFLOW / VIDEO</div>
-  <h3>照片、视频、快慢速视频切换</h3>
-  <p>L10 的视频体验不只是看规格。照片、视频、快慢速视频之间切换很顺，而且参数互相独立；拍完照片后可以马上切到视频或慢动作，这对旅行记录和单兵拍摄很实用。</p>
-  {note_grid([
-    ("照片", "按静态记录来设置，优先构图、焦段、RAW 和 LUT。"),
-    ("视频", "保留稳定的 16:9 和统一色彩，Cinelike A2 可以作为接近 ARRI 取向的直出色彩来用。"),
-    ("慢动作", "单独服务手部动作、走动、雾气、咖啡和环境空镜，不污染照片参数。"),
-  ])}
-</aside>
-"""
-
 
 def inject_modules(body: str) -> str:
     insertions = {
         "<h3>裁切余量和剩余像素</h3>": sensor_module,
         "<h3>比例拨杆：多画幅和自定义入口</h3>": aspect_module,
-        "<h3>L10 vs S9：全幅上限和低决策</h3>": s9_module,
-        "<h3>爱群大酒店室内人像</h3>": hotel_module,
-        "<h2>07 云南旅行：500g 的 L10 会不会成为负担？</h2>": travel_module,
-        "<h2>05 视频能力</h2>": video_workflow_module,
-        "<h3>外观、携带和操作</h3>": handling_module,
     }
     for marker, module in insertions.items():
         if marker in body:
@@ -813,39 +699,6 @@ out = f"""<!doctype html>
     .insert-module h3 {{
       margin-top: 4px;
     }}
-    .module-kicker {{
-      color: var(--muted);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      letter-spacing: .06em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }}
-    .note-grid {{
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      border: 1px solid var(--line);
-      margin: 14px 0 2px;
-    }}
-    .note {{
-      min-width: 0;
-      padding: 12px;
-      border-right: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-    }}
-    .note:nth-child(2n) {{ border-right: 0; }}
-    .note:nth-last-child(-n+2) {{ border-bottom: 0; }}
-    .note b {{
-      display: block;
-      color: var(--ink);
-      font-family: var(--font-display);
-      font-size: 15px;
-      margin-bottom: 5px;
-    }}
-    .note p {{
-      margin: 0;
-      font-size: 14px;
-    }}
     .sensor-bars {{
       display: grid;
       gap: 8px;
@@ -1264,14 +1117,6 @@ out = f"""<!doctype html>
       .article-outline nav a:last-child {{ border-bottom: 0; }}
       table {{ display: block; overflow-x: auto; white-space: nowrap; }}
       .insert-module {{ margin: 24px 0; padding: 14px; }}
-      .note-grid {{ grid-template-columns: 1fr; }}
-      .note,
-      .note:nth-child(2n),
-      .note:nth-last-child(-n+2) {{
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
-      }}
-      .note:last-child {{ border-bottom: 0; }}
       .sensor-controls {{ grid-template-columns: repeat(2, minmax(0, 1fr)); }}
       .sensor-button {{ border-bottom: 1px solid var(--line); }}
       .sensor-button:nth-child(2n) {{ border-right: 0; }}

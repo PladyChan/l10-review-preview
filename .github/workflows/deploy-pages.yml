@@ -28,6 +28,7 @@ jobs:
         run: |
           mkdir -p _site/source
           cp index.html editor.html README.md _site/
+          cp -R tools _site/
           cp source/L10_测评对比草稿.md _site/source/
           touch _site/.nojekyll
 

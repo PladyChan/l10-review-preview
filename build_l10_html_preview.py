@@ -151,7 +151,7 @@ sensor_formats = [
 l10_aspect_ratios = [
     ("4:3", "5184 x 3888", 15.2, 11.4, "默认照片比例"),
     ("3:2", "5392 x 3600", 15.8098765432, 10.5555555556, "更接近全幅 / APS-C 观看习惯"),
-    ("16:9", "5632 x 3168", 16.5135802469, 9.2888888889, "更宽但不是标准 M43 全宽"),
+    ("16:9", "5632 x 3168", 16.5135802469, 9.2888888889, "更宽，仍达不到标准 M43 全宽"),
     ("1:1", "3888 x 3888", 11.4, 11.4, "方形构图"),
 ]
 
@@ -204,7 +204,7 @@ def sensor_visual():
   <div class="area-summary">
     <p><strong>面积换算结论：</strong>全画幅约是 APS-C 的 2.36 倍；APS-C 约是 L10 可用面积的 2.12 倍；APS-C 约是标准 M43 的 1.63 倍；L10 可用面积约是一英寸的 1.49 倍。</p>
     <p>全画幅：36 x 24 = 864mm²；APS-C：23.5 x 15.6 = 366.6mm²；标准 M43：17.3 x 13 = 224.9mm²；L10 可用：15.2 x 11.4 = 173.28mm²；一英寸：13.2 x 8.8 = 116.16mm²。</p>
-    <p>L10 的传感器位置其实很清楚：它比一英寸大一档，但不是碾压；比标准 M43 小一圈；和 APS-C 差距明显；和全画幅差距更大。L10 的成立点，是 24-75mm 光学变焦、EVF、Real Time LUT 和完整相机体验。</p>
+    <p>L10 的传感器位置其实很清楚：它比一英寸大一档，提升有限；比标准 M43 小一圈；和 APS-C 差距明显；和全画幅差距更大。L10 的成立点，是 24-75mm 光学变焦、EVF、Real Time LUT 和完整相机体验。</p>
   </div>
   {table(["规格", "尺寸", "面积", "口径"], rows)}
 """
@@ -213,7 +213,7 @@ def sensor_visual():
 sensor_module = f"""
 <aside class="insert-module" id="visual-sensor">
   <div class="module-kicker">VISUAL TOOL / FORMAT</div>
-  <h3>画幅对比工具：L10 可用面积不是标准 M43 全面积</h3>
+  <h3>画幅对比工具：L10 可用面积小于标准 M43 全面积</h3>
   <p>这块只讲尺寸关系，不直接等同于最终画质。L10 用的是 4/3 多画幅路线，但可用成像面积要和标准 M43 分开看。</p>
   {sensor_visual()}
 </aside>
@@ -261,8 +261,8 @@ def aspect_ratio_visual():
     return f"""
 <aside class="insert-module aspect-module" id="visual-aspect">
   <div class="module-kicker">ASPECT TOOL / L10</div>
-  <h3>内置比例面积示意：矩形不是同一个 4:3 裁切</h3>
-  <p>这张图画 L10 自己的四个内置比例，并加上标准 M43 的 17.3 x 13.0mm 外框作为参照。尺寸按有效像素和同像素密度估算；16:9 比 4:3 更宽，但不是标准 M43 全宽。</p>
+  <h3>内置比例面积示意：四种比例各自取景</h3>
+  <p>这张图画 L10 自己的四个内置比例，并加上标准 M43 的 17.3 x 13.0mm 外框作为参照。尺寸按有效像素和同像素密度估算；16:9 比 4:3 更宽，但仍达不到标准 M43 全宽。</p>
   <div class="aspect-controls" aria-label="选择 L10 内置比例">
     {''.join(controls)}
   </div>
@@ -392,8 +392,7 @@ video_workflow_module = f"""
 def inject_modules(body: str) -> str:
     insertions = {
         "<h3>先确认可用面积</h3>": sensor_module,
-        "<h3>内置比例：不是简单裁切</h3>": aspect_module,
-        "<h3>多画幅不是装饰：不同比例适合什么题材？</h3>": aspect_advice_module,
+        "<h3>比例拨杆：多画幅和自定义入口</h3>": aspect_module,
         "<h3>L10 vs S9：全幅上限和低决策</h3>": s9_module,
         "<h3>爱群大酒店室内人像</h3>": hotel_module,
         "<h2>07 云南旅行：500g 的 L10 会不会成为负担？</h2>": travel_module,

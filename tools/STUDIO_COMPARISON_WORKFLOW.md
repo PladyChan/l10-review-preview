@@ -6,11 +6,30 @@
 
 - `studio-comparison-config.json`：唯一配置入口。相机组、ISO、素材前缀、IFC 锚点、边角锚点、正文预览倍率都写在这里。
 - `studio-comparison.html`：交互对比工具。打开时读取 `studio-comparison-config.json`，不再手写相机配置。
-- `studio_comparison_pipeline.py`：复用流程脚本。负责检查素材、复制素材、生成正文预览图、输出 Markdown 图片引用。
+- `studio_comparison_pipeline.py`：复用流程脚本。负责从按机型分类目录整理照片、检查素材、复制素材、生成正文预览图、输出 Markdown 图片引用。
 - `studio-assets/raw/`：交互工具读取的原始导出 JPG。
 - `studio-assets/night-compare-400/`：正文预览图。当前项目沿用旧文件夹名，但图片内容是 200% 上下排预览。
 
 ## 素材目录
+
+原始导出 JPG 可以先放在按机型分类目录：
+
+```text
+RAW/按机型分类/{机型}/{焦段}/{机型}_{焦段}_{ISO}_原文件名.jpg
+```
+
+当前例子：
+
+```text
+RAW/按机型分类/L10/35mm/L10_35mm_ISO3200_P1023876.jpg
+RAW/按机型分类/X100VI/35mm/X100VI_35mm_ISO3200_DSCF0005.jpg
+```
+
+脚本会把这些照片整理成对比组：
+
+```text
+RAW/对比组/{group_id}/{ISO}/{prefix}_{ISO}.jpg
+```
 
 工具默认读取：
 
@@ -37,6 +56,12 @@ tools/studio-assets/raw/L10_35mm_vs_X100VI_35mm/ISO3200/02_X100VI_35mm_ISO3200.j
 
 ## 常用命令
 
+从 `按机型分类` 整理照片，组成 `对比组`，并同步到工具素材目录：
+
+```bash
+python3 tools/studio_comparison_pipeline.py --organize-photos
+```
+
 检查素材和锚点是否齐：
 
 ```bash
@@ -55,7 +80,7 @@ python3 tools/studio_comparison_pipeline.py --generate-previews
 python3 tools/studio_comparison_pipeline.py --emit-markdown
 ```
 
-如果配置里给 camera 或 group 加了 `sourceDir`，可以从源目录复制素材到工具目录：
+如果配置里给 camera 或 group 加了 `sourceDir`，也可以跳过 `按机型分类`，直接从指定源目录复制素材到工具目录：
 
 ```bash
 python3 tools/studio_comparison_pipeline.py --copy-assets --check --generate-previews
@@ -76,14 +101,15 @@ python3 tools/studio_comparison_pipeline.py --copy-assets --check --generate-pre
 
 ## 复用步骤
 
-1. 把新导出的 JPG 按机型或场景整理好。
+1. 把新导出的 JPG 放进 `RAW/按机型分类/{机型}/{焦段}`。
 2. 在 `studio-comparison-config.json` 里新增或修改 `groups`。
 3. 填每个 camera 的 `prefix`，保证目标文件名能变成 `{prefix}_{ISO}.jpg`。
 4. 给每台机填 `anchors.ifc` 和 `anchors.corner`。
-5. 跑 `python3 tools/studio_comparison_pipeline.py --check`。
-6. 跑 `python3 tools/studio_comparison_pipeline.py --generate-previews`。
-7. 跑 `python3 build_l10_html_preview.py`。
-8. 检查本地页面，再提交发布。
+5. 跑 `python3 tools/studio_comparison_pipeline.py --organize-photos`。
+6. 跑 `python3 tools/studio_comparison_pipeline.py --check`。
+7. 跑 `python3 tools/studio_comparison_pipeline.py --generate-previews`。
+8. 跑 `python3 build_l10_html_preview.py`。
+9. 检查本地页面，再提交发布。
 
 ## 注意
 

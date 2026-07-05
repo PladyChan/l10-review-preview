@@ -7,6 +7,12 @@
   "storageKey": "l10-studio-comparison-view-v5",
   "scaleBaseCamera": "l10",
   "scaleBaseLabel": "L10",
+  "organize": {
+    "sourceRoot": "/Volumes/Media/照片/相片/L10/4机对比/RAW/按机型分类",
+    "comparisonRoot": "/Volumes/Media/照片/相片/L10/4机对比/RAW/对比组",
+    "sourcePattern": "{camera}_{focal}_{iso}_*.jpg",
+    "syncToToolAssets": true
+  },
   "isos": ["ISO1600", "ISO3200", "ISO6400", "ISO12800"],
   "groups": [
     {

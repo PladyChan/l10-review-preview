@@ -49,12 +49,77 @@ def asset_path(config: dict, group_id: str, iso: str, camera: Camera) -> Path:
     return rel_to_tools(config["assetBase"]) / group_id / iso / f"{camera.prefix}_{iso}.jpg"
 
 
+def comparison_path(config: dict, group_id: str, iso: str, camera: Camera) -> Path | None:
+    organize = config.get("organize") or {}
+    comparison_root = organize.get("comparisonRoot")
+    if not comparison_root:
+        return None
+    return Path(comparison_root).expanduser() / group_id / iso / f"{camera.prefix}_{iso}.jpg"
+
+
+def source_camera_label(camera: Camera, raw: dict) -> str:
+    return raw.get("sourceCamera") or raw.get("sourceFolder") or camera.id.upper()
+
+
+def source_focal_label(camera: Camera, raw: dict) -> str:
+    return raw.get("sourceFocal") or camera.focal
+
+
+def find_classified_source(config: dict, camera: Camera, raw: dict, iso: str) -> Path | None:
+    organize = config.get("organize") or {}
+    source_root = organize.get("sourceRoot")
+    if not source_root:
+        return None
+    camera_label = source_camera_label(camera, raw)
+    focal_label = source_focal_label(camera, raw)
+    pattern = raw.get("sourcePattern") or organize.get("sourcePattern") or "{camera}_{focal}_{iso}_*.jpg"
+    source_dir = Path(source_root).expanduser() / camera_label / focal_label
+    source_pattern = pattern.format(
+        camera=camera_label,
+        focal=focal_label,
+        iso=iso,
+        prefix=camera.prefix,
+        id=camera.id,
+    )
+    candidates = sorted(source_dir.glob(source_pattern))
+    return candidates[0] if candidates else None
+
+
 def find_source(camera: Camera, iso: str) -> Path | None:
     if not camera.source_dir:
         return None
     pattern = camera.source_pattern.format(prefix=camera.prefix, iso=iso, camera=camera.id)
     candidates = sorted(camera.source_dir.glob(pattern))
     return candidates[0] if candidates else None
+
+
+def organize_photos(config: dict) -> list[str]:
+    messages: list[str] = []
+    organize = config.get("organize") or {}
+    sync_assets = bool(organize.get("syncToToolAssets", True))
+    for group in config["groups"]:
+        for iso in config["isos"]:
+            for raw_camera in group["cameras"]:
+                camera = camera_from(raw_camera, group)
+                source = find_classified_source(config, camera, raw_camera, iso)
+                if not source:
+                    messages.append(f"missing classified source for {group['id']} {iso} {camera.id}")
+                    continue
+                targets: list[Path] = []
+                comparison_target = comparison_path(config, group["id"], iso, camera)
+                if comparison_target:
+                    targets.append(comparison_target)
+                if sync_assets:
+                    targets.append(asset_path(config, group["id"], iso, camera))
+                for target in targets:
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copy2(source, target)
+                    try:
+                        label = target.relative_to(ROOT)
+                    except ValueError:
+                        label = target
+                    messages.append(f"organized {source} -> {label}")
+    return messages
 
 
 def copy_assets(config: dict) -> list[str]:
@@ -203,6 +268,7 @@ def markdown_refs(config: dict) -> str:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Reusable studio comparison asset pipeline.")
     parser.add_argument("--config", default=DEFAULT_CONFIG, type=Path)
+    parser.add_argument("--organize-photos", action="store_true", help="Build comparison groups from the classified camera/focal source folder.")
     parser.add_argument("--copy-assets", action="store_true", help="Copy configured source files into the tool asset tree.")
     parser.add_argument("--generate-previews", action="store_true", help="Generate vertical article preview JPG files.")
     parser.add_argument("--check", action="store_true", help="Check required assets and anchors.")
@@ -210,6 +276,9 @@ def main() -> int:
     args = parser.parse_args()
 
     config = read_config(args.config)
+    if args.organize_photos:
+        for message in organize_photos(config):
+            print(message)
     if args.copy_assets:
         for message in copy_assets(config):
             print(message)
@@ -225,7 +294,7 @@ def main() -> int:
         print("comparison assets OK")
     if args.emit_markdown:
         print(markdown_refs(config))
-    if not any([args.copy_assets, args.generate_previews, args.check, args.emit_markdown]):
+    if not any([args.organize_photos, args.copy_assets, args.generate_previews, args.check, args.emit_markdown]):
         parser.print_help()
     return 0
 

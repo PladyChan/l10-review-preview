@@ -245,10 +245,15 @@
     }
 
     .minimap-meta {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
       padding: 4px 6px;
+      border: 1px solid color-mix(in srgb, var(--line) 70%, transparent);
+      background: color-mix(in srgb, #000 72%, transparent);
       color: var(--body);
       font-family: var(--mono);
       font-size: 10px;
@@ -671,9 +676,7 @@
           viewport.style.top = `${Math.max(mapY, Math.min(mapY + mapH - vpH, vpY))}px`;
           viewport.style.width = `${Math.min(mapW, vpW)}px`;
           viewport.style.height = `${Math.min(mapH, vpH)}px`;
-          const centerX = Math.round(((visibleX + visibleW / 2) / info.img.naturalWidth) * 100);
-          const centerY = Math.round(((visibleY + visibleH / 2) / info.img.naturalHeight) * 100);
-          meta.innerHTML = `<span>${formatZoom()}</span><span>X ${centerX} / Y ${centerY}</span>`;
+          meta.textContent = formatZoom();
         });
       }
 
@@ -686,7 +689,7 @@
               <div class="stage" data-stage>
                 ${src ? `<img src="${src}" alt="${escapeHtml(camera.name)} ${label} crop" data-camera="${escapeHtml(camera.id)}" data-anchor-x="${camera.anchor ? camera.anchor[0] : ""}" data-anchor-y="${camera.anchor ? camera.anchor[1] : ""}" data-corner-x="${camera.corner ? camera.corner[0] : ""}" data-corner-y="${camera.corner ? camera.corner[1] : ""}" data-scale="${camera.scale}">` : `<div class="empty-state">没有找到 ${escapeHtml(camera.name)} 的 ${label} 内置素材</div>`}
                 <div class="image-label"><strong>${escapeHtml(camera.name)}</strong><span>${escapeHtml(camera.focal || "-")} · ISO ${escapeHtml(camera.iso)}</span></div>
-                ${src ? `<div class="minimap"><div class="minimap-frame" data-minimap-frame><img src="${src}" alt=""><div class="minimap-viewport" data-minimap-viewport></div></div><div class="minimap-meta" data-minimap-meta><span>${formatZoom()}</span><span>X50 Y50</span></div></div>` : ""}
+                ${src ? `<div class="minimap"><div class="minimap-frame" data-minimap-frame><img src="${src}" alt=""><div class="minimap-viewport" data-minimap-viewport></div><div class="minimap-meta" data-minimap-meta>${formatZoom()}</div></div></div>` : ""}
               </div>
             </article>
           `;

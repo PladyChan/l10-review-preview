@@ -1,0 +1,97 @@
+{
+  "assetBase": "studio-assets/raw",
+  "previewDir": "studio-assets/night-compare-400",
+  "previewFileSuffix": "_400",
+  "previewZoom": 2,
+  "previewIsos": ["ISO1600", "ISO3200", "ISO6400", "ISO12800"],
+  "storageKey": "l10-studio-comparison-view-v5",
+  "scaleBaseCamera": "l10",
+  "scaleBaseLabel": "L10",
+  "isos": ["ISO1600", "ISO3200", "ISO6400", "ISO12800"],
+  "groups": [
+    {
+      "id": "L10_28mm_vs_GR4_28mm",
+      "label": "L10 vs GR4",
+      "cameras": [
+        {
+          "id": "l10",
+          "name": "Panasonic Lumix DC-L10",
+          "focal": "28mm",
+          "prefix": "01_L10_28mm"
+        },
+        {
+          "id": "gr4",
+          "name": "Ricoh GR IV",
+          "focal": "28mm",
+          "prefix": "02_GR4_28mm"
+        }
+      ],
+      "anchors": {
+        "ifc": {
+          "l10": [2646, 1870],
+          "gr4": [3032, 2164]
+        },
+        "corner": {
+          "l10": [4970, 3460],
+          "gr4": [5750, 3780]
+        }
+      }
+    },
+    {
+      "id": "L10_35mm_vs_S9_35mm",
+      "label": "L10 vs S9",
+      "cameras": [
+        {
+          "id": "l10",
+          "name": "Panasonic Lumix DC-L10",
+          "focal": "35mm",
+          "prefix": "01_L10_35mm"
+        },
+        {
+          "id": "s9",
+          "name": "Panasonic Lumix DC-S9",
+          "focal": "35mm",
+          "prefix": "02_S9_35mm"
+        }
+      ],
+      "anchors": {
+        "ifc": {
+          "l10": [2678, 1844],
+          "s9": [3034, 1881]
+        },
+        "corner": {
+          "l10": [4470, 2920],
+          "s9": [5050, 2920]
+        }
+      }
+    },
+    {
+      "id": "L10_35mm_vs_X100VI_35mm",
+      "label": "L10 vs X100VI",
+      "cameras": [
+        {
+          "id": "l10",
+          "name": "Panasonic Lumix DC-L10",
+          "focal": "35mm",
+          "prefix": "01_L10_35mm"
+        },
+        {
+          "id": "x100vi",
+          "name": "Fujifilm X100VI",
+          "focal": "35mm",
+          "prefix": "02_X100VI_35mm"
+        }
+      ],
+      "anchors": {
+        "ifc": {
+          "l10": [2678, 1844],
+          "x100vi": [3860, 2576]
+        },
+        "corner": {
+          "l10": [4470, 2920],
+          "x100vi": [6500, 3780]
+        }
+      }
+    }
+  ]
+}

@@ -398,69 +398,11 @@
 
   <script>
     (() => {
-      const presetGroups = [
-        {
-          id: "L10_28mm_vs_GR4_28mm",
-          label: "L10 vs GR4",
-          cameras: [
-            { id: "l10", name: "Panasonic Lumix DC-L10", focal: "28mm", prefix: "01_L10_28mm" },
-            { id: "gr4", name: "Ricoh GR IV", focal: "28mm", prefix: "02_GR4_28mm" }
-          ]
-        },
-        {
-          id: "L10_35mm_vs_S9_35mm",
-          label: "L10 vs S9",
-          cameras: [
-            { id: "l10", name: "Panasonic Lumix DC-L10", focal: "35mm", prefix: "01_L10_35mm" },
-            { id: "s9", name: "Panasonic Lumix DC-S9", focal: "35mm", prefix: "02_S9_35mm" }
-          ]
-        },
-        {
-          id: "L10_35mm_vs_X100VI_35mm",
-          label: "L10 vs X100VI",
-          cameras: [
-            { id: "l10", name: "Panasonic Lumix DC-L10", focal: "35mm", prefix: "01_L10_35mm" },
-            { id: "x100vi", name: "Fujifilm X100VI", focal: "35mm", prefix: "02_X100VI_35mm" }
-          ]
-        }
-      ];
-      const presetIsos = ["ISO1600", "ISO3200", "ISO6400", "ISO12800"];
-      const assetBase = "studio-assets/raw";
-      const storageKey = "l10-studio-comparison-view-v4";
-      const ifcAnchors = {
-        L10_28mm_vs_GR4_28mm: {
-          ISO1600: { l10: [2646, 1870], gr4: [3032, 2164] },
-          ISO3200: { l10: [2646, 1870], gr4: [3032, 2164] },
-          ISO6400: { l10: [2646, 1870], gr4: [3032, 2164] },
-          ISO12800: { l10: [2646, 1870], gr4: [3032, 2164] }
-        },
-        L10_35mm_vs_S9_35mm: {
-          ISO1600: { l10: [2678, 1844], s9: [3034, 1881] },
-          ISO3200: { l10: [2678, 1844], s9: [3034, 1881] },
-          ISO6400: { l10: [2678, 1844], s9: [3034, 1881] },
-          ISO12800: { l10: [2678, 1844], s9: [3034, 1881] }
-        },
-        L10_35mm_vs_X100VI_35mm: {
-          ISO1600: { l10: [2678, 1844], x100vi: [3860, 2576] },
-          ISO3200: { l10: [2678, 1844], x100vi: [3860, 2576] },
-          ISO6400: { l10: [2678, 1844], x100vi: [3860, 2576] },
-          ISO12800: { l10: [2678, 1844], x100vi: [3860, 2576] }
-        }
-      };
-      const cornerAnchors = {
-        L10_28mm_vs_GR4_28mm: {
-          l10: [4970, 3460],
-          gr4: [5750, 3780]
-        },
-        L10_35mm_vs_S9_35mm: {
-          l10: [4470, 2920],
-          s9: [5050, 2920]
-        },
-        L10_35mm_vs_X100VI_35mm: {
-          l10: [4470, 2920],
-          x100vi: [6500, 3780]
-        }
-      };
+      let presetGroups = [];
+      let presetIsos = [];
+      let assetBase = "studio-assets/raw";
+      let storageKey = "l10-studio-comparison-view";
+      let scaleBaseCamera = "l10";
       const state = {
         format: "raw",
         presetGroup: "L10_28mm_vs_GR4_28mm",
@@ -482,6 +424,24 @@
       const params = new URLSearchParams(window.location.search);
       const isFullPageTool = !isEmbedded;
 
+      async function loadToolConfig() {
+        const response = await fetch("studio-comparison-config.json", { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`Config request failed: ${response.status}`);
+        }
+        const config = await response.json();
+        presetGroups = Array.isArray(config.groups) ? config.groups : [];
+        presetIsos = Array.isArray(config.isos) ? config.isos : [];
+        assetBase = config.assetBase || assetBase;
+        storageKey = config.storageKey || storageKey;
+        scaleBaseCamera = config.scaleBaseCamera || scaleBaseCamera;
+        if (!presetGroups.length || !presetIsos.length) {
+          throw new Error("Config must include groups and isos.");
+        }
+        state.presetGroup = presetGroups[0].id;
+        state.presetIso = presetIsos[0];
+      }
+
       const save = () => {
         try {
           localStorage.setItem(storageKey, JSON.stringify(state));
@@ -502,13 +462,14 @@
 
       function buildPresetCameras(groupId, iso) {
         const group = groupFor(groupId);
+        if (!group) return [];
         return group.cameras.map((camera) => ({
           id: camera.id,
           name: camera.name,
           iso: iso.replace("ISO", ""),
           focal: camera.focal,
-          anchor: ifcAnchors[group.id]?.[iso]?.[camera.id] || null,
-          corner: cornerAnchors[group.id]?.[camera.id] || null,
+          anchor: group.anchors?.ifc?.[camera.id] || null,
+          corner: group.anchors?.corner?.[camera.id] || null,
           scale: 1,
           jpg: "",
           raw: assetPath(group.id, iso, camera)
@@ -581,7 +542,7 @@
 
       function normalizeImageScales() {
         const images = Array.from(document.querySelectorAll("[data-stage] img[data-camera]"));
-        const base = images.find((img) => img.dataset.camera === "l10" && img.naturalWidth);
+        const base = images.find((img) => img.dataset.camera === scaleBaseCamera && img.naturalWidth);
         if (!base) return;
         images.forEach((img) => {
           if (!img.naturalWidth) return;
@@ -681,6 +642,10 @@
       }
 
       function renderGrid() {
+        if (!state.cameras.length) {
+          grid.innerHTML = '<div class="empty-state">没有找到可用对比配置</div>';
+          return;
+        }
         grid.innerHTML = state.cameras.map((camera) => {
           const src = activeSrc(camera);
           const label = state.format.toUpperCase();
@@ -848,9 +813,19 @@
         if (event.target.matches("[data-stage] img")) positionImages();
       }, true);
       window.addEventListener("resize", positionImages);
-      renderPresetOptions();
-      hydrate();
-      render();
+      async function init() {
+        try {
+          await loadToolConfig();
+          renderPresetOptions();
+          hydrate();
+          render();
+        } catch (error) {
+          console.error(error);
+          grid.innerHTML = `<div class="empty-state">对比工具配置加载失败：${escapeHtml(error.message)}</div>`;
+        }
+      }
+
+      init();
     })();
   </script>
 </body>

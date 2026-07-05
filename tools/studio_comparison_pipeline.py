@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -85,6 +86,61 @@ def find_classified_source(config: dict, camera: Camera, raw: dict, iso: str) ->
     return candidates[0] if candidates else None
 
 
+def focal_number(value: str | int | float | None) -> float | None:
+    if value is None:
+        return None
+    try:
+        return float(str(value).split()[0])
+    except (TypeError, ValueError):
+        return None
+
+
+def flat_source_index(config: dict) -> list[dict]:
+    cached = config.get("_flatSourceIndex")
+    if cached is not None:
+        return cached
+    organize = config.get("organize") or {}
+    flat_root = organize.get("flatSourceRoot")
+    if not flat_root:
+        config["_flatSourceIndex"] = []
+        return []
+    files = sorted(Path(flat_root).expanduser().glob("*.jpg"))
+    if not files:
+        config["_flatSourceIndex"] = []
+        return []
+    command = [
+        "exiftool",
+        "-j",
+        "-Model",
+        "-ISO",
+        "-FocalLength",
+        *[str(path) for path in files],
+    ]
+    result = subprocess.run(command, check=True, capture_output=True, text=True)
+    rows = json.loads(result.stdout)
+    for row in rows:
+        row["FocalLengthNumber"] = focal_number(row.get("FocalLength"))
+    config["_flatSourceIndex"] = rows
+    return rows
+
+
+def find_flat_source(config: dict, raw: dict, iso: str) -> Path | None:
+    model = raw.get("sourceModel")
+    focal = raw.get("sourceFocalMm")
+    if not model or focal is None:
+        return None
+    iso_value = int(iso.replace("ISO", ""))
+    focal_value = float(focal)
+    candidates = []
+    for row in flat_source_index(config):
+        row_focal = row.get("FocalLengthNumber")
+        if row.get("Model") != model or row.get("ISO") != iso_value or row_focal is None:
+            continue
+        if abs(row_focal - focal_value) <= 0.15:
+            candidates.append(Path(row["SourceFile"]))
+    return sorted(candidates)[0] if candidates else None
+
+
 def find_source(camera: Camera, iso: str) -> Path | None:
     if not camera.source_dir:
         return None
@@ -101,9 +157,9 @@ def organize_photos(config: dict) -> list[str]:
         for iso in config["isos"]:
             for raw_camera in group["cameras"]:
                 camera = camera_from(raw_camera, group)
-                source = find_classified_source(config, camera, raw_camera, iso)
+                source = find_flat_source(config, raw_camera, iso) or find_classified_source(config, camera, raw_camera, iso)
                 if not source:
-                    messages.append(f"missing classified source for {group['id']} {iso} {camera.id}")
+                    messages.append(f"missing source for {group['id']} {iso} {camera.id}")
                     continue
                 targets: list[Path] = []
                 comparison_target = comparison_path(config, group["id"], iso, camera)

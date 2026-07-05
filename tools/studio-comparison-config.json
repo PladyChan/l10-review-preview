@@ -8,6 +8,7 @@
   "scaleBaseCamera": "l10",
   "scaleBaseLabel": "L10",
   "organize": {
+    "flatSourceRoot": "/Volumes/Media/照片/相片/L10/4机对比/RAW",
     "sourceRoot": "/Volumes/Media/照片/相片/L10/4机对比/RAW/按机型分类",
     "comparisonRoot": "/Volumes/Media/照片/相片/L10/4机对比/RAW/对比组",
     "sourcePattern": "{camera}_{focal}_{iso}_*.jpg",
@@ -23,13 +24,17 @@
           "id": "l10",
           "name": "Panasonic Lumix DC-L10",
           "focal": "28mm",
-          "prefix": "01_L10_28mm"
+          "prefix": "01_L10_28mm",
+          "sourceModel": "DC-L10",
+          "sourceFocalMm": 12.5
         },
         {
           "id": "gr4",
           "name": "Ricoh GR IV",
           "focal": "28mm",
-          "prefix": "02_GR4_28mm"
+          "prefix": "02_GR4_28mm",
+          "sourceModel": "RICOH GR IV",
+          "sourceFocalMm": 18.3
         }
       ],
       "anchors": {
@@ -51,13 +56,17 @@
           "id": "l10",
           "name": "Panasonic Lumix DC-L10",
           "focal": "35mm",
-          "prefix": "01_L10_35mm"
+          "prefix": "01_L10_35mm",
+          "sourceModel": "DC-L10",
+          "sourceFocalMm": 15.9
         },
         {
           "id": "s9",
           "name": "Panasonic Lumix DC-S9",
           "focal": "35mm",
-          "prefix": "02_S9_35mm"
+          "prefix": "02_S9_35mm",
+          "sourceModel": "DC-S9",
+          "sourceFocalMm": 35
         }
       ],
       "anchors": {
@@ -79,13 +88,17 @@
           "id": "l10",
           "name": "Panasonic Lumix DC-L10",
           "focal": "35mm",
-          "prefix": "01_L10_35mm"
+          "prefix": "01_L10_35mm",
+          "sourceModel": "DC-L10",
+          "sourceFocalMm": 15.9
         },
         {
           "id": "x100vi",
           "name": "Fujifilm X100VI",
           "focal": "35mm",
-          "prefix": "02_X100VI_35mm"
+          "prefix": "02_X100VI_35mm",
+          "sourceModel": "X100VI",
+          "sourceFocalMm": 23
         }
       ],
       "anchors": {

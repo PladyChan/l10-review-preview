@@ -12,7 +12,15 @@
 
 ## 素材目录
 
-原始导出 JPG 可以先放在按机型分类目录：
+原始导出 JPG 可以直接放在 RAW 根目录。脚本会优先读取 EXIF 里的机型、ISO、实际焦距来整理照片：
+
+```text
+RAW/P1024075.jpg
+RAW/R0002085.jpg
+RAW/DSCF0011.jpg
+```
+
+也可以继续使用按机型分类目录作为备用入口：
 
 ```text
 RAW/按机型分类/{机型}/{焦段}/{机型}_{焦段}_{ISO}_原文件名.jpg
@@ -56,7 +64,7 @@ tools/studio-assets/raw/L10_35mm_vs_X100VI_35mm/ISO3200/02_X100VI_35mm_ISO3200.j
 
 ## 常用命令
 
-从 `按机型分类` 整理照片，组成 `对比组`，并同步到工具素材目录：
+从 `RAW/` 根目录或 `按机型分类` 整理照片，组成 `对比组`，并同步到工具素材目录：
 
 ```bash
 python3 tools/studio_comparison_pipeline.py --organize-photos
@@ -101,7 +109,7 @@ python3 tools/studio_comparison_pipeline.py --copy-assets --check --generate-pre
 
 ## 复用步骤
 
-1. 把新导出的 JPG 放进 `RAW/按机型分类/{机型}/{焦段}`。
+1. 把新导出的 JPG 放进 `RAW/` 根目录；如果没有 EXIF 或需要手动覆盖，再放进 `RAW/按机型分类/{机型}/{焦段}`。
 2. 在 `studio-comparison-config.json` 里新增或修改 `groups`。
 3. 填每个 camera 的 `prefix`，保证目标文件名能变成 `{prefix}_{ISO}.jpg`。
 4. 给每台机填 `anchors.ifc` 和 `anchors.corner`。
@@ -116,3 +124,4 @@ python3 tools/studio_comparison_pipeline.py --copy-assets --check --generate-pre
 - 正文预览图是阅读用的，不替代交互工具。工具仍然可以 400% 查看原图像素。
 - 正文预览图当前为 200%，由 `previewZoom` 控制。
 - `previewFileSuffix` 当前保留 `_400` 是为了不改现有文章引用；新项目可以改成 `_200`。
+- `--organize-photos` 会优先使用 `flatSourceRoot` 的 EXIF 匹配结果；找不到时才回退到 `sourceRoot` 的按机型分类目录。

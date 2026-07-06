@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>F5.6 白天锐度对比</title>
+  <style>
+    :root {
+      color-scheme: dark light;
+      --bg: #070707;
+      --panel: #111;
+      --panel-2: #181818;
+      --ink: #f4f4f4;
+      --muted: #9a9a9a;
+      --line: #303030;
+      --accent: #ff2a2a;
+      --chip: #242424;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f6f2e9;
+        --panel: #fffdf6;
+        --panel-2: #eee8dc;
+        --ink: #111;
+        --muted: #6d675e;
+        --line: #d4cabb;
+        --chip: #e8e0d2;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+    }
+    button, select {
+      font: inherit;
+      color: inherit;
+    }
+    .tool {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      background:
+        linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px),
+        var(--bg);
+      background-size: 28px 28px;
+    }
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--panel) 94%, transparent);
+      backdrop-filter: blur(10px);
+    }
+    .topline {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+    }
+    h1 {
+      margin: 0;
+      font-size: 16px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+    .zoom-control {
+      display: grid;
+      grid-template-columns: repeat(3, 44px);
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+    }
+    .zoom-control button,
+    .focal-tabs button,
+    .view-toggle button {
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .zoom-control button {
+      height: 30px;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    .zoom-control button.is-active,
+    .focal-tabs button.is-active,
+    .view-toggle button.is-active {
+      background: var(--accent);
+      color: var(--bg);
+    }
+    .focal-tabs {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 4px;
+    }
+    .focal-tabs button {
+      min-height: 34px;
+      padding: 6px 4px;
+      background: var(--chip);
+      font-family: var(--mono);
+      font-size: 13px;
+    }
+    .selectors {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: end;
+    }
+    .select-group {
+      display: grid;
+      gap: 4px;
+    }
+    .select-group label {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1;
+    }
+    select {
+      width: 100%;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      background: var(--panel-2);
+      padding: 0 8px;
+      font-size: 14px;
+    }
+    .view-toggle {
+      display: grid;
+      grid-template-columns: repeat(2, 42px);
+      gap: 4px;
+      padding: 3px;
+      border: 1px solid var(--line);
+      background: var(--panel-2);
+    }
+    .view-toggle button {
+      height: 30px;
+      font-size: 12px;
+    }
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 1px;
+      min-height: 0;
+      padding: 1px;
+      background: var(--line);
+    }
+    .stage.is-single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .stage.is-single .pane[data-side="b"] {
+      display: none;
+    }
+    .pane {
+      min-width: 0;
+      min-height: 480px;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      background: var(--panel);
+    }
+    .pane-head,
+    .pane-foot {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 38px;
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+    .pane-foot {
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .pane-title {
+      min-width: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 22px;
+      padding: 0 7px;
+      background: var(--chip);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .tag[data-kind="optical"],
+    .tag[data-kind="native"] {
+      color: var(--ink);
+    }
+    .viewport {
+      min-height: 0;
+      overflow: auto;
+      overscroll-behavior: contain;
+      background: #050505;
+      cursor: grab;
+    }
+    .viewport.is-dragging {
+      cursor: grabbing;
+    }
+    .viewport img {
+      display: block;
+      width: calc(100% * var(--zoom, 1));
+      max-width: none;
+      height: auto;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+    .empty {
+      min-height: 360px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      color: var(--muted);
+      text-align: center;
+      background: var(--panel);
+    }
+    @media (max-width: 760px) {
+      .toolbar { padding: 10px; }
+      .topline {
+        grid-template-columns: 1fr;
+      }
+      .zoom-control {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .selectors {
+        grid-template-columns: 1fr;
+      }
+      .view-toggle {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .stage {
+        grid-template-columns: 1fr;
+      }
+      .pane {
+        min-height: 420px;
+      }
+      .focal-tabs {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="tool">
+    <header class="toolbar">
+      <div class="topline">
+        <h1>F5.6 白天锐度对比</h1>
+        <div class="zoom-control" aria-label="放大倍率">
+          <button type="button" data-zoom="1">100</button>
+          <button type="button" data-zoom="2">200</button>
+          <button type="button" data-zoom="4">400</button>
+        </div>
+      </div>
+      <nav class="focal-tabs" aria-label="选择视角"></nav>
+      <div class="selectors">
+        <div class="select-group">
+          <label for="select-a">A</label>
+          <select id="select-a"></select>
+        </div>
+        <div class="select-group">
+          <label for="select-b">B</label>
+          <select id="select-b"></select>
+        </div>
+        <div class="view-toggle" aria-label="显示模式">
+          <button type="button" data-view="compare">AB</button>
+          <button type="button" data-view="single">A</button>
+        </div>
+      </div>
+    </header>
+    <section class="stage" aria-label="图片对比区">
+      <article class="pane" data-side="a">
+        <div class="pane-head">
+          <div class="pane-title" data-title></div>
+          <span class="tag" data-pixels></span>
+        </div>
+        <div class="viewport" data-viewport>
+          <img alt="" draggable="false" data-image>
+        </div>
+        <div class="pane-foot">
+          <span data-meta></span>
+          <span data-file></span>
+        </div>
+      </article>
+      <article class="pane" data-side="b">
+        <div class="pane-head">
+          <div class="pane-title" data-title></div>
+          <span class="tag" data-pixels></span>
+        </div>
+        <div class="viewport" data-viewport>
+          <img alt="" draggable="false" data-image>
+        </div>
+        <div class="pane-foot">
+          <span data-meta></span>
+          <span data-file></span>
+        </div>
+      </article>
+    </section>
+  </main>
+  <script>
+    const state = {
+      config: null,
+      focal: "50",
+      zoom: 2,
+      view: "compare",
+      a: null,
+      b: null,
+      syncing: false
+    };
+
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+
+    const labelFor = (item) => `${item.camera} · ${item.label} · ${item.aperture} · ${item.iso}`;
+    const availableForFocal = () => state.config.items.filter((item) => item.focal === state.focal);
+
+    function chooseDefaults(items) {
+      const currentA = items.find((item) => item.id === state.a);
+      const currentB = items.find((item) => item.id === state.b);
+      const l10 = items.find((item) => item.cameraId === "l10");
+      state.a = (currentA || l10 || items[0] || {}).id || null;
+
+      const candidates = items.filter((item) => item.id !== state.a);
+      const preferred = candidates.find((item) => item.cameraId === "s9")
+        || candidates.find((item) => item.cameraId === "x100vi")
+        || candidates.find((item) => item.cameraId === "gr4")
+        || candidates[0];
+      state.b = (currentB && currentB.id !== state.a ? currentB : preferred || items[0] || {}).id || null;
+    }
+
+    function renderFocals() {
+      const nav = $(".focal-tabs");
+      nav.innerHTML = state.config.focals.map((focal) => {
+        const active = focal === state.focal ? " is-active" : "";
+        return `<button type="button" class="${active}" data-focal="${focal}">${focal}mm</button>`;
+      }).join("");
+      $$("[data-focal]", nav).forEach((button) => {
+        button.addEventListener("click", () => {
+          state.focal = button.dataset.focal;
+          chooseDefaults(availableForFocal());
+          render();
+        });
+      });
+    }
+
+    function renderSelect(select, selectedId, side) {
+      const items = availableForFocal();
+      select.innerHTML = items.map((item) => (
+        `<option value="${item.id}"${item.id === selectedId ? " selected" : ""}>${labelFor(item)}</option>`
+      )).join("");
+      select.onchange = () => {
+        state[side] = select.value;
+        renderPanes();
+      };
+    }
+
+    function renderPane(pane, item) {
+      if (!item) {
+        pane.querySelector("[data-title]").textContent = "无素材";
+        pane.querySelector("[data-pixels]").textContent = "";
+        pane.querySelector("[data-meta]").textContent = "";
+        pane.querySelector("[data-file]").textContent = "";
+        pane.querySelector("[data-image]").removeAttribute("src");
+        return;
+      }
+      const statusKind = item.status === "光学" ? "optical" : item.status === "原生" ? "native" : "crop";
+      pane.querySelector("[data-title]").innerHTML = [
+        `<strong>${item.camera}</strong>`,
+        `<span class="tag" data-kind="${statusKind}">${item.status}</span>`,
+        `<span class="tag">${item.label}</span>`
+      ].join("");
+      pane.querySelector("[data-pixels]").textContent = item.pixels;
+      pane.querySelector("[data-meta]").textContent = `${item.aperture} · ${item.iso} · ${item.source}`;
+      pane.querySelector("[data-file]").textContent = item.file;
+      const img = pane.querySelector("[data-image]");
+      img.src = `${state.config.assetBase}/${item.file}`;
+      img.alt = labelFor(item);
+    }
+
+    function applyZoom() {
+      document.documentElement.style.setProperty("--zoom", state.zoom);
+      $$("[data-zoom]").forEach((button) => {
+        button.classList.toggle("is-active", Number(button.dataset.zoom) === state.zoom);
+      });
+    }
+
+    function renderPanes() {
+      const items = state.config.items;
+      const a = items.find((item) => item.id === state.a);
+      const b = items.find((item) => item.id === state.b);
+      renderPane($('[data-side="a"]'), a);
+      renderPane($('[data-side="b"]'), b);
+      $(".stage").classList.toggle("is-single", state.view === "single");
+      $$("[data-view]").forEach((button) => {
+        button.classList.toggle("is-active", button.dataset.view === state.view);
+      });
+      applyZoom();
+      requestAnimationFrame(centerViewports);
+    }
+
+    function centerViewports() {
+      $$("[data-viewport]").forEach((viewport) => {
+        viewport.scrollLeft = Math.max(0, (viewport.scrollWidth - viewport.clientWidth) / 2);
+        viewport.scrollTop = Math.max(0, (viewport.scrollHeight - viewport.clientHeight) * 0.42);
+      });
+    }
+
+    function attachViewportSync() {
+      const viewports = $$("[data-viewport]");
+      viewports.forEach((viewport) => {
+        viewport.addEventListener("scroll", () => {
+          if (state.syncing || state.view === "single") return;
+          state.syncing = true;
+          viewports.forEach((other) => {
+            if (other === viewport) return;
+            const leftRatio = viewport.scrollLeft / Math.max(1, viewport.scrollWidth - viewport.clientWidth);
+            const topRatio = viewport.scrollTop / Math.max(1, viewport.scrollHeight - viewport.clientHeight);
+            other.scrollLeft = leftRatio * Math.max(0, other.scrollWidth - other.clientWidth);
+            other.scrollTop = topRatio * Math.max(0, other.scrollHeight - other.clientHeight);
+          });
+          requestAnimationFrame(() => { state.syncing = false; });
+        });
+
+        let dragging = false;
+        let startX = 0;
+        let startY = 0;
+        let startLeft = 0;
+        let startTop = 0;
+        viewport.addEventListener("pointerdown", (event) => {
+          dragging = true;
+          viewport.setPointerCapture(event.pointerId);
+          viewport.classList.add("is-dragging");
+          startX = event.clientX;
+          startY = event.clientY;
+          startLeft = viewport.scrollLeft;
+          startTop = viewport.scrollTop;
+        });
+        viewport.addEventListener("pointermove", (event) => {
+          if (!dragging) return;
+          viewport.scrollLeft = startLeft - (event.clientX - startX);
+          viewport.scrollTop = startTop - (event.clientY - startY);
+        });
+        viewport.addEventListener("pointerup", () => {
+          dragging = false;
+          viewport.classList.remove("is-dragging");
+        });
+        viewport.addEventListener("pointercancel", () => {
+          dragging = false;
+          viewport.classList.remove("is-dragging");
+        });
+      });
+    }
+
+    function render() {
+      renderFocals();
+      renderSelect($("#select-a"), state.a, "a");
+      renderSelect($("#select-b"), state.b, "b");
+      renderPanes();
+    }
+
+    async function init() {
+      const response = await fetch("day-sharpness-config.json", { cache: "no-store" });
+      state.config = await response.json();
+      state.focal = state.config.defaultFocal || state.config.focals[0];
+      chooseDefaults(availableForFocal());
+      $$("[data-zoom]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.zoom = Number(button.dataset.zoom);
+          applyZoom();
+          requestAnimationFrame(centerViewports);
+        });
+      });
+      $$("[data-view]").forEach((button) => {
+        button.addEventListener("click", () => {
+          state.view = button.dataset.view;
+          renderPanes();
+        });
+      });
+      attachViewportSync();
+      render();
+    }
+
+    init().catch((error) => {
+      document.body.innerHTML = `<div class="empty">工具配置读取失败：${error.message}</div>`;
+    });
+  </script>
+</body>
+</html>

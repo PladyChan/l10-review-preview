@@ -230,6 +230,14 @@ studio_compare_module = """
 </aside>
 """
 
+day_sharpness_module = """
+<aside class="insert-module studio-compare-module studio-compare-module--compact" id="day-sharpness-comparison">
+  <div class="studio-compare-shell day-sharpness-shell">
+    <iframe data-day-sharpness-frame title="F5.6 白天锐度对比工具"></iframe>
+  </div>
+</aside>
+"""
+
 
 def aspect_ratio_visual():
     standard_m43_area = 17.3 * 13.0
@@ -300,8 +308,11 @@ aspect_module = aspect_ratio_visual()
 
 
 def inject_modules(body: str) -> str:
+    night_marker = "<h3>夜晚 ISO 噪点对比</h3>"
+    if night_marker in body:
+        body = body.replace(night_marker, day_sharpness_module + "\n" + night_marker + "\n" + studio_compare_module, 1)
+
     insertions = {
-        "<h3>夜晚 ISO 噪点对比</h3>": studio_compare_module,
         "<h3>裁切余量和剩余像素</h3>": sensor_module,
         "<h3>比例拨杆：多画幅和自定义入口</h3>": aspect_module,
     }
@@ -509,7 +520,7 @@ out = f"""<!doctype html>
     .compact-controls {{
       position: relative;
       display: grid;
-      grid-template-columns: repeat(4, 34px);
+      grid-template-columns: repeat(5, 34px);
       gap: 6px;
       align-items: end;
       justify-content: end;
@@ -762,6 +773,10 @@ out = f"""<!doctype html>
       height: 100%;
       border: 0;
       background: var(--surface);
+    }}
+    .day-sharpness-shell {{
+      height: min(86vh, 860px);
+      min-height: 680px;
     }}
     .module-link {{
       margin: 10px 0 0;
@@ -1223,6 +1238,9 @@ out = f"""<!doctype html>
           <a class="icon-button" href="#" data-studio-tool-link aria-label="图片对比工具" title="图片对比工具">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7v7H4zM13 5h7v7h-7zM4 14h7v5H4zM13 14h7v5h-7z"/></svg>
           </a>
+          <a class="icon-button" href="#" data-day-sharpness-link aria-label="白天锐度工具" title="白天锐度工具">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18l6-6 4 4 6-10M4 20h16"/></svg>
+          </a>
           {outline_controls}
         </div>
       </div>
@@ -1232,8 +1250,7 @@ out = f"""<!doctype html>
   </div>
   <script>
     (() => {{
-      const toolPath = "tools/studio-comparison.html";
-      const resolveToolUrl = () => {{
+      const resolveToolUrl = (toolPath) => {{
         const path = window.location.pathname;
         const pagesRoot = "/l10-review-preview";
         if (path === pagesRoot || path.startsWith(`${{pagesRoot}}/`)) {{
@@ -1241,12 +1258,18 @@ out = f"""<!doctype html>
         }}
         return new URL(toolPath, window.location.href.endsWith("/") ? window.location.href : new URL(".", window.location.href)).href;
       }};
-      const url = resolveToolUrl();
-      document.querySelectorAll("[data-studio-tool-link]").forEach((link) => {{
-        link.href = url;
-      }});
-      document.querySelectorAll("[data-studio-tool-frame]").forEach((frame) => {{
-        frame.src = url;
+      const tools = [
+        ["tools/studio-comparison.html", "[data-studio-tool-link]", "[data-studio-tool-frame]"],
+        ["tools/day-sharpness.html", "[data-day-sharpness-link]", "[data-day-sharpness-frame]"],
+      ];
+      tools.forEach(([toolPath, linkSelector, frameSelector]) => {{
+        const url = resolveToolUrl(toolPath);
+        document.querySelectorAll(linkSelector).forEach((link) => {{
+          link.href = url;
+        }});
+        document.querySelectorAll(frameSelector).forEach((frame) => {{
+          frame.src = url;
+        }});
       }});
     }})();
     (() => {{

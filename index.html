@@ -139,7 +139,7 @@
     .compact-controls {
       position: relative;
       display: grid;
-      grid-template-columns: repeat(4, 34px);
+      grid-template-columns: repeat(5, 34px);
       gap: 6px;
       align-items: end;
       justify-content: end;
@@ -392,6 +392,10 @@
       height: 100%;
       border: 0;
       background: var(--surface);
+    }
+    .day-sharpness-shell {
+      height: min(86vh, 860px);
+      min-height: 680px;
     }
     .module-link {
       margin: 10px 0 0;
@@ -853,6 +857,9 @@
           <a class="icon-button" href="#" data-studio-tool-link aria-label="图片对比工具" title="图片对比工具">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h7v7H4zM13 5h7v7h-7zM4 14h7v5H4zM13 14h7v5h-7z"/></svg>
           </a>
+          <a class="icon-button" href="#" data-day-sharpness-link aria-label="白天锐度工具" title="白天锐度工具">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18l6-6 4 4 6-10M4 20h16"/></svg>
+          </a>
           <details class="article-outline"><summary aria-label="文章大纲" title="文章大纲"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></summary><nav aria-label="文章大纲"><a href="#outline-01"><span>01</span>外观、操作和血统</a><a href="#outline-02"><span>02</span>特色功能：比例、直出和人像辅助</a><a href="#outline-03"><span>03</span>L10 画质表现</a><a href="#outline-04"><span>04</span>和几台参照对象具体比一比</a><a href="#outline-05"><span>05</span>视频能力</a><a href="#outline-06"><span>06</span>爱群大酒店实拍</a><a href="#outline-07"><span>07</span>云南旅行：500g 的 L10 会不会成为负担？</a><a href="#outline-08"><span>08</span>总结</a></nav></details>
         </div>
       </div>
@@ -973,6 +980,13 @@
 <p>这些表是后面拍样片时的执行参数。L10 还是主角，参照机器负责确认它在不同场景里输在哪里，又换回了什么。</p>
 <h3>F5.6 锐度对比参数表</h3>
 <table><thead><tr><th>相机</th><th>焦段</th><th>光圈</th><th>ISO</th><th>裁切剩余像素 / 状态</th></tr></thead><tbody><tr><td>L10</td><td>24mm 光学</td><td>F5.6</td><td>ISO 100</td><td>20.4MP</td></tr><tr><td>L10</td><td>35mm 光学</td><td>F5.6</td><td>ISO 100</td><td>20.4MP</td></tr><tr><td>L10</td><td>50mm 光学</td><td>F5.6</td><td>ISO 100</td><td>20.4MP</td></tr><tr><td>L10</td><td>75mm 光学</td><td>F5.6</td><td>ISO 100</td><td>20.4MP</td></tr><tr><td>S9</td><td>24mm 光学，18-40mm</td><td>F5.6</td><td>ISO 100</td><td>24.2MP</td></tr><tr><td>S9</td><td>28mm 光学，28-70mm</td><td>F5.6</td><td>ISO 100</td><td>24.2MP</td></tr><tr><td>S9</td><td>35mm 光学，28-70mm</td><td>F5.6</td><td>ISO 100</td><td>24.2MP</td></tr><tr><td>S9</td><td>50mm 光学，28-70mm</td><td>F5.6</td><td>ISO 100</td><td>24.2MP</td></tr><tr><td>S9</td><td>70mm 光学，28-70mm</td><td>F5.6</td><td>ISO 100</td><td>24.2MP</td></tr><tr><td>S9</td><td>40mm 光学，28-70mm</td><td>F5.6</td><td>ISO 100</td><td>24.2MP</td></tr><tr><td>S9</td><td>40mm 裁到 50mm</td><td>F5.6</td><td>ISO 100</td><td>约 15.5MP</td></tr><tr><td>S9</td><td>40mm 裁到 70mm</td><td>F5.6</td><td>ISO 100</td><td>约 7.9MP</td></tr><tr><td>S9</td><td>40mm 裁到 75mm</td><td>F5.6</td><td>ISO 100</td><td>约 6.9MP</td></tr><tr><td>GR4</td><td>24mm</td><td>-</td><td>-</td><td>28mm 无法裁切变广</td></tr><tr><td>GR4</td><td>28mm 原生</td><td>F5.6</td><td>ISO 100</td><td>约 25.7MP</td></tr><tr><td>GR4</td><td>28mm 裁到 35mm</td><td>F5.6</td><td>ISO 100</td><td>约 16.5MP</td></tr><tr><td>GR4</td><td>28mm 裁到 40mm</td><td>F5.6</td><td>ISO 100</td><td>约 12.6MP</td></tr><tr><td>GR4</td><td>28mm 裁到 50mm</td><td>F5.6</td><td>ISO 100</td><td>约 8.1MP</td></tr><tr><td>GR4</td><td>28mm 裁到 70mm</td><td>F5.6</td><td>ISO 100</td><td>约 4.1MP</td></tr><tr><td>GR4</td><td>28mm 裁到 75mm</td><td>F5.6</td><td>ISO 100</td><td>约 3.6MP</td></tr><tr><td>X100VI</td><td>24mm</td><td>-</td><td>-</td><td>35mm 无法裁切变广</td></tr><tr><td>X100VI</td><td>28mm</td><td>-</td><td>-</td><td>35mm 无法裁切变广</td></tr><tr><td>X100VI</td><td>35mm 原生</td><td>F5.6</td><td>ISO 125</td><td>40.2MP</td></tr><tr><td>X100VI</td><td>35mm 裁到 40mm</td><td>F5.6</td><td>ISO 125</td><td>约 30.8MP</td></tr><tr><td>X100VI</td><td>35mm 裁到 50mm</td><td>F5.6</td><td>ISO 125</td><td>约 19.7MP</td></tr><tr><td>X100VI</td><td>35mm 裁到 70mm</td><td>F5.6</td><td>ISO 125</td><td>约 10.1MP</td></tr><tr><td>X100VI</td><td>35mm 裁到 75mm</td><td>F5.6</td><td>ISO 125</td><td>约 8.8MP</td></tr></tbody></table>
+
+<aside class="insert-module studio-compare-module studio-compare-module--compact" id="day-sharpness-comparison">
+  <div class="studio-compare-shell day-sharpness-shell">
+    <iframe data-day-sharpness-frame title="F5.6 白天锐度对比工具"></iframe>
+  </div>
+</aside>
+
 <h3>夜晚 ISO 噪点对比</h3>
 
 <aside class="insert-module studio-compare-module studio-compare-module--compact" id="studio-comparison">
@@ -1092,8 +1106,7 @@
   </div>
   <script>
     (() => {
-      const toolPath = "tools/studio-comparison.html";
-      const resolveToolUrl = () => {
+      const resolveToolUrl = (toolPath) => {
         const path = window.location.pathname;
         const pagesRoot = "/l10-review-preview";
         if (path === pagesRoot || path.startsWith(`${pagesRoot}/`)) {
@@ -1101,12 +1114,18 @@
         }
         return new URL(toolPath, window.location.href.endsWith("/") ? window.location.href : new URL(".", window.location.href)).href;
       };
-      const url = resolveToolUrl();
-      document.querySelectorAll("[data-studio-tool-link]").forEach((link) => {
-        link.href = url;
-      });
-      document.querySelectorAll("[data-studio-tool-frame]").forEach((frame) => {
-        frame.src = url;
+      const tools = [
+        ["tools/studio-comparison.html", "[data-studio-tool-link]", "[data-studio-tool-frame]"],
+        ["tools/day-sharpness.html", "[data-day-sharpness-link]", "[data-day-sharpness-frame]"],
+      ];
+      tools.forEach(([toolPath, linkSelector, frameSelector]) => {
+        const url = resolveToolUrl(toolPath);
+        document.querySelectorAll(linkSelector).forEach((link) => {
+          link.href = url;
+        });
+        document.querySelectorAll(frameSelector).forEach((frame) => {
+          frame.src = url;
+        });
       });
     })();
     (() => {

@@ -3,6 +3,46 @@
   "scaleBaseCamera": "l10",
   "defaultFocal": "50",
   "focals": ["28", "35", "40", "50", "70", "75"],
+  "compareGroups": [
+    {
+      "id": "l10_vs_s9_optical",
+      "label": "L10 / S9 光学",
+      "leftCameraId": "l10",
+      "rightLabel": "S9 光学",
+      "rightItemIds": {
+        "28": "s9_28",
+        "35": "s9_35",
+        "40": "s9_40",
+        "50": "s9_50",
+        "70": "s9_70"
+      }
+    },
+    {
+      "id": "l10_vs_s9_crop",
+      "label": "L10 / S9 裁切",
+      "leftCameraId": "l10",
+      "rightLabel": "S9 40mm 裁切",
+      "rightItemIds": {
+        "50": "s9_50_crop",
+        "70": "s9_70_crop",
+        "75": "s9_75_crop"
+      }
+    },
+    {
+      "id": "l10_vs_gr4",
+      "label": "L10 / GR4",
+      "leftCameraId": "l10",
+      "rightCameraId": "gr4",
+      "rightLabel": "GR4"
+    },
+    {
+      "id": "l10_vs_x100vi",
+      "label": "L10 / X100VI",
+      "leftCameraId": "l10",
+      "rightCameraId": "x100vi",
+      "rightLabel": "X100VI"
+    }
+  ],
   "items": [
     {
       "id": "l10_28",

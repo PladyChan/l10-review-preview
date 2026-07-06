@@ -132,6 +132,10 @@
       white-space: nowrap;
     }
 
+    .group-options {
+      max-width: min(52vw, 620px);
+    }
+
     .main {
       display: block;
       min-height: 0;
@@ -304,6 +308,19 @@
       font-size: 14px;
     }
 
+    .empty-state strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .empty-state span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
     @media (max-width: 980px) {
       body {
         overflow: hidden;
@@ -361,6 +378,10 @@
         max-width: 100%;
       }
 
+      .group-options {
+        max-width: 100%;
+      }
+
       .view-controls {
         gap: 5px;
         flex: 1 1 100%;
@@ -415,11 +436,8 @@
       <label>焦段
         <div class="segmented" data-focal-options></div>
       </label>
-      <label>A
-        <select data-select-a></select>
-      </label>
-      <label>B
-        <select data-select-b></select>
+      <label>对比组
+        <div class="segmented group-options" data-group-options></div>
       </label>
       <label>缩放
         <input type="range" min="0.05" max="4" step="0.01" value="1" data-zoom>
@@ -448,9 +466,7 @@
         panX: 0,
         panY: 0,
         view: "compare",
-        a: null,
-        b: null,
-        images: []
+        group: null
       };
 
       let assetBase = "day-sharpness-assets";
@@ -458,8 +474,7 @@
       const storageKey = "l10-day-sharpness-view";
       const grid = document.querySelector("[data-grid]");
       const focalOptions = document.querySelector("[data-focal-options]");
-      const selectA = document.querySelector("[data-select-a]");
-      const selectB = document.querySelector("[data-select-b]");
+      const groupOptions = document.querySelector("[data-group-options]");
       const zoomInput = document.querySelector("[data-zoom]");
       const maxViewButton = document.querySelector("[data-max-view]");
       const viewButton = document.querySelector("[data-view]");
@@ -494,12 +509,11 @@
           localStorage.setItem(storageKey, JSON.stringify({
             focal: state.focal,
             zoom: state.zoom,
-            panX: state.panX,
-            panY: state.panY,
-            view: state.view,
-            a: state.a,
-            b: state.b
-          }));
+          panX: state.panX,
+          panY: state.panY,
+          view: state.view,
+          group: state.group
+        }));
         } catch (error) {
           console.warn("Local save failed", error);
         }
@@ -514,33 +528,60 @@
           state.panX = Number(saved.panX || 0);
           state.panY = Number(saved.panY || 0);
           state.view = saved.view === "single" ? "single" : "compare";
-          state.a = saved.a || state.a;
-          state.b = saved.b || state.b;
+          if (groupFor(saved.group)) state.group = saved.group;
         } catch (error) {
           console.warn("Local restore failed", error);
         }
       }
 
-      function chooseDefaults() {
-        const items = availableForFocal();
-        const currentA = items.find((item) => item.id === state.a);
-        const currentB = items.find((item) => item.id === state.b);
-        const l10 = items.find((item) => item.cameraId === "l10");
-        state.a = (currentA || l10 || items[0] || {}).id || null;
+      function groups() {
+        return Array.isArray(state.config.compareGroups) ? state.config.compareGroups : [];
+      }
 
-        const candidates = items.filter((item) => item.id !== state.a);
-        const preferred = candidates.find((item) => item.cameraId === "s9")
-          || candidates.find((item) => item.cameraId === "x100vi")
-          || candidates.find((item) => item.cameraId === "gr4")
-          || candidates[0];
-        state.b = (currentB && currentB.id !== state.a ? currentB : preferred || items[0] || {}).id || null;
+      function groupFor(id) {
+        return groups().find((group) => group.id === id) || groups()[0] || null;
+      }
+
+      function chooseDefaults() {
+        if (!groupFor(state.group)) state.group = groups()[0]?.id || null;
       }
 
       function activeItems() {
-        const items = state.config.items;
-        const a = items.find((item) => item.id === state.a);
-        const b = items.find((item) => item.id === state.b);
-        return state.view === "single" ? [a].filter(Boolean) : [a, b].filter(Boolean);
+        const group = groupFor(state.group);
+        if (!group) return [];
+        const left = resolveGroupItem(group, "left");
+        const right = resolveGroupItem(group, "right");
+        return state.view === "single" ? [left] : [left, right];
+      }
+
+      function resolveGroupItem(group, side) {
+        const prefix = side === "left" ? "left" : "right";
+        const label = side === "left" ? "L10" : (group.rightLabel || group.label || "对照相机");
+        const explicitId = group[`${prefix}ItemIds`]?.[state.focal];
+        if (explicitId) {
+          const explicitItem = state.config.items.find((item) => item.id === explicitId);
+          if (explicitItem) return explicitItem;
+        }
+        const cameraId = group[`${prefix}CameraId`];
+        const status = group[`${prefix}Status`];
+        const item = state.config.items.find((candidate) => (
+          candidate.cameraId === cameraId
+          && candidate.focal === state.focal
+          && (!status || candidate.status === status)
+        ));
+        return item || {
+          missing: true,
+          id: `${group.id}_${side}_${state.focal}_missing`,
+          camera: label,
+          cameraId: cameraId || `${side}-missing`,
+          focal: state.focal,
+          label: `${state.focal}mm`,
+          aperture: "F5.6",
+          iso: "",
+          status: "无法拍摄",
+          pixels: "",
+          missingReason: `${label} 无法拍摄 ${state.focal}mm`
+        };
       }
 
       function itemSrc(item) {
@@ -554,15 +595,11 @@
         updateOptionStates();
       }
 
-      function renderSelects() {
-        const items = availableForFocal();
-        const options = items.map((item) => (
-          `<option value="${escapeHtml(item.id)}">${escapeHtml(labelFor(item))}</option>`
+      function renderGroupOptions() {
+        groupOptions.innerHTML = groups().map((group) => (
+          `<button type="button" data-group="${escapeHtml(group.id)}">${escapeHtml(group.label)}</button>`
         )).join("");
-        selectA.innerHTML = options;
-        selectB.innerHTML = options;
-        selectA.value = state.a || "";
-        selectB.value = state.b || "";
+        updateOptionStates();
       }
 
       function statusKind(item) {
@@ -577,6 +614,25 @@
           return;
         }
         grid.innerHTML = items.map((item) => {
+          if (item.missing) {
+            return `
+              <article class="camera-card" data-card="${escapeHtml(item.id)}">
+                <div class="stage" data-stage>
+                  <div class="empty-state">
+                    <div>
+                      <strong>${escapeHtml(item.missingReason)}</strong>
+                      <span>F5.6 · 当前对比组缺少该焦段素材</span>
+                    </div>
+                  </div>
+                  <div class="image-label">
+                    <strong>${escapeHtml(item.camera)}</strong>
+                    <span class="tag">${escapeHtml(item.status)}</span>
+                    <span>${escapeHtml(state.focal)}mm · F5.6</span>
+                  </div>
+                </div>
+              </article>
+            `;
+          }
           const src = itemSrc(item);
           return `
             <article class="camera-card" data-card="${escapeHtml(item.id)}">
@@ -640,13 +696,15 @@
       }
 
       function currentStage() {
-        return document.querySelector("[data-stage]");
+        return document.querySelector("[data-stage] img[data-camera]")?.closest("[data-stage]")
+          || document.querySelector("[data-stage]");
       }
 
       function zoomToFitForStage(stage) {
         const info = stageInfo(stage);
         if (!info) return 1;
-        return Math.min(info.rect.width / info.img.naturalWidth, info.rect.height / info.img.naturalHeight);
+        const scale = Number(info.img.dataset.scale) || 1;
+        return Math.min(info.rect.width / (info.img.naturalWidth * scale), info.rect.height / (info.img.naturalHeight * scale));
       }
 
       function positionImage(img) {
@@ -718,13 +776,16 @@
         document.querySelectorAll("[data-focal]").forEach((button) => {
           button.classList.toggle("is-active", button.dataset.focal === state.focal);
         });
+        document.querySelectorAll("[data-group]").forEach((button) => {
+          button.classList.toggle("is-active", button.dataset.group === state.group);
+        });
         viewButton.classList.toggle("is-active", state.view === "single");
       }
 
       function render() {
         chooseDefaults();
         renderFocalOptions();
-        renderSelects();
+        renderGroupOptions();
         setZoom(state.zoom);
         updateOptionStates();
         renderGrid();
@@ -766,26 +827,6 @@
         }
       });
 
-      document.addEventListener("change", (event) => {
-        const target = event.target;
-        if (target.matches("[data-select-a]")) {
-          state.a = target.value;
-          state.panX = 0;
-          state.panY = 0;
-          save();
-          renderGrid();
-          requestAnimationFrame(positionImages);
-        }
-        if (target.matches("[data-select-b]")) {
-          state.b = target.value;
-          state.panX = 0;
-          state.panY = 0;
-          save();
-          renderGrid();
-          requestAnimationFrame(positionImages);
-        }
-      });
-
       document.addEventListener("click", (event) => {
         const target = event.target.closest("button");
         if (!target) return;
@@ -794,6 +835,13 @@
           state.panX = 0;
           state.panY = 0;
           chooseDefaults();
+          save();
+          render();
+        }
+        if (target.matches("[data-group]")) {
+          state.group = target.dataset.group;
+          state.panX = 0;
+          state.panY = 0;
           save();
           render();
         }

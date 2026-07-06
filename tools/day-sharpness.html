@@ -214,6 +214,7 @@
       min-height: 0;
       overflow: auto;
       overscroll-behavior: contain;
+      touch-action: none;
       background: #050505;
       cursor: grab;
     }
@@ -449,6 +450,7 @@
         let startLeft = 0;
         let startTop = 0;
         viewport.addEventListener("pointerdown", (event) => {
+          event.preventDefault();
           dragging = true;
           viewport.setPointerCapture(event.pointerId);
           viewport.classList.add("is-dragging");
@@ -459,15 +461,23 @@
         });
         viewport.addEventListener("pointermove", (event) => {
           if (!dragging) return;
+          event.preventDefault();
           viewport.scrollLeft = startLeft - (event.clientX - startX);
           viewport.scrollTop = startTop - (event.clientY - startY);
         });
-        viewport.addEventListener("pointerup", () => {
+        viewport.addEventListener("pointerup", (event) => {
+          if (dragging) event.preventDefault();
           dragging = false;
+          if (viewport.hasPointerCapture(event.pointerId)) {
+            viewport.releasePointerCapture(event.pointerId);
+          }
           viewport.classList.remove("is-dragging");
         });
-        viewport.addEventListener("pointercancel", () => {
+        viewport.addEventListener("pointercancel", (event) => {
           dragging = false;
+          if (viewport.hasPointerCapture(event.pointerId)) {
+            viewport.releasePointerCapture(event.pointerId);
+          }
           viewport.classList.remove("is-dragging");
         });
       });

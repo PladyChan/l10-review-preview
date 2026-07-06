@@ -55,7 +55,8 @@
       "status": "光学",
       "pixels": "20.4MP",
       "file": "l10_28_f56_iso100.jpg",
-      "source": "P1024099.jpg"
+      "source": "P1024099.jpg",
+      "anchor": [3088, 2184]
     },
     {
       "id": "l10_35",
@@ -68,7 +69,8 @@
       "status": "光学",
       "pixels": "20.4MP",
       "file": "l10_35_f56_iso100.jpg",
-      "source": "P1024100.jpg"
+      "source": "P1024100.jpg",
+      "anchor": [3184, 2224]
     },
     {
       "id": "l10_50",
@@ -81,7 +83,8 @@
       "status": "光学",
       "pixels": "20.4MP",
       "file": "l10_50_f56_iso100.jpg",
-      "source": "P1024101.jpg"
+      "source": "P1024101.jpg",
+      "anchor": [3432, 2392]
     },
     {
       "id": "l10_70",
@@ -94,7 +97,8 @@
       "status": "光学",
       "pixels": "20.4MP",
       "file": "l10_70_f56_iso100.jpg",
-      "source": "P1024102.jpg"
+      "source": "P1024102.jpg",
+      "anchor": [3736, 2552]
     },
     {
       "id": "l10_75",
@@ -107,7 +111,8 @@
       "status": "光学",
       "pixels": "20.4MP",
       "file": "l10_75_f56_iso100.jpg",
-      "source": "P1024103.jpg"
+      "source": "P1024103.jpg",
+      "anchor": [3824, 2616]
     },
     {
       "id": "s9_28",
@@ -120,7 +125,8 @@
       "status": "光学",
       "pixels": "24.2MP",
       "file": "s9_28_f56_iso100.jpg",
-      "source": "P1623125-2.jpg"
+      "source": "P1623125-2.jpg",
+      "anchor": [3591, 2282]
     },
     {
       "id": "s9_35",
@@ -133,7 +139,8 @@
       "status": "光学",
       "pixels": "24.2MP",
       "file": "s9_35_f56_iso100.jpg",
-      "source": "P1623126-2.jpg"
+      "source": "P1623126-2.jpg",
+      "anchor": [3711, 2319]
     },
     {
       "id": "s9_40",
@@ -146,7 +153,8 @@
       "status": "光学",
       "pixels": "24.2MP",
       "file": "s9_40_f56_iso100.jpg",
-      "source": "P1623130-2.jpg"
+      "source": "P1623130-2.jpg",
+      "anchor": [2958, 1782]
     },
     {
       "id": "s9_50_crop",
@@ -159,7 +167,8 @@
       "status": "裁切",
       "pixels": "约 15.5MP",
       "file": "s9_50_crop_f56_iso100.jpg",
-      "source": "P1623130-2.jpg"
+      "source": "P1623130-2.jpg",
+      "anchor": [3822, 2356]
     },
     {
       "id": "s9_50",
@@ -172,7 +181,8 @@
       "status": "光学",
       "pixels": "24.2MP",
       "file": "s9_50_f56_iso100.jpg",
-      "source": "P1623127-2.jpg"
+      "source": "P1623127-2.jpg",
+      "anchor": [4052, 2467]
     },
     {
       "id": "s9_70_crop",
@@ -185,7 +195,8 @@
       "status": "裁切",
       "pixels": "约 7.9MP",
       "file": "s9_70_crop_f56_iso100.jpg",
-      "source": "P1623130-2.jpg"
+      "source": "P1623130-2.jpg",
+      "anchor": [3220, 1958]
     },
     {
       "id": "s9_70",
@@ -198,7 +209,8 @@
       "status": "光学",
       "pixels": "24.2MP",
       "file": "s9_70_f56_iso100.jpg",
-      "source": "P1623128-2.jpg"
+      "source": "P1623128-2.jpg",
+      "anchor": [4440, 2605]
     },
     {
       "id": "s9_75_crop",
@@ -211,7 +223,8 @@
       "status": "裁切",
       "pixels": "约 6.9MP",
       "file": "s9_75_crop_f56_iso100.jpg",
-      "source": "P1623130-2.jpg"
+      "source": "P1623130-2.jpg",
+      "anchor": [3060, 1856]
     },
     {
       "id": "gr4_28",
@@ -224,7 +237,8 @@
       "status": "原生",
       "pixels": "约 25.7MP",
       "file": "gr4_28_f56_iso100.jpg",
-      "source": "R0002091.jpg"
+      "source": "R0002091.jpg",
+      "anchor": [3706, 2431]
     },
     {
       "id": "gr4_35_crop",
@@ -237,7 +251,8 @@
       "status": "裁切",
       "pixels": "约 16.5MP",
       "file": "gr4_35_crop_f56_iso100.jpg",
-      "source": "R0002092.jpg"
+      "source": "R0002092.jpg",
+      "anchor": [3080, 2010]
     },
     {
       "id": "gr4_40_crop",
@@ -250,7 +265,8 @@
       "status": "裁切",
       "pixels": "约 12.6MP",
       "file": "gr4_40_crop_f56_iso100.jpg",
-      "source": "R0002091.jpg"
+      "source": "R0002091.jpg",
+      "anchor": [2774, 1809]
     },
     {
       "id": "gr4_50_crop",
@@ -263,7 +279,8 @@
       "status": "裁切",
       "pixels": "约 8.1MP",
       "file": "gr4_50_crop_f56_iso100.jpg",
-      "source": "R0002093.jpg"
+      "source": "R0002093.jpg",
+      "anchor": [2356, 1532]
     },
     {
       "id": "gr4_70_crop",
@@ -276,7 +293,8 @@
       "status": "裁切",
       "pixels": "约 4.1MP",
       "file": "gr4_70_crop_f56_iso100.jpg",
-      "source": "R0002091.jpg"
+      "source": "R0002091.jpg",
+      "anchor": [1844, 1190]
     },
     {
       "id": "gr4_75_crop",
@@ -289,7 +307,8 @@
       "status": "裁切",
       "pixels": "约 3.6MP",
       "file": "gr4_75_crop_f56_iso100.jpg",
-      "source": "R0002091.jpg"
+      "source": "R0002091.jpg",
+      "anchor": [1764, 1135]
     },
     {
       "id": "x100vi_35",
@@ -302,7 +321,8 @@
       "status": "原生",
       "pixels": "40.2MP",
       "file": "x100vi_35_f56_iso125.jpg",
-      "source": "DSCF0018.jpg"
+      "source": "DSCF0018.jpg",
+      "anchor": [4768, 3058]
     },
     {
       "id": "x100vi_40_crop",
@@ -315,7 +335,8 @@
       "status": "裁切",
       "pixels": "约 30.8MP",
       "file": "x100vi_40_crop_f56_iso125.jpg",
-      "source": "DSCF0018.jpg"
+      "source": "DSCF0018.jpg",
+      "anchor": [4286, 2738]
     },
     {
       "id": "x100vi_50_crop",
@@ -328,7 +349,8 @@
       "status": "裁切",
       "pixels": "约 19.7MP",
       "file": "x100vi_50_crop_f56_iso125.jpg",
-      "source": "DSCF0018.jpg"
+      "source": "DSCF0018.jpg",
+      "anchor": [3612, 2290]
     },
     {
       "id": "x100vi_70_crop",
@@ -341,7 +363,8 @@
       "status": "裁切",
       "pixels": "约 10.1MP",
       "file": "x100vi_70_crop_f56_iso125.jpg",
-      "source": "DSCF0018.jpg"
+      "source": "DSCF0018.jpg",
+      "anchor": [2836, 1773]
     },
     {
       "id": "x100vi_75_crop",
@@ -354,7 +377,8 @@
       "status": "裁切",
       "pixels": "约 8.8MP",
       "file": "x100vi_75_crop_f56_iso125.jpg",
-      "source": "DSCF0018.jpg"
+      "source": "DSCF0018.jpg",
+      "anchor": [2707, 1688]
     }
   ]
 }

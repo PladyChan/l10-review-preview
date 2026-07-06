@@ -471,7 +471,7 @@
 
       let assetBase = "day-sharpness-assets";
       let scaleBaseCamera = "l10";
-      const storageKey = "l10-day-sharpness-view";
+      const storageKey = "l10-day-sharpness-view-v2";
       const grid = document.querySelector("[data-grid]");
       const focalOptions = document.querySelector("[data-focal-options]");
       const groupOptions = document.querySelector("[data-group-options]");
@@ -637,7 +637,7 @@
           return `
             <article class="camera-card" data-card="${escapeHtml(item.id)}">
               <div class="stage" data-stage>
-                <img src="${src}" alt="${escapeHtml(labelFor(item))}" data-camera="${escapeHtml(item.cameraId)}" data-anchor-x="" data-anchor-y="" data-scale="1">
+                <img src="${src}" alt="${escapeHtml(labelFor(item))}" data-camera="${escapeHtml(item.cameraId)}" data-anchor-x="${item.anchor ? item.anchor[0] : ""}" data-anchor-y="${item.anchor ? item.anchor[1] : ""}" data-scale="1">
                 <div class="image-label">
                   <strong>${escapeHtml(item.camera)}</strong>
                   <span class="tag" data-kind="${statusKind(item)}">${escapeHtml(item.status)}</span>

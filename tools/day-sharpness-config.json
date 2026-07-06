@@ -2,7 +2,7 @@
   "assetBase": "day-sharpness-assets",
   "scaleBaseCamera": "l10",
   "defaultFocal": "50",
-  "focals": ["28", "35", "40", "50", "70", "75"],
+  "focals": ["28", "35", "50", "70", "75"],
   "compareGroups": [
     {
       "id": "l10_vs_s9_optical",

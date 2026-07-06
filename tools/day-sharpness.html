@@ -454,6 +454,7 @@
       };
 
       let assetBase = "day-sharpness-assets";
+      let scaleBaseCamera = "l10";
       const storageKey = "l10-day-sharpness-view";
       const grid = document.querySelector("[data-grid]");
       const focalOptions = document.querySelector("[data-focal-options]");
@@ -484,6 +485,7 @@
         if (!response.ok) throw new Error(`Config request failed: ${response.status}`);
         state.config = await response.json();
         assetBase = state.config.assetBase || assetBase;
+        scaleBaseCamera = state.config.scaleBaseCamera || scaleBaseCamera;
         state.focal = state.config.defaultFocal || state.config.focals[0];
       }
 
@@ -579,7 +581,7 @@
           return `
             <article class="camera-card" data-card="${escapeHtml(item.id)}">
               <div class="stage" data-stage>
-                <img src="${src}" alt="${escapeHtml(labelFor(item))}" data-camera="${escapeHtml(item.cameraId)}" data-anchor-x="" data-anchor-y="">
+                <img src="${src}" alt="${escapeHtml(labelFor(item))}" data-camera="${escapeHtml(item.cameraId)}" data-anchor-x="" data-anchor-y="" data-scale="1">
                 <div class="image-label">
                   <strong>${escapeHtml(item.camera)}</strong>
                   <span class="tag" data-kind="${statusKind(item)}">${escapeHtml(item.status)}</span>
@@ -611,12 +613,27 @@
         ];
       }
 
+      function effectiveZoomForImage(img) {
+        return state.zoom * (Number(img.dataset.scale) || 1);
+      }
+
+      function normalizeImageScales() {
+        const images = Array.from(document.querySelectorAll("[data-stage] img[data-camera]"));
+        const base = images.find((img) => img.dataset.camera === scaleBaseCamera && img.naturalWidth)
+          || images.find((img) => img.naturalWidth);
+        if (!base) return;
+        images.forEach((img) => {
+          if (!img.naturalWidth) return;
+          img.dataset.scale = String(base.naturalWidth / img.naturalWidth);
+        });
+      }
+
       function stageInfo(stage) {
         const img = stage?.querySelector("img[data-camera]");
         if (!stage || !img || !img.naturalWidth || !img.naturalHeight) return null;
         const rect = stage.getBoundingClientRect();
         const [anchorX, anchorY] = activeAnchorForImage(img);
-        const effectiveZoom = state.zoom;
+        const effectiveZoom = effectiveZoomForImage(img);
         const left = rect.width / 2 + state.panX - anchorX * effectiveZoom;
         const top = rect.height / 2 + state.panY - anchorY * effectiveZoom;
         return { img, rect, anchorX, anchorY, effectiveZoom, left, top };
@@ -638,15 +655,17 @@
         if (!stage) return;
         const rect = stage.getBoundingClientRect();
         const [anchorX, anchorY] = activeAnchorForImage(img);
-        const width = img.naturalWidth * state.zoom;
-        const height = img.naturalHeight * state.zoom;
+        const effectiveZoom = effectiveZoomForImage(img);
+        const width = img.naturalWidth * effectiveZoom;
+        const height = img.naturalHeight * effectiveZoom;
         img.style.width = `${width}px`;
         img.style.height = `${height}px`;
-        img.style.left = `${rect.width / 2 + state.panX - anchorX * state.zoom}px`;
-        img.style.top = `${rect.height / 2 + state.panY - anchorY * state.zoom}px`;
+        img.style.left = `${rect.width / 2 + state.panX - anchorX * effectiveZoom}px`;
+        img.style.top = `${rect.height / 2 + state.panY - anchorY * effectiveZoom}px`;
       }
 
       function positionImages() {
+        normalizeImageScales();
         document.querySelectorAll("[data-stage] img[data-camera]").forEach(positionImage);
         updateOverlays();
         updateToolbarLabels();

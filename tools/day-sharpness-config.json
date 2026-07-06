@@ -154,7 +154,7 @@
       "pixels": "24.2MP",
       "file": "s9_40_f56_iso100.jpg",
       "source": "P1623130-2.jpg",
-      "anchor": [2958, 1782]
+      "anchor": [3822, 2356]
     },
     {
       "id": "s9_50_crop",
@@ -165,10 +165,10 @@
       "aperture": "F5.6",
       "iso": "ISO100",
       "status": "裁切",
-      "pixels": "约 15.5MP",
+      "pixels": "约 15.4MP",
       "file": "s9_50_crop_f56_iso100.jpg",
       "source": "P1623130-2.jpg",
-      "anchor": [3822, 2356]
+      "anchor": [3220, 1958]
     },
     {
       "id": "s9_50",
@@ -193,10 +193,10 @@
       "aperture": "F5.6",
       "iso": "ISO100",
       "status": "裁切",
-      "pixels": "约 7.9MP",
+      "pixels": "约 7.8MP",
       "file": "s9_70_crop_f56_iso100.jpg",
       "source": "P1623130-2.jpg",
-      "anchor": [3220, 1958]
+      "anchor": [2531, 1505]
     },
     {
       "id": "s9_70",
@@ -221,10 +221,10 @@
       "aperture": "F5.6",
       "iso": "ISO100",
       "status": "裁切",
-      "pixels": "约 6.9MP",
+      "pixels": "约 6.8MP",
       "file": "s9_75_crop_f56_iso100.jpg",
       "source": "P1623130-2.jpg",
-      "anchor": [3060, 1856]
+      "anchor": [2422, 1428]
     },
     {
       "id": "gr4_28",

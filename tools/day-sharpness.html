@@ -82,6 +82,8 @@
     }
 
     .toolbar {
+      position: relative;
+      z-index: 20;
       padding: 7px 8px;
       border-bottom: 1px solid var(--line);
       background: var(--panel);
@@ -472,6 +474,7 @@
       let assetBase = "day-sharpness-assets";
       let scaleBaseCamera = "l10";
       const storageKey = "l10-day-sharpness-view-v2";
+      let controlsRendered = false;
       const grid = document.querySelector("[data-grid]");
       const focalOptions = document.querySelector("[data-focal-options]");
       const groupOptions = document.querySelector("[data-group-options]");
@@ -784,8 +787,11 @@
 
       function render() {
         chooseDefaults();
-        renderFocalOptions();
-        renderGroupOptions();
+        if (!controlsRendered) {
+          renderFocalOptions();
+          renderGroupOptions();
+          controlsRendered = true;
+        }
         setZoom(state.zoom);
         updateOptionStates();
         renderGrid();
@@ -831,53 +837,76 @@
         const target = event.target.closest("button");
         if (!target) return;
         if (target.matches("[data-focal]")) {
+          event.preventDefault();
+          event.stopPropagation();
           state.focal = target.dataset.focal;
           state.panX = 0;
           state.panY = 0;
           chooseDefaults();
           save();
           render();
+          return;
         }
         if (target.matches("[data-group]")) {
+          event.preventDefault();
+          event.stopPropagation();
           state.group = target.dataset.group;
           state.panX = 0;
           state.panY = 0;
           save();
           render();
+          return;
         }
         if (target.matches("[data-fit]")) {
+          event.preventDefault();
+          event.stopPropagation();
           setZoom(zoomToFitForStage(currentStage()));
           state.panX = 0;
           state.panY = 0;
           save();
           positionImages();
+          return;
         }
         if (target.matches("[data-max-view]")) {
+          event.preventDefault();
+          event.stopPropagation();
           setZoom(4);
           state.panX = 0;
           state.panY = 0;
           save();
           positionImages();
+          return;
         }
         if (target.matches("[data-actual]")) {
+          event.preventDefault();
+          event.stopPropagation();
           setZoom(1);
           save();
           positionImages();
+          return;
         }
         if (target.matches("[data-center]")) {
+          event.preventDefault();
+          event.stopPropagation();
           state.panX = 0;
           state.panY = 0;
           save();
           positionImages();
+          return;
         }
         if (target.matches("[data-view]")) {
+          event.preventDefault();
+          event.stopPropagation();
           state.view = state.view === "single" ? "compare" : "single";
           state.panX = 0;
           state.panY = 0;
           save();
           render();
+          return;
         }
         if (target.matches("[data-fullscreen]")) {
+          event.preventDefault();
+          event.stopPropagation();
           if (isFullPageTool) {
             returnToArticle();
           } else {

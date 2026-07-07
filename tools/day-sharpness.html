@@ -449,7 +449,9 @@
         <button type="button" data-max-view>最大显示</button>
         <button type="button" data-actual>100%</button>
         <button type="button" data-center>回到中心</button>
+        <button type="button" data-corner>回到边角</button>
         <button type="button" data-mark-anchor>标记中心</button>
+        <button type="button" data-mark-corner>标记边角</button>
         <button type="button" data-copy-anchors>复制标记</button>
         <button type="button" data-reset-anchors>清除标记</button>
         <button type="button" data-view>单图</button>
@@ -472,8 +474,10 @@
         panY: 0,
         view: "compare",
         group: null,
-        markMode: false,
-        anchorOverrides: {}
+        markMode: null,
+        focusMode: "center",
+        anchorOverrides: {},
+        cornerOverrides: {}
       };
 
       let assetBase = "day-sharpness-assets";
@@ -488,6 +492,7 @@
       const viewButton = document.querySelector("[data-view]");
       const fullscreenButton = document.querySelector("[data-fullscreen]");
       const markButton = document.querySelector("[data-mark-anchor]");
+      const markCornerButton = document.querySelector("[data-mark-corner]");
       const copyAnchorsButton = document.querySelector("[data-copy-anchors]");
       const isEmbedded = window.self !== window.top;
       const params = new URLSearchParams(window.location.search);
@@ -519,12 +524,14 @@
           localStorage.setItem(storageKey, JSON.stringify({
             focal: state.focal,
             zoom: state.zoom,
-          panX: state.panX,
-          panY: state.panY,
-          view: state.view,
-          group: state.group,
-          anchorOverrides: state.anchorOverrides
-        }));
+            panX: state.panX,
+            panY: state.panY,
+            view: state.view,
+            group: state.group,
+            focusMode: state.focusMode,
+            anchorOverrides: state.anchorOverrides,
+            cornerOverrides: state.cornerOverrides
+          }));
         } catch (error) {
           console.warn("Local save failed", error);
         }
@@ -540,8 +547,12 @@
           state.panY = Number(saved.panY || 0);
           state.view = saved.view === "single" ? "single" : "compare";
           if (groupFor(saved.group)) state.group = saved.group;
+          state.focusMode = saved.focusMode === "corner" ? "corner" : "center";
           if (saved.anchorOverrides && typeof saved.anchorOverrides === "object") {
             state.anchorOverrides = saved.anchorOverrides;
+          }
+          if (saved.cornerOverrides && typeof saved.cornerOverrides === "object") {
+            state.cornerOverrides = saved.cornerOverrides;
           }
         } catch (error) {
           console.warn("Local restore failed", error);
@@ -676,7 +687,8 @@
                   <span class="tag" data-kind="${statusKind(item)}">${escapeHtml(item.status)}</span>
                   <span>${escapeHtml(item.label)} · ${escapeHtml(item.aperture)} · ${escapeHtml(item.iso)}</span>
                   <span>${escapeHtml(item.pixels)}</span>
-                  ${state.anchorOverrides[item.id] ? '<span>手动标记</span>' : ''}
+                  ${state.anchorOverrides[item.id] ? '<span>手动中心</span>' : ''}
+                  ${state.cornerOverrides[item.id] ? '<span>手动边角</span>' : ''}
                 </div>
                 <div class="minimap">
                   <div class="minimap-frame" data-minimap-frame>
@@ -697,9 +709,14 @@
       }
 
       function activeAnchorForImage(img) {
-        const override = state.anchorOverrides[img.dataset.itemId];
-        if (Array.isArray(override) && override.length === 2) {
-          return [Number(override[0]), Number(override[1])];
+        const itemId = img.dataset.itemId;
+        const corner = state.cornerOverrides[itemId];
+        if (state.focusMode === "corner" && Array.isArray(corner) && corner.length === 2) {
+          return [Number(corner[0]), Number(corner[1])];
+        }
+        const center = state.anchorOverrides[itemId];
+        if (Array.isArray(center) && center.length === 2) {
+          return [Number(center[0]), Number(center[1])];
         }
         return [
           Number(img.dataset.anchorX) || img.naturalWidth / 2,
@@ -805,11 +822,13 @@
       }
 
       function updateToolbarLabels() {
+        const hasMarks = Object.keys(state.anchorOverrides).length || Object.keys(state.cornerOverrides).length;
         maxViewButton.textContent = "最大显示 400%";
         viewButton.textContent = state.view === "single" ? "AB 对比" : "单图";
         fullscreenButton.textContent = isFullPageTool ? "缩小" : "全屏";
-        markButton.textContent = state.markMode ? "点击图片标记" : "标记中心";
-        copyAnchorsButton.textContent = Object.keys(state.anchorOverrides).length ? "复制标记" : "无标记";
+        markButton.textContent = state.markMode === "center" ? "点击标中心" : "标记中心";
+        markCornerButton.textContent = state.markMode === "corner" ? "点击标边角" : "标记边角";
+        copyAnchorsButton.textContent = hasMarks ? "复制标记" : "无标记";
       }
 
       function updateOptionStates() {
@@ -820,7 +839,10 @@
           button.classList.toggle("is-active", button.dataset.group === state.group);
         });
         viewButton.classList.toggle("is-active", state.view === "single");
-        markButton.classList.toggle("is-active", state.markMode);
+        markButton.classList.toggle("is-active", state.markMode === "center");
+        markCornerButton.classList.toggle("is-active", state.markMode === "corner");
+        document.querySelector("[data-center]")?.classList.toggle("is-active", state.focusMode === "center");
+        document.querySelector("[data-corner]")?.classList.toggle("is-active", state.focusMode === "corner");
       }
 
       function render() {
@@ -872,15 +894,26 @@
       }
 
       async function copyAnchorOverrides() {
-        const entries = Object.entries(state.anchorOverrides);
-        if (!entries.length) return;
-        const text = JSON.stringify(Object.fromEntries(entries.sort()), null, 2);
+        const center = Object.fromEntries(Object.entries(state.anchorOverrides).sort());
+        const corner = Object.fromEntries(Object.entries(state.cornerOverrides).sort());
+        if (!Object.keys(center).length && !Object.keys(corner).length) return;
+        const text = JSON.stringify({ center, corner }, null, 2);
         try {
           await navigator.clipboard.writeText(text);
           copyAnchorsButton.textContent = "已复制";
         } catch (error) {
           window.prompt("复制这些标记坐标：", text);
         }
+      }
+
+      function returnToFocus(focusMode) {
+        state.focusMode = focusMode;
+        state.markMode = null;
+        state.panX = 0;
+        state.panY = 0;
+        save();
+        positionImages();
+        updateOptionStates();
       }
 
       document.addEventListener("input", (event) => {
@@ -949,16 +982,33 @@
         if (target.matches("[data-center]")) {
           event.preventDefault();
           event.stopPropagation();
-          state.panX = 0;
-          state.panY = 0;
-          save();
-          positionImages();
+          returnToFocus("center");
+          return;
+        }
+        if (target.matches("[data-corner]")) {
+          event.preventDefault();
+          event.stopPropagation();
+          returnToFocus("corner");
           return;
         }
         if (target.matches("[data-mark-anchor]")) {
           event.preventDefault();
           event.stopPropagation();
-          state.markMode = !state.markMode;
+          state.markMode = state.markMode === "center" ? null : "center";
+          state.focusMode = "center";
+          save();
+          positionImages();
+          updateOptionStates();
+          updateToolbarLabels();
+          return;
+        }
+        if (target.matches("[data-mark-corner]")) {
+          event.preventDefault();
+          event.stopPropagation();
+          state.markMode = state.markMode === "corner" ? null : "corner";
+          state.focusMode = "corner";
+          save();
+          positionImages();
           updateOptionStates();
           updateToolbarLabels();
           return;
@@ -973,6 +1023,9 @@
           event.preventDefault();
           event.stopPropagation();
           state.anchorOverrides = {};
+          state.cornerOverrides = {};
+          state.markMode = null;
+          state.focusMode = "center";
           state.panX = 0;
           state.panY = 0;
           save();
@@ -1009,7 +1062,13 @@
           const img = stage.querySelector("img[data-camera]");
           const anchor = anchorFromEvent(stage, event);
           if (img && anchor) {
-            state.anchorOverrides[img.dataset.itemId] = anchor;
+            if (state.markMode === "corner") {
+              state.cornerOverrides[img.dataset.itemId] = anchor;
+              state.focusMode = "corner";
+            } else {
+              state.anchorOverrides[img.dataset.itemId] = anchor;
+              state.focusMode = "center";
+            }
             state.panX = 0;
             state.panY = 0;
             save();
@@ -1052,6 +1111,20 @@
         positionImages();
         save();
       }, { passive: false });
+
+      document.addEventListener("keydown", (event) => {
+        const tagName = event.target?.tagName || "";
+        if (/^(INPUT|TEXTAREA|SELECT)$/.test(tagName)) return;
+        const key = event.key.toLowerCase();
+        if (key === "c") {
+          event.preventDefault();
+          returnToFocus("center");
+        }
+        if (key === "e" || key === "b") {
+          event.preventDefault();
+          returnToFocus("corner");
+        }
+      });
 
       document.addEventListener("load", (event) => {
         if (event.target.matches("[data-stage] img")) positionImages();

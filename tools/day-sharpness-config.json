@@ -1,5 +1,9 @@
 {
   "assetBase": "day-sharpness-assets",
+  "previewDir": "day-sharpness-assets/article-previews",
+  "previewFocals": ["50", "75"],
+  "previewPane": [880, 560],
+  "previewZoom": 2,
   "scaleBaseCamera": "l10",
   "defaultFocal": "50",
   "focals": ["28", "35", "50", "70", "75"],

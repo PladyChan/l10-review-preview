@@ -449,6 +449,9 @@
         <button type="button" data-max-view>最大显示</button>
         <button type="button" data-actual>100%</button>
         <button type="button" data-center>回到中心</button>
+        <button type="button" data-mark-anchor>标记中心</button>
+        <button type="button" data-copy-anchors>复制标记</button>
+        <button type="button" data-reset-anchors>清除标记</button>
         <button type="button" data-view>单图</button>
         <button type="button" data-fullscreen>全屏</button>
       </div>
@@ -468,7 +471,9 @@
         panX: 0,
         panY: 0,
         view: "compare",
-        group: null
+        group: null,
+        markMode: false,
+        anchorOverrides: {}
       };
 
       let assetBase = "day-sharpness-assets";
@@ -482,6 +487,8 @@
       const maxViewButton = document.querySelector("[data-max-view]");
       const viewButton = document.querySelector("[data-view]");
       const fullscreenButton = document.querySelector("[data-fullscreen]");
+      const markButton = document.querySelector("[data-mark-anchor]");
+      const copyAnchorsButton = document.querySelector("[data-copy-anchors]");
       const isEmbedded = window.self !== window.top;
       const params = new URLSearchParams(window.location.search);
       const isFullPageTool = !isEmbedded;
@@ -515,7 +522,8 @@
           panX: state.panX,
           panY: state.panY,
           view: state.view,
-          group: state.group
+          group: state.group,
+          anchorOverrides: state.anchorOverrides
         }));
         } catch (error) {
           console.warn("Local save failed", error);
@@ -532,6 +540,9 @@
           state.panY = Number(saved.panY || 0);
           state.view = saved.view === "single" ? "single" : "compare";
           if (groupFor(saved.group)) state.group = saved.group;
+          if (saved.anchorOverrides && typeof saved.anchorOverrides === "object") {
+            state.anchorOverrides = saved.anchorOverrides;
+          }
         } catch (error) {
           console.warn("Local restore failed", error);
         }
@@ -659,12 +670,13 @@
           return `
             <article class="camera-card" data-card="${escapeHtml(item.id)}">
               <div class="stage" data-stage>
-                <img src="${src}" alt="${escapeHtml(labelFor(item))}" data-camera="${escapeHtml(item.cameraId)}" data-anchor-x="${item.anchor ? item.anchor[0] : ""}" data-anchor-y="${item.anchor ? item.anchor[1] : ""}" data-scale="1">
+                <img src="${src}" alt="${escapeHtml(labelFor(item))}" data-camera="${escapeHtml(item.cameraId)}" data-item-id="${escapeHtml(item.id)}" data-anchor-x="${item.anchor ? item.anchor[0] : ""}" data-anchor-y="${item.anchor ? item.anchor[1] : ""}" data-scale="1">
                 <div class="image-label">
                   <strong>${escapeHtml(item.camera)}</strong>
                   <span class="tag" data-kind="${statusKind(item)}">${escapeHtml(item.status)}</span>
                   <span>${escapeHtml(item.label)} · ${escapeHtml(item.aperture)} · ${escapeHtml(item.iso)}</span>
                   <span>${escapeHtml(item.pixels)}</span>
+                  ${state.anchorOverrides[item.id] ? '<span>手动标记</span>' : ''}
                 </div>
                 <div class="minimap">
                   <div class="minimap-frame" data-minimap-frame>
@@ -685,6 +697,10 @@
       }
 
       function activeAnchorForImage(img) {
+        const override = state.anchorOverrides[img.dataset.itemId];
+        if (Array.isArray(override) && override.length === 2) {
+          return [Number(override[0]), Number(override[1])];
+        }
         return [
           Number(img.dataset.anchorX) || img.naturalWidth / 2,
           Number(img.dataset.anchorY) || img.naturalHeight / 2
@@ -792,6 +808,8 @@
         maxViewButton.textContent = "最大显示 400%";
         viewButton.textContent = state.view === "single" ? "AB 对比" : "单图";
         fullscreenButton.textContent = isFullPageTool ? "缩小" : "全屏";
+        markButton.textContent = state.markMode ? "点击图片标记" : "标记中心";
+        copyAnchorsButton.textContent = Object.keys(state.anchorOverrides).length ? "复制标记" : "无标记";
       }
 
       function updateOptionStates() {
@@ -802,6 +820,7 @@
           button.classList.toggle("is-active", button.dataset.group === state.group);
         });
         viewButton.classList.toggle("is-active", state.view === "single");
+        markButton.classList.toggle("is-active", state.markMode);
       }
 
       function render() {
@@ -841,6 +860,27 @@
 
       function returnToArticle() {
         window.location.href = articleUrl();
+      }
+
+      function anchorFromEvent(stage, event) {
+        const info = stageInfo(stage);
+        if (!info) return null;
+        return [
+          Math.round((event.clientX - info.rect.left - info.left) / info.effectiveZoom),
+          Math.round((event.clientY - info.rect.top - info.top) / info.effectiveZoom)
+        ];
+      }
+
+      async function copyAnchorOverrides() {
+        const entries = Object.entries(state.anchorOverrides);
+        if (!entries.length) return;
+        const text = JSON.stringify(Object.fromEntries(entries.sort()), null, 2);
+        try {
+          await navigator.clipboard.writeText(text);
+          copyAnchorsButton.textContent = "已复制";
+        } catch (error) {
+          window.prompt("复制这些标记坐标：", text);
+        }
       }
 
       document.addEventListener("input", (event) => {
@@ -915,6 +955,30 @@
           positionImages();
           return;
         }
+        if (target.matches("[data-mark-anchor]")) {
+          event.preventDefault();
+          event.stopPropagation();
+          state.markMode = !state.markMode;
+          updateOptionStates();
+          updateToolbarLabels();
+          return;
+        }
+        if (target.matches("[data-copy-anchors]")) {
+          event.preventDefault();
+          event.stopPropagation();
+          copyAnchorOverrides();
+          return;
+        }
+        if (target.matches("[data-reset-anchors]")) {
+          event.preventDefault();
+          event.stopPropagation();
+          state.anchorOverrides = {};
+          state.panX = 0;
+          state.panY = 0;
+          save();
+          render();
+          return;
+        }
         if (target.matches("[data-view]")) {
           event.preventDefault();
           event.stopPropagation();
@@ -941,6 +1005,18 @@
         const stage = event.target.closest("[data-stage]");
         if (!stage) return;
         event.preventDefault();
+        if (state.markMode) {
+          const img = stage.querySelector("img[data-camera]");
+          const anchor = anchorFromEvent(stage, event);
+          if (img && anchor) {
+            state.anchorOverrides[img.dataset.itemId] = anchor;
+            state.panX = 0;
+            state.panY = 0;
+            save();
+            render();
+          }
+          return;
+        }
         drag = { x: event.clientX, y: event.clientY, panX: state.panX, panY: state.panY };
         stage.setPointerCapture(event.pointerId);
       });

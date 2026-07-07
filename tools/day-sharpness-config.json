@@ -1,12 +1,24 @@
 {
   "assetBase": "day-sharpness-assets",
   "previewDir": "day-sharpness-assets/article-previews",
-  "previewFocals": ["50", "75"],
-  "previewPane": [880, 560],
+  "previewFocals": [
+    "50",
+    "75"
+  ],
+  "previewPane": [
+    880,
+    560
+  ],
   "previewZoom": 2,
   "scaleBaseCamera": "l10",
   "defaultFocal": "50",
-  "focals": ["28", "35", "50", "70", "75"],
+  "focals": [
+    "28",
+    "35",
+    "50",
+    "70",
+    "75"
+  ],
   "compareGroups": [
     {
       "id": "l10_vs_s9_optical",
@@ -60,7 +72,10 @@
       "pixels": "20.4MP",
       "file": "l10_28_f56_iso100.jpg",
       "source": "P1024099.jpg",
-      "anchor": [3088, 2184]
+      "anchor": [
+        2678,
+        1994
+      ]
     },
     {
       "id": "l10_35",
@@ -74,7 +89,10 @@
       "pixels": "20.4MP",
       "file": "l10_35_f56_iso100.jpg",
       "source": "P1024100.jpg",
-      "anchor": [3184, 2224]
+      "anchor": [
+        2684,
+        1989
+      ]
     },
     {
       "id": "l10_50",
@@ -88,7 +106,10 @@
       "pixels": "20.4MP",
       "file": "l10_50_f56_iso100.jpg",
       "source": "P1024101.jpg",
-      "anchor": [3432, 2392]
+      "anchor": [
+        2699,
+        2068
+      ]
     },
     {
       "id": "l10_70",
@@ -102,7 +123,10 @@
       "pixels": "20.4MP",
       "file": "l10_70_f56_iso100.jpg",
       "source": "P1024102.jpg",
-      "anchor": [3736, 2552]
+      "anchor": [
+        2761,
+        2110
+      ]
     },
     {
       "id": "l10_75",
@@ -116,7 +140,10 @@
       "pixels": "20.4MP",
       "file": "l10_75_f56_iso100.jpg",
       "source": "P1024103.jpg",
-      "anchor": [3824, 2616]
+      "anchor": [
+        2739,
+        2159
+      ]
     },
     {
       "id": "s9_28",
@@ -130,7 +157,10 @@
       "pixels": "24.2MP",
       "file": "s9_28_f56_iso100.jpg",
       "source": "P1623125-2.jpg",
-      "anchor": [3591, 2282]
+      "anchor": [
+        3141,
+        2022
+      ]
     },
     {
       "id": "s9_35",
@@ -144,7 +174,10 @@
       "pixels": "24.2MP",
       "file": "s9_35_f56_iso100.jpg",
       "source": "P1623126-2.jpg",
-      "anchor": [3711, 2319]
+      "anchor": [
+        3121,
+        1999
+      ]
     },
     {
       "id": "s9_40",
@@ -158,7 +191,10 @@
       "pixels": "24.2MP",
       "file": "s9_40_f56_iso100.jpg",
       "source": "P1623130-2.jpg",
-      "anchor": [3822, 2356]
+      "anchor": [
+        3026,
+        1956
+      ]
     },
     {
       "id": "s9_50_crop",
@@ -172,7 +208,10 @@
       "pixels": "约 15.4MP",
       "file": "s9_50_crop_f56_iso100.jpg",
       "source": "P1623130-2.jpg",
-      "anchor": [3220, 1958]
+      "anchor": [
+        2545,
+        1680
+      ]
     },
     {
       "id": "s9_50",
@@ -186,7 +225,10 @@
       "pixels": "24.2MP",
       "file": "s9_50_f56_iso100.jpg",
       "source": "P1623127-2.jpg",
-      "anchor": [4052, 2467]
+      "anchor": [
+        3172,
+        2058
+      ]
     },
     {
       "id": "s9_70_crop",
@@ -200,7 +242,10 @@
       "pixels": "约 7.8MP",
       "file": "s9_70_crop_f56_iso100.jpg",
       "source": "P1623130-2.jpg",
-      "anchor": [2531, 1505]
+      "anchor": [
+        2097,
+        1208
+      ]
     },
     {
       "id": "s9_70",
@@ -214,7 +259,10 @@
       "pixels": "24.2MP",
       "file": "s9_70_f56_iso100.jpg",
       "source": "P1623128-2.jpg",
-      "anchor": [4440, 2605]
+      "anchor": [
+        3234,
+        2142
+      ]
     },
     {
       "id": "s9_75_crop",
@@ -228,7 +276,10 @@
       "pixels": "约 6.8MP",
       "file": "s9_75_crop_f56_iso100.jpg",
       "source": "P1623130-2.jpg",
-      "anchor": [2422, 1428]
+      "anchor": [
+        1727,
+        1092
+      ]
     },
     {
       "id": "gr4_28",
@@ -242,7 +293,10 @@
       "pixels": "约 25.7MP",
       "file": "gr4_28_f56_iso100.jpg",
       "source": "R0002091.jpg",
-      "anchor": [3706, 2431]
+      "anchor": [
+        3256,
+        2165
+      ]
     },
     {
       "id": "gr4_35_crop",
@@ -256,7 +310,10 @@
       "pixels": "约 16.5MP",
       "file": "gr4_35_crop_f56_iso100.jpg",
       "source": "R0002092.jpg",
-      "anchor": [3080, 2010]
+      "anchor": [
+        2710,
+        1692
+      ]
     },
     {
       "id": "gr4_40_crop",
@@ -270,7 +327,10 @@
       "pixels": "约 12.6MP",
       "file": "gr4_40_crop_f56_iso100.jpg",
       "source": "R0002091.jpg",
-      "anchor": [2774, 1809]
+      "anchor": [
+        1974,
+        1401
+      ]
     },
     {
       "id": "gr4_50_crop",
@@ -284,7 +344,10 @@
       "pixels": "约 8.1MP",
       "file": "gr4_50_crop_f56_iso100.jpg",
       "source": "R0002093.jpg",
-      "anchor": [2356, 1532]
+      "anchor": [
+        1876,
+        1281
+      ]
     },
     {
       "id": "gr4_70_crop",
@@ -298,7 +361,10 @@
       "pixels": "约 4.1MP",
       "file": "gr4_70_crop_f56_iso100.jpg",
       "source": "R0002091.jpg",
-      "anchor": [1844, 1190]
+      "anchor": [
+        1356,
+        927
+      ]
     },
     {
       "id": "gr4_75_crop",
@@ -312,7 +378,10 @@
       "pixels": "约 3.6MP",
       "file": "gr4_75_crop_f56_iso100.jpg",
       "source": "R0002091.jpg",
-      "anchor": [1764, 1135]
+      "anchor": [
+        1279,
+        885
+      ]
     },
     {
       "id": "x100vi_35",
@@ -326,7 +395,10 @@
       "pixels": "40.2MP",
       "file": "x100vi_35_f56_iso125.jpg",
       "source": "DSCF0018.jpg",
-      "anchor": [4768, 3058]
+      "anchor": [
+        3958,
+        2748
+      ]
     },
     {
       "id": "x100vi_40_crop",
@@ -340,7 +412,10 @@
       "pixels": "约 30.8MP",
       "file": "x100vi_40_crop_f56_iso125.jpg",
       "source": "DSCF0018.jpg",
-      "anchor": [4286, 2738]
+      "anchor": [
+        3202,
+        2322
+      ]
     },
     {
       "id": "x100vi_50_crop",
@@ -354,7 +429,10 @@
       "pixels": "约 19.7MP",
       "file": "x100vi_50_crop_f56_iso125.jpg",
       "source": "DSCF0018.jpg",
-      "anchor": [3612, 2290]
+      "anchor": [
+        2862,
+        1960
+      ]
     },
     {
       "id": "x100vi_70_crop",
@@ -368,7 +446,10 @@
       "pixels": "约 10.1MP",
       "file": "x100vi_70_crop_f56_iso125.jpg",
       "source": "DSCF0018.jpg",
-      "anchor": [2836, 1773]
+      "anchor": [
+        1880,
+        1406
+      ]
     },
     {
       "id": "x100vi_75_crop",
@@ -382,7 +463,10 @@
       "pixels": "约 8.8MP",
       "file": "x100vi_75_crop_f56_iso125.jpg",
       "source": "DSCF0018.jpg",
-      "anchor": [2707, 1688]
+      "anchor": [
+        1917,
+        1348
+      ]
     }
   ]
 }

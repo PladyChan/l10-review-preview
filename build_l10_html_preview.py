@@ -308,9 +308,13 @@ aspect_module = aspect_ratio_visual()
 
 
 def inject_modules(body: str) -> str:
+    day_marker = "<h3>F5.6 锐度对比参数表</h3>"
+    if day_marker in body:
+        body = body.replace(day_marker, day_sharpness_module + "\n" + day_marker, 1)
+
     night_marker = "<h3>夜晚 ISO 噪点对比</h3>"
     if night_marker in body:
-        body = body.replace(night_marker, day_sharpness_module + "\n" + night_marker + "\n" + studio_compare_module, 1)
+        body = body.replace(night_marker, night_marker + "\n" + studio_compare_module, 1)
 
     insertions = {
         "<h3>裁切余量和剩余像素</h3>": sensor_module,

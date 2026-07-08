@@ -681,7 +681,7 @@
           return `
             <article class="camera-card" data-card="${escapeHtml(item.id)}">
               <div class="stage" data-stage>
-                <img src="${src}" alt="${escapeHtml(labelFor(item))}" data-camera="${escapeHtml(item.cameraId)}" data-item-id="${escapeHtml(item.id)}" data-anchor-x="${item.anchor ? item.anchor[0] : ""}" data-anchor-y="${item.anchor ? item.anchor[1] : ""}" data-scale="1">
+                <img src="${src}" alt="${escapeHtml(labelFor(item))}" data-camera="${escapeHtml(item.cameraId)}" data-item-id="${escapeHtml(item.id)}" data-anchor-x="${item.anchor ? item.anchor[0] : ""}" data-anchor-y="${item.anchor ? item.anchor[1] : ""}" data-corner-x="${item.corner ? item.corner[0] : ""}" data-corner-y="${item.corner ? item.corner[1] : ""}" data-scale="1">
                 <div class="image-label">
                   <strong>${escapeHtml(item.camera)}</strong>
                   <span class="tag" data-kind="${statusKind(item)}">${escapeHtml(item.status)}</span>
@@ -713,6 +713,12 @@
         const corner = state.cornerOverrides[itemId];
         if (state.focusMode === "corner" && Array.isArray(corner) && corner.length === 2) {
           return [Number(corner[0]), Number(corner[1])];
+        }
+        if (state.focusMode === "corner") {
+          const configCorner = [Number(img.dataset.cornerX), Number(img.dataset.cornerY)];
+          if (configCorner.every(Number.isFinite) && configCorner.every((value) => value > 0)) {
+            return configCorner;
+          }
         }
         const center = state.anchorOverrides[itemId];
         if (Array.isArray(center) && center.length === 2) {

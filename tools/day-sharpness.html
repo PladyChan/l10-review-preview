@@ -207,7 +207,8 @@
       transform: none;
       user-select: none;
       pointer-events: none;
-      image-rendering: auto;
+      image-rendering: crisp-edges;
+      image-rendering: pixelated;
     }
 
     .image-label {
@@ -332,6 +333,14 @@
       font-family: var(--doto);
       font-weight: 700;
       font-size: 12px;
+    }
+
+    .debug-control {
+      display: none;
+    }
+
+    body.is-debug .debug-control {
+      display: inline-flex;
     }
 
     @media (max-width: 980px) {
@@ -460,11 +469,11 @@
         <button type="button" data-max-view>最大显示</button>
         <button type="button" data-actual>100%</button>
         <button type="button" data-center>回到中心</button>
-        <button type="button" data-corner>回到边角</button>
-        <button type="button" data-mark-anchor>标记中心</button>
-        <button type="button" data-mark-corner>标记边角</button>
-        <button type="button" data-copy-anchors>复制标记</button>
-        <button type="button" data-reset-anchors>清除标记</button>
+        <button type="button" data-corner>定位边角</button>
+        <button class="debug-control" type="button" data-mark-anchor>标记中心</button>
+        <button class="debug-control" type="button" data-mark-corner>标记边角</button>
+        <button class="debug-control" type="button" data-copy-anchors>复制标记</button>
+        <button class="debug-control" type="button" data-reset-anchors>清除标记</button>
         <button type="button" data-view>单图</button>
         <button type="button" data-fullscreen>全屏</button>
       </div>
@@ -508,6 +517,7 @@
       const isEmbedded = window.self !== window.top;
       const params = new URLSearchParams(window.location.search);
       const isFullPageTool = !isEmbedded;
+      document.body.classList.toggle("is-debug", params.has("debug"));
 
       const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({
         "&": "&amp;",

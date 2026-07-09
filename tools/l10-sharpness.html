@@ -58,11 +58,14 @@
       grid-template-rows: auto minmax(0, 1fr);
       overflow: hidden;
     }
-    .toolbar {
+    .toolbar,
+    .view-controls {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       align-items: center;
+    }
+    .toolbar {
       padding: 7px 8px;
       border-bottom: 1px solid var(--line);
       background: var(--panel);
@@ -79,6 +82,10 @@
       font-weight: 700;
       font-size: 12px;
       white-space: nowrap;
+    }
+    .toolbar input[type="range"] {
+      width: min(24vw, 180px);
+      accent-color: var(--accent);
     }
     .segmented {
       display: flex;
@@ -218,15 +225,15 @@
         <button type="button" data-point="center">中心</button>
         <button type="button" data-point="edge">边角</button>
       </div>
-      <div class="segmented" data-zoom-options>
-        <button type="button" data-zoom-preset="1">100%</button>
-        <button type="button" data-zoom-preset="2">200%</button>
-        <button type="button" data-zoom-preset="4">400%</button>
-      </div>
       <label>ZOOM <input type="range" min="0.05" max="4" step="0.01" value="1" data-zoom></label>
-      <button type="button" data-fit>适合窗口</button>
-      <button type="button" data-reset>回到中心</button>
-      <button type="button" data-edge-jump>定位边角</button>
+      <div class="view-controls">
+        <button type="button" data-fit>适合窗口</button>
+        <button type="button" data-max-view>最大显示</button>
+        <button type="button" data-actual>100%</button>
+        <button type="button" data-reset>回到中心</button>
+        <button type="button" data-edge-jump>定位边角</button>
+        <button type="button" data-fullscreen>全屏</button>
+      </div>
     </div>
     <main class="main">
       <section class="stage" data-stage>
@@ -265,6 +272,11 @@
       const pointButtons = Array.from(document.querySelectorAll("[data-point]"));
       const zoomButtons = Array.from(document.querySelectorAll("[data-zoom-preset]"));
       const zoomInput = document.querySelector("[data-zoom]");
+      const maxViewButton = document.querySelector("[data-max-view]");
+      const fullscreenButton = document.querySelector("[data-fullscreen]");
+      const isEmbedded = window.self !== window.top;
+      const params = new URLSearchParams(window.location.search);
+      const isFullPageTool = !isEmbedded;
 
       function escapeHtml(value) {
         return String(value).replace(/[&<>"']/g, (char) => ({
@@ -347,6 +359,8 @@
           button.classList.toggle("is-active", active);
           button.setAttribute("aria-pressed", active ? "true" : "false");
         });
+        maxViewButton.textContent = `最大显示 ${Math.round((state.config?.maxZoom || 4) * 100)}%`;
+        fullscreenButton.textContent = isFullPageTool ? "缩小" : "全屏";
       }
 
       function renderControls() {
@@ -443,6 +457,32 @@
         return Math.min(rect.width / image.naturalWidth, rect.height / image.naturalHeight);
       }
 
+      function articleUrl() {
+        const fallback = new URL("../#l10-sharpness", window.location.href).href;
+        return params.get("return") || fallback;
+      }
+
+      function toolFullscreenUrl() {
+        const url = new URL(window.location.href);
+        url.searchParams.set("fullscreen", "1");
+        try {
+          const returnUrl = new URL(window.top.location.href);
+          returnUrl.hash = "l10-sharpness";
+          url.searchParams.set("return", returnUrl.href);
+        } catch (error) {
+          url.searchParams.set("return", articleUrl());
+        }
+        return url.href;
+      }
+
+      function openFullPageTool() {
+        window.top.location.href = toolFullscreenUrl();
+      }
+
+      function returnToArticle() {
+        window.location.href = articleUrl();
+      }
+
       function render() {
         renderControls();
         renderPhoto();
@@ -454,6 +494,12 @@
       zoomButtons.forEach((button) => button.addEventListener("click", () => setZoom(Number(button.dataset.zoomPreset))));
       document.querySelector("[data-reset]").addEventListener("click", () => jumpToPoint("center"));
       document.querySelector("[data-edge-jump]").addEventListener("click", () => jumpToPoint("edge"));
+      document.querySelector("[data-max-view]").addEventListener("click", () => setZoom(state.config?.maxZoom || 4));
+      document.querySelector("[data-actual]").addEventListener("click", () => setZoom(1));
+      document.querySelector("[data-fullscreen]").addEventListener("click", () => {
+        if (isFullPageTool) returnToArticle();
+        else openFullPageTool();
+      });
       document.querySelector("[data-fit]").addEventListener("click", () => {
         state.zoom = zoomToFit();
         state.panX = 0;

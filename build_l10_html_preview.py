@@ -404,7 +404,7 @@ out = f"""<!doctype html>
   <title>Panasonic Lumix L10</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@500;600;700;800&family=Space+Grotesk:wght@500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   <script>
     (() => {{
       try {{
@@ -428,6 +428,7 @@ out = f"""<!doctype html>
       --ok: #e8e8e8;
       --font-display: "Space Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
       --font-mono: "Space Mono", "SFMono-Regular", ui-monospace, monospace;
+      --font-doto: "Doto", "Space Mono", "SFMono-Regular", ui-monospace, monospace;
       --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
     }}
     @media (prefers-color-scheme: light) {{
@@ -511,8 +512,8 @@ out = f"""<!doctype html>
       overflow: visible;
     }}
     .brand {{
-      font-family: var(--font-display);
-      font-weight: 700;
+      font-family: var(--font-doto);
+      font-weight: 800;
       font-size: 18px;
       line-height: 1.08;
       letter-spacing: 0;
@@ -530,17 +531,17 @@ out = f"""<!doctype html>
     .header-row {{
       position: relative;
       display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 12px;
-      align-items: end;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+      align-items: start;
     }}
     .compact-controls {{
       position: relative;
       display: grid;
-      grid-template-columns: repeat(5, 34px);
+      grid-template-columns: repeat(3, 34px);
       gap: 6px;
       align-items: end;
-      justify-content: end;
+      justify-content: start;
     }}
     .icon-button,
     .article-outline summary {{
@@ -579,7 +580,8 @@ out = f"""<!doctype html>
       text-decoration: none;
       padding: 10px 0;
       border-top: 1px solid var(--line);
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 700;
       font-size: 12px;
       letter-spacing: .03em;
     }}
@@ -648,7 +650,8 @@ out = f"""<!doctype html>
     }}
     .article-outline nav a span {{
       color: var(--accent);
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 800;
       font-size: 11px;
       line-height: 1.6;
     }}
@@ -720,7 +723,8 @@ out = f"""<!doctype html>
       background: var(--surface-2);
       text-align: left;
       color: var(--ink);
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 700;
       font-size: 11px;
       letter-spacing: .04em;
       text-transform: uppercase;
@@ -748,7 +752,8 @@ out = f"""<!doctype html>
       padding: 1px 5px;
       border-radius: 0;
       color: var(--ink);
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 700;
     }}
     blockquote {{
       margin: 16px 0;
@@ -801,7 +806,8 @@ out = f"""<!doctype html>
     }}
     .module-link {{
       margin: 10px 0 0;
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 700;
       font-size: 12px;
     }}
     .module-link a {{
@@ -846,7 +852,8 @@ out = f"""<!doctype html>
       display: block;
       margin-top: 3px;
       color: var(--muted);
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 700;
       font-size: 11px;
     }}
     .sensor-controls {{
@@ -876,7 +883,8 @@ out = f"""<!doctype html>
       justify-content: center;
       border: 1px solid var(--line);
       color: var(--muted);
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 800;
       font-size: 10px;
       font-style: normal;
       margin-bottom: 7px;
@@ -892,7 +900,8 @@ out = f"""<!doctype html>
     .sensor-button span {{
       display: block;
       margin-top: 5px;
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 700;
       font-size: 10px;
       color: var(--muted);
     }}
@@ -934,7 +943,8 @@ out = f"""<!doctype html>
       display: flex;
       justify-content: space-between;
       color: var(--muted);
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 700;
       font-size: 10px;
       z-index: 20;
     }}
@@ -956,7 +966,8 @@ out = f"""<!doctype html>
       left: 6px;
       top: 5px;
       color: var(--muted);
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 700;
       font-size: 10px;
       line-height: 1.2;
       white-space: nowrap;
@@ -991,7 +1002,8 @@ out = f"""<!doctype html>
       line-height: 1;
     }}
     .sensor-readout span {{
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 700;
       color: var(--muted);
       font-size: 11px;
     }}
@@ -1019,7 +1031,8 @@ out = f"""<!doctype html>
       justify-content: center;
       background: var(--accent);
       color: #fff;
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 800;
       font-size: 11px;
     }}
     .sensor-compare div:nth-child(2) span {{
@@ -1043,7 +1056,8 @@ out = f"""<!doctype html>
     .sensor-compare output::before {{
       content: "A/B ";
       color: var(--accent);
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 800;
       font-size: 11px;
       letter-spacing: .06em;
       vertical-align: 2px;
@@ -1071,7 +1085,8 @@ out = f"""<!doctype html>
     .aspect-button:last-child {{ border-right: 0; }}
     .aspect-button strong {{
       display: block;
-      font-family: var(--font-display);
+      font-family: var(--font-doto);
+      font-weight: 800;
       font-size: 18px;
       line-height: 1;
     }}
@@ -1079,7 +1094,8 @@ out = f"""<!doctype html>
       display: block;
       margin-top: 6px;
       color: var(--muted);
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 700;
       font-size: 10px;
       white-space: nowrap;
     }}
@@ -1143,7 +1159,8 @@ out = f"""<!doctype html>
       position: absolute;
       left: 7px;
       top: 6px;
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 700;
       font-size: 10px;
       line-height: 1.2;
       white-space: nowrap;
@@ -1186,19 +1203,22 @@ out = f"""<!doctype html>
       margin-bottom: 12px;
     }}
     .aspect-readout strong {{
-      font-family: var(--font-display);
-      font-size: 20px;
+      font-family: var(--font-doto);
+      font-size: 22px;
+      font-weight: 800;
       line-height: 1;
     }}
     .aspect-readout span {{
       color: var(--muted);
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 700;
       font-size: 10px;
     }}
     figcaption {{
       margin-top: 8px;
       color: var(--muted);
-      font-family: var(--font-mono);
+      font-family: var(--font-doto);
+      font-weight: 600;
       font-size: 11px;
       line-height: 1.6;
     }}
@@ -1207,7 +1227,7 @@ out = f"""<!doctype html>
       .layout > aside {{ position: relative; height: auto; padding: 12px 16px 10px; border-right: 0; border-bottom: 1px solid var(--line); overflow: visible; }}
       .brand {{ font-size: 17px; }}
       .brand::before {{ width: 26px; height: 7px; margin-bottom: 7px; }}
-      .compact-controls {{ grid-template-columns: repeat(4, 32px); gap: 5px; }}
+      .compact-controls {{ grid-template-columns: repeat(6, 32px); gap: 5px; }}
       .icon-button,
       .article-outline summary {{ width: 32px; height: 32px; }}
       .icon-button svg,

@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>L10 Lens Sharpness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Doto:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       color-scheme: dark light;
@@ -17,6 +20,7 @@
       --accent: #e3322b;
       --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
       --mono: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+      --doto: "Doto", "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
     }
     * { box-sizing: border-box; }
     html, body { height: 100%; min-height: 100%; }
@@ -63,8 +67,16 @@
       border-bottom: 1px solid var(--line);
       background: var(--panel);
     }
+    .toolbar label {
+      color: var(--muted);
+      font-family: var(--doto);
+      font-weight: 700;
+      font-size: 12px;
+    }
     .toolbar button {
       padding: 4px 9px;
+      font-family: var(--doto);
+      font-weight: 700;
       font-size: 12px;
       white-space: nowrap;
     }
@@ -133,7 +145,8 @@
     }
     .image-label span {
       color: var(--muted);
-      font-family: var(--mono);
+      font-family: var(--doto);
+      font-weight: 700;
       font-size: 10px;
     }
     .minimap {
@@ -172,7 +185,8 @@
     .empty-state {
       padding: 16px;
       color: var(--muted);
-      font-family: var(--mono);
+      font-family: var(--doto);
+      font-weight: 700;
       font-size: 12px;
     }
     @media (max-width: 760px) {

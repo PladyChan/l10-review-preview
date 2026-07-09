@@ -1,0 +1,79 @@
+{
+  "assetBase": "l10-sharpness-assets/raw",
+  "previewBase": "l10-sharpness-assets/previews",
+  "storageKey": "l10-sharpness-view-v1",
+  "camera": "Panasonic Lumix DC-L10",
+  "imageSize": [5200, 3904],
+  "defaultZoom": 2,
+  "maxZoom": 4,
+  "previewZoom": 2,
+  "previewSize": [720, 480],
+  "focals": [
+    {
+      "id": "24mm",
+      "label": "24mm",
+      "test": "广角锐度",
+      "anchors": {
+        "center": [2920, 2140],
+        "edge": [470, 760]
+      }
+    },
+    {
+      "id": "35mm",
+      "label": "35mm",
+      "test": "标准视角锐度",
+      "anchors": {
+        "center": [2980, 2040],
+        "edge": [420, 760]
+      }
+    },
+    {
+      "id": "50mm",
+      "label": "50mm",
+      "test": "中焦锐度",
+      "anchors": {
+        "center": [2820, 1760],
+        "edge": [610, 980]
+      }
+    },
+    {
+      "id": "75mm",
+      "label": "75mm",
+      "test": "长端锐度",
+      "anchors": {
+        "center": [2740, 1760],
+        "edge": [780, 1040]
+      }
+    }
+  ],
+  "apertures": [
+    {"id": "wide-open", "label": "全开"},
+    {"id": "f2_8", "label": "F2.8"},
+    {"id": "f4", "label": "F4"},
+    {"id": "f5_6", "label": "F5.6"},
+    {"id": "f8", "label": "F8"}
+  ],
+  "photos": [
+    {"file": "P1024124.JPEG", "focal": "24mm", "aperture": "wide-open", "actualAperture": "F1.7", "iso": "ISO 100", "shutter": "1/4000"},
+    {"file": "P1024125.JPEG", "focal": "24mm", "aperture": "f2_8", "actualAperture": "F2.8", "iso": "ISO 100", "shutter": "1/1300"},
+    {"file": "P1024126.JPEG", "focal": "24mm", "aperture": "f4", "actualAperture": "F4", "iso": "ISO 100", "shutter": "1/640"},
+    {"file": "P1024127.JPEG", "focal": "24mm", "aperture": "f5_6", "actualAperture": "F5.6", "iso": "ISO 100", "shutter": "1/320"},
+    {"file": "P1024128.JPEG", "focal": "24mm", "aperture": "f8", "actualAperture": "F8", "iso": "ISO 100", "shutter": "1/160"},
+    {"file": "P1024138.JPEG", "focal": "35mm", "aperture": "wide-open", "actualAperture": "F2.3", "iso": "ISO 100", "shutter": "1/1600"},
+    {"file": "P1024139.JPEG", "focal": "35mm", "aperture": "f2_8", "actualAperture": "F2.8", "iso": "ISO 100", "shutter": "1/1300"},
+    {"file": "P1024140.JPEG", "focal": "35mm", "aperture": "f4", "actualAperture": "F4", "iso": "ISO 100", "shutter": "1/640"},
+    {"file": "P1024141.JPEG", "focal": "35mm", "aperture": "f5_6", "actualAperture": "F5.6", "iso": "ISO 100", "shutter": "1/320"},
+    {"file": "P1024142.JPEG", "focal": "35mm", "aperture": "f8", "actualAperture": "F8", "iso": "ISO 100", "shutter": "1/160"},
+    {"file": "P1024129.JPEG", "focal": "50mm", "aperture": "wide-open", "actualAperture": "F2.7", "iso": "ISO 100", "shutter": "1/2000"},
+    {"file": "P1024130.JPEG", "focal": "50mm", "aperture": "f4", "actualAperture": "F4", "iso": "ISO 100", "shutter": "1/1000"},
+    {"file": "P1024131.JPEG", "focal": "50mm", "aperture": "f5_6", "actualAperture": "F5.6", "iso": "ISO 100", "shutter": "1/400"},
+    {"file": "P1024132.JPEG", "focal": "50mm", "aperture": "f8", "actualAperture": "F8", "iso": "ISO 100", "shutter": "1/250"},
+    {"file": "P1024133.JPEG", "focal": "75mm", "aperture": "wide-open", "actualAperture": "F2.8", "iso": "ISO 100", "shutter": "1/2000"},
+    {"file": "P1024135.JPEG", "focal": "75mm", "aperture": "f4", "actualAperture": "F4", "iso": "ISO 100", "shutter": "1/800"},
+    {"file": "P1024136.JPEG", "focal": "75mm", "aperture": "f5_6", "actualAperture": "F5.6", "iso": "ISO 100", "shutter": "1/400"},
+    {"file": "P1024137.JPEG", "focal": "75mm", "aperture": "f8", "actualAperture": "F8", "iso": "ISO 100", "shutter": "1/200"}
+  ],
+  "extras": [
+    {"file": "P1024134.JPEG", "focal": "75mm", "aperture": "wide-open", "actualAperture": "F2.8", "iso": "ISO 100", "shutter": "1/1600", "note": "75mm F2.8 alternate frame"}
+  ]
+}

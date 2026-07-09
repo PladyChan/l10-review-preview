@@ -397,6 +397,10 @@
       height: min(86vh, 860px);
       min-height: 680px;
     }
+    .l10-sharpness-shell {
+      height: min(86vh, 860px);
+      min-height: 680px;
+    }
     .module-link {
       margin: 10px 0 0;
       font-family: var(--font-mono);
@@ -860,6 +864,9 @@
           <a class="icon-button" href="#" data-day-sharpness-link aria-label="白天锐度工具" title="白天锐度工具">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18l6-6 4 4 6-10M4 20h16"/></svg>
           </a>
+          <a class="icon-button" href="#" data-l10-sharpness-link aria-label="L10 镜头锐度工具" title="L10 镜头锐度工具">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h4l2-2h4l2 2h4v12H4zM12 10a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+          </a>
           <details class="article-outline"><summary aria-label="文章大纲" title="文章大纲"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></summary><nav aria-label="文章大纲"><a href="#outline-01"><span>01</span>外观、操作和血统</a><a href="#outline-02"><span>02</span>特色功能：比例、直出和人像辅助</a><a href="#outline-03"><span>03</span>L10 画质表现</a><a href="#outline-04"><span>04</span>和几台参照对象具体比一比</a><a href="#outline-05"><span>05</span>视频能力</a><a href="#outline-06"><span>06</span>爱群大酒店实拍</a><a href="#outline-07"><span>07</span>云南旅行：500g 的 L10 会不会成为负担？</a><a href="#outline-08"><span>08</span>总结</a></nav></details>
         </div>
       </div>
@@ -932,6 +939,13 @@
 <p>动态范围也要按真实场景看。窗边人像的脸和窗外、老酒店灯光下的肤色和暗部、山顶大雾里的亮部层次，以及低饱和处理会不会把阴影压得太死，都比一句参数更有用。</p>
 <h3>L10 画质测试参数表</h3>
 <table><thead><tr><th>焦段</th><th>光圈</th><th>ISO</th></tr></thead><tbody><tr><td>24mm</td><td>全开</td><td>ISO 100</td></tr><tr><td>24mm</td><td>F2.8</td><td>ISO 100</td></tr><tr><td>24mm</td><td>F4</td><td>ISO 100</td></tr><tr><td>24mm</td><td>F5.6</td><td>ISO 100</td></tr><tr><td>24mm</td><td>F8</td><td>ISO 100</td></tr><tr><td>35mm</td><td>全开</td><td>ISO 100</td></tr><tr><td>35mm</td><td>F2.8</td><td>ISO 100</td></tr><tr><td>35mm</td><td>F4</td><td>ISO 100</td></tr><tr><td>35mm</td><td>F5.6</td><td>ISO 100</td></tr><tr><td>35mm</td><td>F8</td><td>ISO 100</td></tr><tr><td>50mm</td><td>全开</td><td>ISO 100</td></tr><tr><td>50mm</td><td>F2.8</td><td>ISO 100</td></tr><tr><td>50mm</td><td>F4</td><td>ISO 100</td></tr><tr><td>50mm</td><td>F5.6</td><td>ISO 100</td></tr><tr><td>50mm</td><td>F8</td><td>ISO 100</td></tr><tr><td>75mm</td><td>全开</td><td>ISO 100</td></tr><tr><td>75mm</td><td>F4</td><td>ISO 100</td></tr><tr><td>75mm</td><td>F5.6</td><td>ISO 100</td></tr><tr><td>75mm</td><td>F8</td><td>ISO 100</td></tr></tbody></table>
+
+<aside class="insert-module studio-compare-module studio-compare-module--compact" id="l10-sharpness">
+  <div class="studio-compare-shell l10-sharpness-shell">
+    <iframe data-l10-sharpness-frame title="L10 镜头锐度单项工具"></iframe>
+  </div>
+</aside>
+
 <h2 id="outline-04">04 和几台参照对象具体比一比</h2>
 <h3>裁切余量和剩余像素</h3>
 
@@ -1136,6 +1150,7 @@
       const tools = [
         ["tools/studio-comparison.html", "[data-studio-tool-link]", "[data-studio-tool-frame]"],
         ["tools/day-sharpness.html", "[data-day-sharpness-link]", "[data-day-sharpness-frame]"],
+        ["tools/l10-sharpness.html", "[data-l10-sharpness-link]", "[data-l10-sharpness-frame]"],
       ];
       tools.forEach(([toolPath, linkSelector, frameSelector]) => {
         const url = resolveToolUrl(toolPath);

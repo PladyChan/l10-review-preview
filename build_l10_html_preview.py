@@ -238,6 +238,14 @@ day_sharpness_module = """
 </aside>
 """
 
+l10_sharpness_module = """
+<aside class="insert-module studio-compare-module studio-compare-module--compact" id="l10-sharpness">
+  <div class="studio-compare-shell l10-sharpness-shell">
+    <iframe data-l10-sharpness-frame title="L10 镜头锐度单项工具"></iframe>
+  </div>
+</aside>
+"""
+
 
 def aspect_ratio_visual():
     standard_m43_area = 17.3 * 13.0
@@ -308,6 +316,11 @@ aspect_module = aspect_ratio_visual()
 
 
 def inject_modules(body: str) -> str:
+    l10_marker = "<h3>L10 画质测试参数表</h3>"
+    next_section_marker = "<h2>04 和几台参照对象具体比一比</h2>"
+    if l10_marker in body and next_section_marker in body:
+        body = body.replace(next_section_marker, l10_sharpness_module + "\n" + next_section_marker, 1)
+
     day_marker = "<h3>F5.6 锐度对比参数表</h3>"
     if day_marker in body:
         body = body.replace(day_marker, day_sharpness_module + "\n" + day_marker, 1)
@@ -782,6 +795,10 @@ out = f"""<!doctype html>
       height: min(86vh, 860px);
       min-height: 680px;
     }}
+    .l10-sharpness-shell {{
+      height: min(86vh, 860px);
+      min-height: 680px;
+    }}
     .module-link {{
       margin: 10px 0 0;
       font-family: var(--font-mono);
@@ -1245,6 +1262,9 @@ out = f"""<!doctype html>
           <a class="icon-button" href="#" data-day-sharpness-link aria-label="白天锐度工具" title="白天锐度工具">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18l6-6 4 4 6-10M4 20h16"/></svg>
           </a>
+          <a class="icon-button" href="#" data-l10-sharpness-link aria-label="L10 镜头锐度工具" title="L10 镜头锐度工具">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h4l2-2h4l2 2h4v12H4zM12 10a3 3 0 1 0 0 6 3 3 0 0 0 0-6z"/></svg>
+          </a>
           {outline_controls}
         </div>
       </div>
@@ -1265,6 +1285,7 @@ out = f"""<!doctype html>
       const tools = [
         ["tools/studio-comparison.html", "[data-studio-tool-link]", "[data-studio-tool-frame]"],
         ["tools/day-sharpness.html", "[data-day-sharpness-link]", "[data-day-sharpness-frame]"],
+        ["tools/l10-sharpness.html", "[data-l10-sharpness-link]", "[data-l10-sharpness-frame]"],
       ];
       tools.forEach(([toolPath, linkSelector, frameSelector]) => {{
         const url = resolveToolUrl(toolPath);

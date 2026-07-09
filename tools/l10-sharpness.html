@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>L10 Lens Sharpness</title>
+  <style>
+    :root {
+      color-scheme: dark light;
+      --bg: #090909;
+      --panel: #141414;
+      --panel-2: #202020;
+      --ink: #f2f2f2;
+      --body: #cfcfcf;
+      --muted: #8b8b8b;
+      --line: #343434;
+      --accent: #e3322b;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --mono: "SFMono-Regular", ui-monospace, Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; min-height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font);
+      line-height: 1.45;
+    }
+    button { font: inherit; }
+    button {
+      min-height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      background: var(--panel-2);
+      color: var(--ink);
+      cursor: pointer;
+    }
+    button:hover:not(:disabled) { border-color: var(--accent); }
+    button.is-active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    button:disabled {
+      cursor: not-allowed;
+      color: #5e5e5e;
+      background: #111;
+      border-color: #242424;
+    }
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      overflow: hidden;
+    }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      padding: 7px 8px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
+    }
+    .toolbar button {
+      padding: 4px 9px;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+    .segmented {
+      display: flex;
+      gap: 4px;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .segmented::-webkit-scrollbar { display: none; }
+    .focal-options { max-width: min(34vw, 360px); }
+    .aperture-options { max-width: min(42vw, 460px); }
+    .main {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    .stage {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      background:
+        linear-gradient(45deg, color-mix(in srgb, var(--panel-2) 82%, #000) 25%, transparent 25%),
+        linear-gradient(-45deg, color-mix(in srgb, var(--panel-2) 82%, #000) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, color-mix(in srgb, var(--panel-2) 82%, #000) 75%),
+        linear-gradient(-45deg, transparent 75%, color-mix(in srgb, var(--panel-2) 82%, #000) 75%);
+      background-size: 24px 24px;
+      background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+      touch-action: none;
+      cursor: grab;
+    }
+    .stage:active { cursor: grabbing; }
+    .stage img.main-image {
+      position: absolute;
+      left: 0;
+      top: 0;
+      max-width: none;
+      width: auto;
+      height: auto;
+      transform-origin: 0 0;
+      user-select: none;
+      pointer-events: none;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    .image-label {
+      position: absolute;
+      left: 8px;
+      top: 8px;
+      z-index: 5;
+      display: grid;
+      gap: 2px;
+      max-width: calc(100% - 16px);
+      padding: 6px 7px;
+      border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+      background: color-mix(in srgb, var(--panel) 88%, transparent);
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.2;
+      backdrop-filter: blur(8px);
+      pointer-events: none;
+    }
+    .image-label span {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+    .minimap {
+      position: absolute;
+      right: 10px;
+      bottom: 10px;
+      z-index: 6;
+      width: 136px;
+      border: 1px solid color-mix(in srgb, var(--line) 88%, transparent);
+      background: color-mix(in srgb, var(--panel) 88%, transparent);
+      box-shadow: 0 8px 22px color-mix(in srgb, #000 36%, transparent);
+      backdrop-filter: blur(8px);
+      pointer-events: none;
+    }
+    .minimap-frame {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: #050505;
+    }
+    .minimap img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      opacity: 0.64;
+    }
+    .minimap-viewport {
+      position: absolute;
+      border: 2px solid var(--accent);
+      background: color-mix(in srgb, var(--accent) 18%, transparent);
+      box-shadow: 0 0 0 999px color-mix(in srgb, #000 22%, transparent);
+    }
+    .empty-state {
+      padding: 16px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+    @media (max-width: 760px) {
+      .toolbar {
+        gap: 6px;
+        padding: 6px;
+      }
+      .toolbar button {
+        min-height: 28px;
+        padding: 3px 7px;
+        font-size: 11px;
+      }
+      .focal-options,
+      .aperture-options { max-width: 100%; }
+      .minimap { display: none; }
+      .image-label {
+        font-size: 11px;
+        max-width: calc(100% - 12px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="toolbar" aria-label="L10 镜头锐度工具控制">
+      <div class="segmented focal-options" data-focal-options></div>
+      <div class="segmented aperture-options" data-aperture-options></div>
+      <div class="segmented" data-point-options>
+        <button type="button" data-point="center">中心</button>
+        <button type="button" data-point="edge">边角</button>
+      </div>
+      <div class="segmented" data-zoom-options>
+        <button type="button" data-zoom="1">100%</button>
+        <button type="button" data-zoom="2">200%</button>
+        <button type="button" data-zoom="4">400%</button>
+      </div>
+      <button type="button" data-reset>回到中心</button>
+      <button type="button" data-edge-jump>定位边角</button>
+    </div>
+    <main class="main">
+      <section class="stage" data-stage>
+        <img class="main-image" alt="" data-main-image>
+        <div class="image-label" data-label></div>
+        <div class="minimap" aria-hidden="true">
+          <div class="minimap-frame">
+            <img alt="" data-minimap-image>
+            <div class="minimap-viewport" data-minimap-viewport></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script>
+    (() => {
+      const state = {
+        config: null,
+        focal: "24mm",
+        aperture: "wide-open",
+        point: "center",
+        scale: 2,
+        offsetX: 0,
+        offsetY: 0,
+        dragging: false,
+        dragStart: null
+      };
+
+      const stage = document.querySelector("[data-stage]");
+      const image = document.querySelector("[data-main-image]");
+      const minimapImage = document.querySelector("[data-minimap-image]");
+      const minimapViewport = document.querySelector("[data-minimap-viewport]");
+      const label = document.querySelector("[data-label]");
+      const focalOptions = document.querySelector("[data-focal-options]");
+      const apertureOptions = document.querySelector("[data-aperture-options]");
+      const pointButtons = Array.from(document.querySelectorAll("[data-point]"));
+      const zoomButtons = Array.from(document.querySelectorAll("[data-zoom]"));
+
+      function escapeHtml(value) {
+        return String(value).replace(/[&<>"']/g, (char) => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        }[char]));
+      }
+
+      function focalConfig() {
+        return state.config.focals.find((item) => item.id === state.focal);
+      }
+
+      function apertureConfig(id = state.aperture) {
+        return state.config.apertures.find((item) => item.id === id);
+      }
+
+      function currentPhoto() {
+        return state.config.photos.find((photo) => photo.focal === state.focal && photo.aperture === state.aperture) || null;
+      }
+
+      function photoUrl(photo) {
+        return `${state.config.assetBase}/${photo.file}`;
+      }
+
+      function save() {
+        localStorage.setItem(state.config.storageKey, JSON.stringify({
+          focal: state.focal,
+          aperture: state.aperture,
+          point: state.point,
+          scale: state.scale
+        }));
+      }
+
+      function restore() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(state.config.storageKey) || "{}");
+          if (state.config.focals.some((item) => item.id === saved.focal)) state.focal = saved.focal;
+          if (saved.aperture && hasPhoto(state.focal, saved.aperture)) state.aperture = saved.aperture;
+          if (saved.point === "center" || saved.point === "edge") state.point = saved.point;
+          if ([1, 2, 4].includes(saved.scale)) state.scale = saved.scale;
+        } catch {}
+      }
+
+      function hasPhoto(focal, aperture) {
+        return state.config.photos.some((photo) => photo.focal === focal && photo.aperture === aperture);
+      }
+
+      function availableApertures() {
+        return state.config.apertures.filter((aperture) => hasPhoto(state.focal, aperture.id));
+      }
+
+      function renderSegment(container, items, current, onSelect, isDisabled = () => false) {
+        container.innerHTML = "";
+        items.forEach((item) => {
+          const button = document.createElement("button");
+          const disabled = isDisabled(item);
+          button.type = "button";
+          button.textContent = item.label;
+          button.classList.toggle("is-active", item.id === current);
+          button.disabled = disabled;
+          button.setAttribute("aria-pressed", item.id === current ? "true" : "false");
+          button.addEventListener("click", () => {
+            if (!disabled) onSelect(item.id);
+          });
+          container.append(button);
+        });
+      }
+
+      function syncButtons() {
+        pointButtons.forEach((button) => {
+          const active = button.dataset.point === state.point;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+        zoomButtons.forEach((button) => {
+          const active = Number(button.dataset.zoom) === state.scale;
+          button.classList.toggle("is-active", active);
+          button.setAttribute("aria-pressed", active ? "true" : "false");
+        });
+      }
+
+      function renderControls() {
+        renderSegment(focalOptions, state.config.focals, state.focal, (id) => {
+          state.focal = id;
+          if (!hasPhoto(state.focal, state.aperture)) state.aperture = availableApertures()[0].id;
+          render();
+        });
+        renderSegment(
+          apertureOptions,
+          state.config.apertures,
+          state.aperture,
+          (id) => {
+            state.aperture = id;
+            render();
+          },
+          (item) => !hasPhoto(state.focal, item.id)
+        );
+        syncButtons();
+      }
+
+      function renderPhoto() {
+        const photo = currentPhoto();
+        if (!photo) {
+          stage.innerHTML = '<div class="empty-state">当前焦段没有这个光圈的样张。</div>';
+          return;
+        }
+        const focal = focalConfig();
+        const aperture = apertureConfig();
+        label.innerHTML = `<strong>${escapeHtml(focal.test)} · ${escapeHtml(focal.label)} · ${escapeHtml(aperture.label)}</strong><span>${escapeHtml(photo.actualAperture)} · ${escapeHtml(photo.iso)} · ${escapeHtml(photo.shutter)} · ${escapeHtml(state.point === "center" ? "中心" : "边角")} · ${Math.round(state.scale * 100)}%</span>`;
+        const nextUrl = photoUrl(photo);
+        if (!image.src.endsWith(photo.file)) {
+          image.src = nextUrl;
+          minimapImage.src = nextUrl;
+        } else {
+          jumpToPoint(state.point);
+        }
+      }
+
+      function clamp() {
+        const rect = stage.getBoundingClientRect();
+        const width = image.naturalWidth * state.scale;
+        const height = image.naturalHeight * state.scale;
+        if (width <= rect.width) state.offsetX = (rect.width - width) / 2;
+        else state.offsetX = Math.min(0, Math.max(rect.width - width, state.offsetX));
+        if (height <= rect.height) state.offsetY = (rect.height - height) / 2;
+        else state.offsetY = Math.min(0, Math.max(rect.height - height, state.offsetY));
+      }
+
+      function updateImage() {
+        image.style.transform = `translate(${state.offsetX}px, ${state.offsetY}px) scale(${state.scale})`;
+        syncButtons();
+        updateMinimap();
+        save();
+      }
+
+      function updateMinimap() {
+        if (!image.naturalWidth || !image.naturalHeight) return;
+        const rect = stage.getBoundingClientRect();
+        const visibleX = Math.max(0, -state.offsetX / state.scale);
+        const visibleY = Math.max(0, -state.offsetY / state.scale);
+        const visibleW = Math.min(image.naturalWidth, rect.width / state.scale);
+        const visibleH = Math.min(image.naturalHeight, rect.height / state.scale);
+        minimapViewport.style.left = `${(visibleX / image.naturalWidth) * 100}%`;
+        minimapViewport.style.top = `${(visibleY / image.naturalHeight) * 100}%`;
+        minimapViewport.style.width = `${Math.min(100, (visibleW / image.naturalWidth) * 100)}%`;
+        minimapViewport.style.height = `${Math.min(100, (visibleH / image.naturalHeight) * 100)}%`;
+      }
+
+      function jumpToPoint(point) {
+        const anchors = focalConfig().anchors;
+        const anchor = anchors[point] || anchors.center;
+        const rect = stage.getBoundingClientRect();
+        state.point = point;
+        state.offsetX = rect.width / 2 - anchor[0] * state.scale;
+        state.offsetY = rect.height / 2 - anchor[1] * state.scale;
+        clamp();
+        updateImage();
+        renderControls();
+        const photo = currentPhoto();
+        const aperture = apertureConfig();
+        label.innerHTML = `<strong>${escapeHtml(focalConfig().test)} · ${escapeHtml(state.focal)} · ${escapeHtml(aperture.label)}</strong><span>${escapeHtml(photo.actualAperture)} · ${escapeHtml(photo.iso)} · ${escapeHtml(photo.shutter)} · ${escapeHtml(point === "center" ? "中心" : "边角")} · ${Math.round(state.scale * 100)}%</span>`;
+      }
+
+      function setZoom(scale) {
+        state.scale = Math.min(state.config.maxZoom, Math.max(1, scale));
+        jumpToPoint(state.point);
+      }
+
+      function render() {
+        renderControls();
+        renderPhoto();
+        save();
+      }
+
+      image.addEventListener("load", () => jumpToPoint(state.point));
+      pointButtons.forEach((button) => button.addEventListener("click", () => jumpToPoint(button.dataset.point)));
+      zoomButtons.forEach((button) => button.addEventListener("click", () => setZoom(Number(button.dataset.zoom))));
+      document.querySelector("[data-reset]").addEventListener("click", () => jumpToPoint("center"));
+      document.querySelector("[data-edge-jump]").addEventListener("click", () => jumpToPoint("edge"));
+
+      stage.addEventListener("pointerdown", (event) => {
+        state.dragging = true;
+        state.dragStart = { x: event.clientX, y: event.clientY, offsetX: state.offsetX, offsetY: state.offsetY };
+        stage.setPointerCapture(event.pointerId);
+      });
+      stage.addEventListener("pointermove", (event) => {
+        if (!state.dragging || !state.dragStart) return;
+        state.offsetX = state.dragStart.offsetX + event.clientX - state.dragStart.x;
+        state.offsetY = state.dragStart.offsetY + event.clientY - state.dragStart.y;
+        clamp();
+        updateImage();
+      });
+      stage.addEventListener("pointerup", () => {
+        state.dragging = false;
+        state.dragStart = null;
+      });
+      window.addEventListener("resize", () => jumpToPoint(state.point));
+
+      fetch("l10-sharpness-config.json", { cache: "no-store" })
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.json();
+        })
+        .then((config) => {
+          state.config = config;
+          state.scale = config.defaultZoom || 2;
+          restore();
+          if (!hasPhoto(state.focal, state.aperture)) state.aperture = availableApertures()[0].id;
+          render();
+        })
+        .catch((error) => {
+          stage.innerHTML = `<div class="empty-state">L10 镜头锐度工具配置加载失败：${escapeHtml(error.message)}</div>`;
+        });
+    })();
+  </script>
+</body>
+</html>

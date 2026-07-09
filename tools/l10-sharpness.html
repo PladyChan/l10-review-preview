@@ -205,10 +205,12 @@
         <button type="button" data-point="edge">边角</button>
       </div>
       <div class="segmented" data-zoom-options>
-        <button type="button" data-zoom="1">100%</button>
-        <button type="button" data-zoom="2">200%</button>
-        <button type="button" data-zoom="4">400%</button>
+        <button type="button" data-zoom-preset="1">100%</button>
+        <button type="button" data-zoom-preset="2">200%</button>
+        <button type="button" data-zoom-preset="4">400%</button>
       </div>
+      <label>ZOOM <input type="range" min="0.05" max="4" step="0.01" value="1" data-zoom></label>
+      <button type="button" data-fit>适合窗口</button>
       <button type="button" data-reset>回到中心</button>
       <button type="button" data-edge-jump>定位边角</button>
     </div>
@@ -232,9 +234,9 @@
         focal: "24mm",
         aperture: "wide-open",
         point: "center",
-        scale: 2,
-        offsetX: 0,
-        offsetY: 0,
+        zoom: 1,
+        panX: 0,
+        panY: 0,
         dragging: false,
         dragStart: null
       };
@@ -247,7 +249,8 @@
       const focalOptions = document.querySelector("[data-focal-options]");
       const apertureOptions = document.querySelector("[data-aperture-options]");
       const pointButtons = Array.from(document.querySelectorAll("[data-point]"));
-      const zoomButtons = Array.from(document.querySelectorAll("[data-zoom]"));
+      const zoomButtons = Array.from(document.querySelectorAll("[data-zoom-preset]"));
+      const zoomInput = document.querySelector("[data-zoom]");
 
       function escapeHtml(value) {
         return String(value).replace(/[&<>"']/g, (char) => ({
@@ -280,7 +283,7 @@
           focal: state.focal,
           aperture: state.aperture,
           point: state.point,
-          scale: state.scale
+          zoom: state.zoom
         }));
       }
 
@@ -290,7 +293,7 @@
           if (state.config.focals.some((item) => item.id === saved.focal)) state.focal = saved.focal;
           if (saved.aperture && hasPhoto(state.focal, saved.aperture)) state.aperture = saved.aperture;
           if (saved.point === "center" || saved.point === "edge") state.point = saved.point;
-          if ([1, 2, 4].includes(saved.scale)) state.scale = saved.scale;
+          if (Number.isFinite(saved.zoom)) state.zoom = Math.min(4, Math.max(0.05, saved.zoom));
         } catch {}
       }
 
@@ -326,7 +329,7 @@
           button.setAttribute("aria-pressed", active ? "true" : "false");
         });
         zoomButtons.forEach((button) => {
-          const active = Number(button.dataset.zoom) === state.scale;
+          const active = Number(button.dataset.zoomPreset) === state.zoom;
           button.classList.toggle("is-active", active);
           button.setAttribute("aria-pressed", active ? "true" : "false");
         });
@@ -359,7 +362,7 @@
         }
         const focal = focalConfig();
         const aperture = apertureConfig();
-        label.innerHTML = `<strong>${escapeHtml(focal.test)} · ${escapeHtml(focal.label)} · ${escapeHtml(aperture.label)}</strong><span>${escapeHtml(photo.actualAperture)} · ${escapeHtml(photo.iso)} · ${escapeHtml(photo.shutter)} · ${escapeHtml(state.point === "center" ? "中心" : "边角")} · ${Math.round(state.scale * 100)}%</span>`;
+        label.innerHTML = `<strong>${escapeHtml(focal.test)} · ${escapeHtml(focal.label)} · ${escapeHtml(aperture.label)}</strong><span>${escapeHtml(photo.actualAperture)} · ${escapeHtml(photo.iso)} · ${escapeHtml(photo.shutter)} · ${escapeHtml(state.point === "center" ? "中心" : "边角")} · ${Math.round(state.zoom * 100)}%</span>`;
         const nextUrl = photoUrl(photo);
         if (!image.src.endsWith(photo.file)) {
           image.src = nextUrl;
@@ -371,16 +374,17 @@
 
       function clamp() {
         const rect = stage.getBoundingClientRect();
-        const width = image.naturalWidth * state.scale;
-        const height = image.naturalHeight * state.scale;
-        if (width <= rect.width) state.offsetX = (rect.width - width) / 2;
-        else state.offsetX = Math.min(0, Math.max(rect.width - width, state.offsetX));
-        if (height <= rect.height) state.offsetY = (rect.height - height) / 2;
-        else state.offsetY = Math.min(0, Math.max(rect.height - height, state.offsetY));
+        const width = image.naturalWidth * state.zoom;
+        const height = image.naturalHeight * state.zoom;
+        if (width <= rect.width) state.panX = (rect.width - width) / 2;
+        else state.panX = Math.min(0, Math.max(rect.width - width, state.panX));
+        if (height <= rect.height) state.panY = (rect.height - height) / 2;
+        else state.panY = Math.min(0, Math.max(rect.height - height, state.panY));
       }
 
       function updateImage() {
-        image.style.transform = `translate(${state.offsetX}px, ${state.offsetY}px) scale(${state.scale})`;
+        image.style.transform = `translate(${state.panX}px, ${state.panY}px) scale(${state.zoom})`;
+        zoomInput.value = String(state.zoom);
         syncButtons();
         updateMinimap();
         save();
@@ -389,10 +393,10 @@
       function updateMinimap() {
         if (!image.naturalWidth || !image.naturalHeight) return;
         const rect = stage.getBoundingClientRect();
-        const visibleX = Math.max(0, -state.offsetX / state.scale);
-        const visibleY = Math.max(0, -state.offsetY / state.scale);
-        const visibleW = Math.min(image.naturalWidth, rect.width / state.scale);
-        const visibleH = Math.min(image.naturalHeight, rect.height / state.scale);
+        const visibleX = Math.max(0, -state.panX / state.zoom);
+        const visibleY = Math.max(0, -state.panY / state.zoom);
+        const visibleW = Math.min(image.naturalWidth, rect.width / state.zoom);
+        const visibleH = Math.min(image.naturalHeight, rect.height / state.zoom);
         minimapViewport.style.left = `${(visibleX / image.naturalWidth) * 100}%`;
         minimapViewport.style.top = `${(visibleY / image.naturalHeight) * 100}%`;
         minimapViewport.style.width = `${Math.min(100, (visibleW / image.naturalWidth) * 100)}%`;
@@ -404,19 +408,25 @@
         const anchor = anchors[point] || anchors.center;
         const rect = stage.getBoundingClientRect();
         state.point = point;
-        state.offsetX = rect.width / 2 - anchor[0] * state.scale;
-        state.offsetY = rect.height / 2 - anchor[1] * state.scale;
+        state.panX = rect.width / 2 - anchor[0] * state.zoom;
+        state.panY = rect.height / 2 - anchor[1] * state.zoom;
         clamp();
         updateImage();
         renderControls();
         const photo = currentPhoto();
         const aperture = apertureConfig();
-        label.innerHTML = `<strong>${escapeHtml(focalConfig().test)} · ${escapeHtml(state.focal)} · ${escapeHtml(aperture.label)}</strong><span>${escapeHtml(photo.actualAperture)} · ${escapeHtml(photo.iso)} · ${escapeHtml(photo.shutter)} · ${escapeHtml(point === "center" ? "中心" : "边角")} · ${Math.round(state.scale * 100)}%</span>`;
+        label.innerHTML = `<strong>${escapeHtml(focalConfig().test)} · ${escapeHtml(state.focal)} · ${escapeHtml(aperture.label)}</strong><span>${escapeHtml(photo.actualAperture)} · ${escapeHtml(photo.iso)} · ${escapeHtml(photo.shutter)} · ${escapeHtml(point === "center" ? "中心" : "边角")} · ${Math.round(state.zoom * 100)}%</span>`;
       }
 
-      function setZoom(scale) {
-        state.scale = Math.min(state.config.maxZoom, Math.max(1, scale));
+      function setZoom(zoom) {
+        state.zoom = Math.min(state.config.maxZoom, Math.max(0.05, Math.round(zoom * 100) / 100));
         jumpToPoint(state.point);
+      }
+
+      function zoomToFit() {
+        const rect = stage.getBoundingClientRect();
+        if (!image.naturalWidth || !image.naturalHeight) return 1;
+        return Math.min(rect.width / image.naturalWidth, rect.height / image.naturalHeight);
       }
 
       function render() {
@@ -427,19 +437,26 @@
 
       image.addEventListener("load", () => jumpToPoint(state.point));
       pointButtons.forEach((button) => button.addEventListener("click", () => jumpToPoint(button.dataset.point)));
-      zoomButtons.forEach((button) => button.addEventListener("click", () => setZoom(Number(button.dataset.zoom))));
+      zoomButtons.forEach((button) => button.addEventListener("click", () => setZoom(Number(button.dataset.zoomPreset))));
       document.querySelector("[data-reset]").addEventListener("click", () => jumpToPoint("center"));
       document.querySelector("[data-edge-jump]").addEventListener("click", () => jumpToPoint("edge"));
+      document.querySelector("[data-fit]").addEventListener("click", () => {
+        state.zoom = zoomToFit();
+        state.panX = 0;
+        state.panY = 0;
+        jumpToPoint(state.point);
+      });
+      zoomInput.addEventListener("input", () => setZoom(Number(zoomInput.value)));
 
       stage.addEventListener("pointerdown", (event) => {
         state.dragging = true;
-        state.dragStart = { x: event.clientX, y: event.clientY, offsetX: state.offsetX, offsetY: state.offsetY };
+        state.dragStart = { x: event.clientX, y: event.clientY, panX: state.panX, panY: state.panY };
         stage.setPointerCapture(event.pointerId);
       });
       stage.addEventListener("pointermove", (event) => {
         if (!state.dragging || !state.dragStart) return;
-        state.offsetX = state.dragStart.offsetX + event.clientX - state.dragStart.x;
-        state.offsetY = state.dragStart.offsetY + event.clientY - state.dragStart.y;
+        state.panX = state.dragStart.panX + event.clientX - state.dragStart.x;
+        state.panY = state.dragStart.panY + event.clientY - state.dragStart.y;
         clamp();
         updateImage();
       });
@@ -456,7 +473,7 @@
         })
         .then((config) => {
           state.config = config;
-          state.scale = config.defaultZoom || 2;
+          state.zoom = config.defaultZoom || 2;
           restore();
           if (!hasPhoto(state.focal, state.aperture)) state.aperture = availableApertures()[0].id;
           render();

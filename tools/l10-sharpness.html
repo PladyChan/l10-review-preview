@@ -196,6 +196,23 @@
       font-weight: 700;
       font-size: 12px;
     }
+    .loading-state {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      display: none;
+      place-items: center;
+      background: color-mix(in srgb, var(--bg) 58%, transparent);
+      color: var(--ink);
+      font-family: var(--doto);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0;
+      pointer-events: none;
+    }
+    .stage.is-loading .loading-state {
+      display: grid;
+    }
     @media (max-width: 760px) {
       .toolbar {
         gap: 6px;
@@ -239,6 +256,7 @@
       <section class="stage" data-stage>
         <img class="main-image" alt="" data-main-image>
         <div class="image-label" data-label></div>
+        <div class="loading-state" data-loading>加载中</div>
         <div class="minimap" aria-hidden="true">
           <div class="minimap-frame">
             <img alt="" data-minimap-image>
@@ -393,6 +411,7 @@
         label.innerHTML = `<strong>${escapeHtml(focal.test)} · ${escapeHtml(focal.label)} · ${escapeHtml(aperture.label)}</strong><span>${escapeHtml(photo.actualAperture)} · ${escapeHtml(photo.iso)} · ${escapeHtml(photo.shutter)} · ${escapeHtml(state.point === "center" ? "中心" : "边角")} · ${Math.round(state.zoom * 100)}%</span>`;
         const nextUrl = photoUrl(photo);
         if (!image.src.endsWith(photo.file)) {
+          stage.classList.add("is-loading");
           image.src = nextUrl;
           minimapImage.src = nextUrl;
         } else {
@@ -489,7 +508,14 @@
         save();
       }
 
-      image.addEventListener("load", () => jumpToPoint(state.point));
+      image.addEventListener("load", () => {
+        stage.classList.remove("is-loading");
+        jumpToPoint(state.point);
+      });
+      image.addEventListener("error", () => {
+        stage.classList.remove("is-loading");
+        label.innerHTML = `<strong>图片加载失败</strong><span>${escapeHtml(image.currentSrc || image.src)}</span>`;
+      });
       pointButtons.forEach((button) => button.addEventListener("click", () => jumpToPoint(button.dataset.point)));
       zoomButtons.forEach((button) => button.addEventListener("click", () => setZoom(Number(button.dataset.zoomPreset))));
       document.querySelector("[data-reset]").addEventListener("click", () => jumpToPoint("center"));

@@ -280,6 +280,25 @@
       font-size: 14px;
     }
 
+    .loading-state {
+      position: absolute;
+      inset: 0;
+      z-index: 8;
+      display: grid;
+      place-items: center;
+      background: color-mix(in srgb, var(--bg) 58%, transparent);
+      color: var(--ink);
+      font-family: var(--doto);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0;
+      pointer-events: none;
+    }
+
+    .stage.is-loaded .loading-state {
+      display: none;
+    }
+
     .hidden { display: none !important; }
 
     @media (max-width: 980px) {
@@ -661,7 +680,7 @@
           return `
             <article class="camera-card" data-card="${camera.id}">
               <div class="stage" data-stage>
-                ${src ? `<img src="${src}" alt="${escapeHtml(camera.name)} ${label} crop" data-camera="${escapeHtml(camera.id)}" data-anchor-x="${camera.anchor ? camera.anchor[0] : ""}" data-anchor-y="${camera.anchor ? camera.anchor[1] : ""}" data-corner-x="${camera.corner ? camera.corner[0] : ""}" data-corner-y="${camera.corner ? camera.corner[1] : ""}" data-scale="${camera.scale}">` : `<div class="empty-state">没有找到 ${escapeHtml(camera.name)} 的 ${label} 内置素材</div>`}
+                ${src ? `<img src="${src}" alt="${escapeHtml(camera.name)} ${label} crop" data-camera="${escapeHtml(camera.id)}" data-anchor-x="${camera.anchor ? camera.anchor[0] : ""}" data-anchor-y="${camera.anchor ? camera.anchor[1] : ""}" data-corner-x="${camera.corner ? camera.corner[0] : ""}" data-corner-y="${camera.corner ? camera.corner[1] : ""}" data-scale="${camera.scale}"><div class="loading-state">加载中</div>` : `<div class="empty-state">没有找到 ${escapeHtml(camera.name)} 的 ${label} 内置素材</div>`}
                 <div class="image-label"><strong>${escapeHtml(camera.name)}</strong><span>${escapeHtml(camera.focal || "-")} · ISO ${escapeHtml(camera.iso)}</span></div>
                 ${src ? `<div class="minimap"><div class="minimap-frame" data-minimap-frame><img src="${src}" alt=""><div class="minimap-viewport" data-minimap-viewport></div><div class="minimap-meta" data-minimap-meta>${formatZoom()}</div></div></div>` : ""}
               </div>
@@ -819,7 +838,19 @@
       }, { passive: false });
 
       document.addEventListener("load", (event) => {
-        if (event.target.matches("[data-stage] img")) positionImages();
+        if (event.target.matches("[data-stage] img[data-camera]")) {
+          event.target.closest("[data-stage]")?.classList.add("is-loaded");
+          positionImages();
+        }
+      }, true);
+      document.addEventListener("error", (event) => {
+        if (event.target.matches("[data-stage] img[data-camera]")) {
+          const stage = event.target.closest("[data-stage]");
+          if (stage) {
+            stage.classList.add("is-loaded");
+            stage.insertAdjacentHTML("beforeend", '<div class="empty-state">图片加载失败</div>');
+          }
+        }
       }, true);
       window.addEventListener("resize", positionImages);
       async function init() {

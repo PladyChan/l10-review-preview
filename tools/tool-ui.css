@@ -151,6 +151,30 @@ body {
   }
 }
 
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --tool-bg: #050505;
+  --tool-surface: #0c0c0c;
+  --tool-surface-2: #151515;
+  --tool-line: #2a2a2a;
+  --tool-text: #f2f2f2;
+  --tool-muted: #8a8a8a;
+  --tool-faint: #4d4d4d;
+  --tool-accent: #ff2a2a;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --tool-bg: #f3f1ea;
+  --tool-surface: #fffdf6;
+  --tool-surface-2: #ece8dd;
+  --tool-line: #cfc8b8;
+  --tool-text: #111;
+  --tool-muted: #6f6b62;
+  --tool-faint: #a19a8e;
+  --tool-accent: #d71920;
+}
+
 @media (max-width: 720px) {
   :root { --tool-control-height: 40px; }
 

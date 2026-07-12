@@ -1244,16 +1244,32 @@
         button.setAttribute("title", theme === "dark" ? "切换到浅色" : "切换到深色");
         button.setAttribute("aria-label", theme === "dark" ? "切换到浅色" : "切换到深色");
       };
+      const syncToolFrames = (theme) => {
+        document.querySelectorAll("iframe[data-studio-tool-frame], iframe[data-day-sharpness-frame], iframe[data-l10-sharpness-frame]").forEach((frame) => {
+          try {
+            frame.contentWindow?.postMessage({ type: "l10-theme", theme }, window.location.origin);
+          } catch (error) {}
+        });
+      };
       button.addEventListener("click", () => {
         const next = currentTheme() === "dark" ? "light" : "dark";
         root.dataset.theme = next;
         try {
           localStorage.setItem("l10-theme", next);
         } catch (error) {}
+        syncToolFrames(next);
         render();
       });
       systemDark.addEventListener("change", () => {
         if (!hasSavedTheme()) render();
+      });
+      window.addEventListener("storage", (event) => {
+        if (event.key !== "l10-theme") return;
+        const saved = event.newValue;
+        if (saved === "dark" || saved === "light") root.dataset.theme = saved;
+        else delete root.dataset.theme;
+        syncToolFrames(saved);
+        render();
       });
       render();
     })();

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>L10 RAW Export Comparison</title>
+  <title>夜晚 ISO 噪点对比工具</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Doto:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -411,6 +411,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="tool-ui.css">
 </head>
 <body>
   <div class="app">
@@ -439,6 +440,7 @@
     </div>
   </div>
 
+  <script src="tool-ui.js"></script>
   <script>
     (() => {
       let presetGroups = [];
@@ -618,7 +620,7 @@
 
       function updateToolbarLabels() {
         maxViewButton.textContent = "最大显示 400%";
-        fullscreenButton.textContent = isFullPageTool ? "缩小" : "全屏";
+        L10ToolUI.syncFullscreenButton(fullscreenButton, isFullPageTool);
       }
 
       function articleUrl() {

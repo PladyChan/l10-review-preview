@@ -1270,6 +1270,7 @@ out = f"""<!doctype html>
       .aspect-readout {{ grid-template-columns: 1fr; gap: 5px; }}
     }}
   </style>
+  <link rel="stylesheet" href="tools/tool-ui.css">
 </head>
 <body>
   <div class="layout">

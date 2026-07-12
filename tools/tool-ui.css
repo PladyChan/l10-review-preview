@@ -1,0 +1,179 @@
+:root {
+  --tool-bg: #050505;
+  --tool-surface: #0c0c0c;
+  --tool-surface-2: #151515;
+  --tool-line: #2a2a2a;
+  --tool-text: #f2f2f2;
+  --tool-muted: #8a8a8a;
+  --tool-faint: #4d4d4d;
+  --tool-accent: #ff2a2a;
+  --tool-font-display: "Space Grotesk", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+  --tool-font-mono: "Space Mono", "SFMono-Regular", ui-monospace, monospace;
+  --tool-font-dot: "Doto", "Space Mono", ui-monospace, monospace;
+  --tool-control-height: 36px;
+  --tool-gap: 6px;
+}
+
+body {
+  background: var(--tool-bg);
+  color: var(--tool-text);
+  font-family: var(--tool-font-display);
+}
+
+.toolbar {
+  gap: var(--tool-gap);
+  padding: 8px;
+  border-color: var(--tool-line);
+  background: var(--tool-surface);
+}
+
+.toolbar label {
+  gap: 4px;
+  color: var(--tool-muted);
+  font-family: var(--tool-font-mono);
+  font-size: 10px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+.toolbar button,
+.toolbar select {
+  min-height: var(--tool-control-height);
+  border-color: var(--tool-line);
+  background: var(--tool-surface-2);
+  color: var(--tool-text);
+  font-family: var(--tool-font-mono);
+  font-size: 12px;
+  line-height: 1;
+}
+
+.aspect-button,
+.sensor-button {
+  min-height: var(--tool-control-height);
+  border: 1px solid var(--tool-line);
+  border-radius: 0;
+  background: var(--tool-surface-2);
+  color: var(--tool-text);
+  font-family: var(--tool-font-mono);
+}
+
+.aspect-button:hover,
+.sensor-button:hover,
+.aspect-button:focus-visible,
+.sensor-button:focus-visible {
+  border-color: var(--tool-accent);
+  outline: 2px solid color-mix(in srgb, var(--tool-accent) 55%, transparent);
+  outline-offset: 1px;
+}
+
+.aspect-button.is-active,
+.sensor-button.is-active,
+.sensor-button[aria-pressed="true"] {
+  border-color: var(--tool-accent);
+}
+
+.toolbar button {
+  padding: 7px 10px;
+}
+
+.toolbar button:hover:not(:disabled),
+.toolbar select:hover:not(:disabled),
+.toolbar button:focus-visible,
+.toolbar select:focus-visible,
+.toolbar input:focus-visible {
+  border-color: var(--tool-accent);
+  outline: 2px solid color-mix(in srgb, var(--tool-accent) 55%, transparent);
+  outline-offset: 1px;
+}
+
+.toolbar button.is-active,
+.toolbar button[aria-pressed="true"] {
+  border-color: var(--tool-accent);
+  background: var(--tool-accent);
+  color: #fff;
+}
+
+.toolbar button:disabled {
+  border-color: var(--tool-line);
+  background: var(--tool-surface);
+  color: var(--tool-faint);
+}
+
+.segmented {
+  gap: 3px;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--tool-faint) transparent;
+}
+
+.segmented::-webkit-scrollbar {
+  display: block;
+  height: 3px;
+}
+
+.segmented::-webkit-scrollbar-thumb {
+  background: var(--tool-faint);
+}
+
+.stage {
+  background: var(--tool-surface-2) !important;
+}
+
+.camera-card {
+  border-color: var(--tool-line);
+  background: var(--tool-surface);
+}
+
+.image-label,
+.minimap,
+.loading-pill {
+  border-color: var(--tool-line) !important;
+  background: var(--tool-surface) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+[data-fullscreen] {
+  border-color: var(--tool-accent) !important;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --tool-bg: #f3f1ea;
+    --tool-surface: #fffdf6;
+    --tool-surface-2: #ece8dd;
+    --tool-line: #cfc8b8;
+    --tool-text: #111;
+    --tool-muted: #6f6b62;
+    --tool-faint: #a19a8e;
+    --tool-accent: #d71920;
+  }
+}
+
+@media (max-width: 720px) {
+  :root { --tool-control-height: 40px; }
+
+  .toolbar {
+    align-items: end;
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .toolbar button,
+  .toolbar select,
+  .aspect-button,
+  .sensor-button {
+    min-height: var(--tool-control-height);
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .view-controls {
+    gap: 4px;
+  }
+
+  .view-controls button {
+    min-width: 40px;
+  }
+}

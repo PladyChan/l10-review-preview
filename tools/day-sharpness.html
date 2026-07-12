@@ -485,6 +485,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="tool-ui.css">
 </head>
 <body>
   <div class="app">
@@ -518,6 +519,7 @@
     </div>
   </div>
 
+  <script src="tool-ui.js"></script>
   <script>
     (() => {
       const state = {
@@ -677,9 +679,9 @@
 
       function availableFocalsForGroup(group) {
         if (!group) return state.config.focals;
-        return state.config.focals.filter((focal) => (
-          hasGroupItem(group, "left", focal) && hasGroupItem(group, "right", focal)
-        ));
+        // Keep every focal length the protagonist can shoot visible. The
+        // comparison side renders an explicit unavailable state when needed.
+        return state.config.focals.filter((focal) => hasGroupItem(group, "left", focal));
       }
 
       function itemSrc(item) {
@@ -887,7 +889,7 @@
         const hasMarks = Object.keys(state.anchorOverrides).length || Object.keys(state.cornerOverrides).length;
         maxViewButton.textContent = "最大显示 400%";
         viewButton.textContent = state.view === "single" ? "AB 对比" : "单图";
-        fullscreenButton.textContent = isFullPageTool ? "缩小" : "全屏";
+        L10ToolUI.syncFullscreenButton(fullscreenButton, isFullPageTool);
         markButton.textContent = state.markMode === "center" ? "点击标中心" : "标记中心";
         markCornerButton.textContent = state.markMode === "corner" ? "点击标边角" : "标记边角";
         copyAnchorsButton.textContent = hasMarks ? "复制标记" : "无标记";

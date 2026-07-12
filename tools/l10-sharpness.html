@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>L10 Lens Sharpness</title>
+  <title>L10 镜头锐度工具</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Doto:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -243,6 +243,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="tool-ui.css">
 </head>
 <body>
   <div class="app">
@@ -277,6 +278,7 @@
       </section>
     </main>
   </div>
+  <script src="tool-ui.js"></script>
   <script>
     (() => {
       const state = {
@@ -389,7 +391,7 @@
           button.setAttribute("aria-pressed", active ? "true" : "false");
         });
         maxViewButton.textContent = `最大显示 ${Math.round((state.config?.maxZoom || 4) * 100)}%`;
-        fullscreenButton.textContent = isFullPageTool ? "缩小" : "全屏";
+        L10ToolUI.syncFullscreenButton(fullscreenButton, isFullPageTool);
       }
 
       function renderControls() {

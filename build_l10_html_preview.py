@@ -225,7 +225,7 @@ sensor_module = f"""
 <aside class="insert-module" id="visual-sensor">
   <h3>画幅对比工具：L10 可用面积小于标准 M43 全面积</h3>
   <p>这块只讲尺寸关系，不直接等同于最终画质。L10 用的是 4/3 多画幅路线，但可用成像面积要和标准 M43 分开看。</p>
-  {sensor_visual()}
+  {sensor_visual().lstrip()}
 </aside>
 """
 
@@ -336,7 +336,7 @@ def inject_modules(body: str) -> str:
         body = body.replace(night_marker, night_marker + "\n" + studio_compare_module, 1)
 
     insertions = {
-        "<h3>先确认可用面积</h3>": sensor_module,
+        "<h3>传感器可用面积</h3>": sensor_module,
         "<h3>比例拨杆：多画幅和自定义入口</h3>": aspect_module,
     }
     for marker, module in insertions.items():

@@ -215,7 +215,7 @@ def sensor_visual():
   <div class="sensor-compare" aria-label="传感器面积对比工具">
     <div><span>A</span><strong data-compare-a-name>标准 M43</strong></div>
     <div><span>B</span><strong data-compare-b-name>L10 可用</strong></div>
-    <output data-compare-output>A（标准 M43）是 B（L10 可用）的 1.30 倍，面积大约多 30%。</output>
+    <output data-compare-output>A（标准 M43）是 B（L10 可用）的 1.30 倍；A 比 B 多约 30%，B 比 A 少约 23%。</output>
   </div>
   {table(["规格", "尺寸", "面积", "口径"], rows)}
 """
@@ -1408,9 +1408,11 @@ out = f"""<!doctype html>
           const leftArea = Number(aButton.dataset.area);
           const rightArea = Number(bButton.dataset.area);
           const ratio = leftArea / rightArea;
-          const percent = (ratio - 1) * 100;
-          const direction = percent >= 0 ? "大约多" : "大约少";
-          output.textContent = `A（${{aButton.dataset.name}}）是 B（${{bButton.dataset.name}}）的 ${{ratio.toFixed(2)}} 倍，面积${{direction}} ${{Math.abs(percent).toFixed(0)}}%。`;
+          const aPercent = (leftArea / rightArea - 1) * 100;
+          const bPercent = (rightArea / leftArea - 1) * 100;
+          const aDirection = aPercent >= 0 ? "多" : "少";
+          const bDirection = bPercent >= 0 ? "多" : "少";
+          output.textContent = `A（${{aButton.dataset.name}}）是 B（${{bButton.dataset.name}}）的 ${{ratio.toFixed(2)}} 倍；A 比 B ${{aDirection}}约 ${{Math.abs(aPercent).toFixed(0)}}%，B 比 A ${{bDirection}}约 ${{Math.abs(bPercent).toFixed(0)}}%。`;
         }} else if (aButton) {{
           output.textContent = `A（${{aButton.dataset.name}}）已选中，再点一个规格作为 B 进行对比。`;
         }} else if (bButton) {{

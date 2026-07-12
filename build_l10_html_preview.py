@@ -96,10 +96,17 @@ def md_to_html(md: str):
                 out.append("</ol>")
                 in_ol = False
             alt, src = image_match.groups()
-            out.append(
-                f'<figure class="article-image"><img src="{html.escape(src)}" alt="{html.escape(alt)}" loading="lazy">'
-                f'<figcaption>{inline(alt)}</figcaption></figure>'
-            )
+            escaped_src = html.escape(src)
+            escaped_alt = html.escape(alt)
+            if "l10-sharpness-assets/contact-sheets/" in src and src.endswith(".jpg"):
+                mobile_src = html.escape(src[:-4] + "_mobile.jpg")
+                media = (
+                    f'<picture><source media="(max-width: 820px)" srcset="{mobile_src}">'
+                    f'<img src="{escaped_src}" alt="{escaped_alt}" loading="lazy"></picture>'
+                )
+            else:
+                media = f'<img src="{escaped_src}" alt="{escaped_alt}" loading="lazy">'
+            out.append(f'<figure class="article-image">{media}<figcaption>{inline(alt)}</figcaption></figure>')
             i += 1
             continue
 
@@ -740,6 +747,7 @@ out = f"""<!doctype html>
       width: 100%;
       height: auto;
     }}
+    .article-image picture {{ display: block; }}
     .article-image figcaption {{
       margin: 0;
       padding: 8px 10px;

@@ -93,12 +93,16 @@ def generate_contact_sheets(config: dict) -> None:
         rows = (len(photos) + columns - 1) // columns
         for point in ("center", "edge"):
             sheet = Image.new("RGB", (preview_w * columns, preview_h * rows), (18, 18, 18))
+            mobile_sheet = Image.new("RGB", (preview_w, preview_h * len(photos)), (18, 18, 18))
             for index, photo in enumerate(photos):
                 with Image.open(preview_dir / preview_filename(photo, point)) as preview:
+                    preview = preview.convert("RGB")
                     x = index % columns * preview_w
                     y = index // columns * preview_h
-                    sheet.paste(preview.convert("RGB"), (x, y))
+                    sheet.paste(preview, (x, y))
+                    mobile_sheet.paste(preview, (0, index * preview_h))
             sheet.save(out_dir / f"{focal['id']}_{point}_apertures.jpg", quality=92)
+            mobile_sheet.save(out_dir / f"{focal['id']}_{point}_apertures_mobile.jpg", quality=92)
     print("l10 sharpness contact sheets generated")
 
 

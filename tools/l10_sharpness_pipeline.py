@@ -81,6 +81,27 @@ def generate_previews(config: dict) -> None:
     print("l10 sharpness previews generated")
 
 
+def generate_contact_sheets(config: dict) -> None:
+    preview_dir = rel_to_tools(config["previewBase"])
+    out_dir = rel_to_tools(config.get("contactSheetBase", "l10-sharpness-assets/contact-sheets"))
+    out_dir.mkdir(parents=True, exist_ok=True)
+    preview_w, preview_h = config.get("previewSize", [720, 480])
+    columns = int(config.get("contactSheetColumns", 3))
+
+    for focal in config["focals"]:
+        photos = [photo for photo in config["photos"] if photo["focal"] == focal["id"]]
+        rows = (len(photos) + columns - 1) // columns
+        for point in ("center", "edge"):
+            sheet = Image.new("RGB", (preview_w * columns, preview_h * rows), (18, 18, 18))
+            for index, photo in enumerate(photos):
+                with Image.open(preview_dir / preview_filename(photo, point)) as preview:
+                    x = index % columns * preview_w
+                    y = index // columns * preview_h
+                    sheet.paste(preview.convert("RGB"), (x, y))
+            sheet.save(out_dir / f"{focal['id']}_{point}_apertures.jpg", quality=92)
+    print("l10 sharpness contact sheets generated")
+
+
 def emit_markdown(config: dict) -> None:
     for photo in config["photos"]:
         for point in ("center", "edge"):
@@ -93,6 +114,7 @@ def main() -> None:
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
     parser.add_argument("--check", action="store_true")
     parser.add_argument("--generate-previews", action="store_true")
+    parser.add_argument("--generate-contact-sheets", action="store_true")
     parser.add_argument("--emit-markdown", action="store_true")
     args = parser.parse_args()
 
@@ -101,9 +123,11 @@ def main() -> None:
         check_assets(config)
     if args.generate_previews:
         generate_previews(config)
+    if args.generate_contact_sheets:
+        generate_contact_sheets(config)
     if args.emit_markdown:
         emit_markdown(config)
-    if not (args.check or args.generate_previews or args.emit_markdown):
+    if not (args.check or args.generate_previews or args.generate_contact_sheets or args.emit_markdown):
         parser.print_help()
 
 

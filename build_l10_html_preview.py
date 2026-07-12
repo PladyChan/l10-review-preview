@@ -316,10 +316,9 @@ aspect_module = aspect_ratio_visual()
 
 
 def inject_modules(body: str) -> str:
-    l10_marker = "<h3>L10 画质测试参数表</h3>"
-    next_section_marker = "<h2>04 和几台参照对象具体比一比</h2>"
-    if l10_marker in body and next_section_marker in body:
-        body = body.replace(next_section_marker, l10_sharpness_module + "\n" + next_section_marker, 1)
+    l10_results_marker = "<h3>中心：先比焦段，再比光圈</h3>"
+    if l10_results_marker in body:
+        body = body.replace(l10_results_marker, l10_sharpness_module + "\n" + l10_results_marker, 1)
 
     day_marker = "<h3>F5.6 锐度对比参数表</h3>"
     if day_marker in body:
@@ -330,7 +329,7 @@ def inject_modules(body: str) -> str:
         body = body.replace(night_marker, night_marker + "\n" + studio_compare_module, 1)
 
     insertions = {
-        "<h3>裁切余量和剩余像素</h3>": sensor_module,
+        "<h3>先确认可用面积</h3>": sensor_module,
         "<h3>比例拨杆：多画幅和自定义入口</h3>": aspect_module,
     }
     for marker, module in insertions.items():

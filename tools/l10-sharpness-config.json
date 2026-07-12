@@ -1,6 +1,8 @@
 {
   "assetBase": "l10-sharpness-assets/raw",
   "previewBase": "l10-sharpness-assets/previews",
+  "contactSheetBase": "l10-sharpness-assets/contact-sheets",
+  "contactSheetColumns": 3,
   "storageKey": "l10-sharpness-view-v1",
   "camera": "Panasonic Lumix DC-L10",
   "imageSize": [5200, 3904],

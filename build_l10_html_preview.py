@@ -217,10 +217,7 @@ def sensor_visual():
     <div><span>B</span><strong data-compare-b-name>L10 可用</strong></div>
     <output data-compare-output>A（标准 M43）是 B（L10 可用）的 1.30 倍；A 比 B 多约 30%，B 比 A 少约 23%。</output>
   </div>
-  <details class="sensor-details">
-    <summary>查看精确尺寸和面积</summary>
-    {table(["规格", "尺寸", "面积", "口径"], rows)}
-  </details>
+  {table(["规格", "尺寸", "面积", "口径"], rows)}
 """
 
 
@@ -1071,27 +1068,6 @@ out = f"""<!doctype html>
       font-size: 11px;
       letter-spacing: .06em;
       vertical-align: 2px;
-    }}
-    .sensor-details {{
-      margin-top: 12px;
-      border: 1px solid var(--line);
-      background: var(--surface);
-    }}
-    .sensor-details summary {{
-      padding: 10px 12px;
-      color: var(--muted);
-      font-family: var(--font-doto);
-      font-weight: 700;
-      font-size: 11px;
-      cursor: pointer;
-    }}
-    .sensor-details[open] summary {{
-      border-bottom: 1px solid var(--line);
-      color: var(--ink);
-    }}
-    .sensor-details table {{
-      margin: 0;
-      border: 0;
     }}
     .aspect-module {{
       border-left-color: var(--ok);

@@ -198,7 +198,7 @@ body {
 }
 
 @media (max-width: 720px) {
-  :root { --tool-control-height: 40px; }
+  :root { --tool-control-height: 36px; }
 
   .toolbar {
     display: flex;
@@ -212,31 +212,47 @@ body {
 
   .selection-controls,
   .view-controls {
-    display: flex;
     width: 100%;
     min-width: 0;
+    overflow: visible;
+  }
+
+  .selection-controls {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .selection-controls > [data-point-options] {
+    grid-column: 1;
+  }
+
+  .selection-controls > .focal-options {
+    grid-column: 2;
+  }
+
+  .selection-controls > .aperture-options {
+    grid-column: 1 / -1;
     overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior-x: contain;
     scrollbar-width: thin;
     scrollbar-color: var(--tool-faint) transparent;
-    -webkit-overflow-scrolling: touch;
   }
 
-  .selection-controls::-webkit-scrollbar,
-  .view-controls::-webkit-scrollbar {
-    height: 3px;
+  .selection-controls > label {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
   }
 
-  .selection-controls::-webkit-scrollbar-thumb,
-  .view-controls::-webkit-scrollbar-thumb {
-    background: var(--tool-faint);
+  .selection-controls > label input[type="range"] {
+    flex: 1;
+    width: auto;
   }
 
-  .selection-controls > label,
-  .selection-controls > .segmented,
   .view-controls {
-    flex: 0 0 auto !important;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 4px;
   }
 
   .toolbar button,
@@ -255,13 +271,12 @@ body {
   }
 
   .view-controls {
-    flex-wrap: nowrap;
-    gap: 4px;
     padding-bottom: 2px;
   }
 
   .view-controls button {
-    flex: 0 0 auto !important;
-    min-width: 40px;
+    min-width: 0;
+    padding-inline: 5px;
+    white-space: normal;
   }
 }

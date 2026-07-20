@@ -262,8 +262,6 @@
         <button type="button" data-fit>适合窗口</button>
         <button type="button" data-max-view>最大显示</button>
         <button type="button" data-actual>100%</button>
-        <button type="button" data-reset>回到中心</button>
-        <button type="button" data-edge-jump>定位边角</button>
         <button type="button" data-fullscreen>全屏</button>
       </div>
     </div>
@@ -533,8 +531,6 @@
       });
       pointButtons.forEach((button) => button.addEventListener("click", () => jumpToPoint(button.dataset.point)));
       zoomButtons.forEach((button) => button.addEventListener("click", () => setZoom(Number(button.dataset.zoomPreset))));
-      document.querySelector("[data-reset]").addEventListener("click", () => jumpToPoint("center"));
-      document.querySelector("[data-edge-jump]").addEventListener("click", () => jumpToPoint("edge"));
       document.querySelector("[data-max-view]").addEventListener("click", () => setZoom(state.config?.maxZoom || 4));
       document.querySelector("[data-actual]").addEventListener("click", () => setZoom(1));
       document.querySelector("[data-fullscreen]").addEventListener("click", () => {

@@ -63,11 +63,14 @@ body {
 }
 
 .aspect-button:hover,
-.sensor-button:hover,
+.sensor-button:hover {
+  border-color: var(--tool-accent);
+}
+
 .aspect-button:focus-visible,
 .sensor-button:focus-visible {
-  border-color: var(--tool-accent);
-  outline: 2px solid color-mix(in srgb, var(--tool-accent) 55%, transparent);
+  border-color: var(--tool-text);
+  outline: 2px solid var(--tool-text);
   outline-offset: 1px;
 }
 
@@ -81,13 +84,17 @@ body {
   padding: 7px 10px;
 }
 
-.toolbar button:hover:not(:disabled),
-.toolbar select:hover:not(:disabled),
+.toolbar button:hover:not(:disabled):not(.is-active):not([aria-pressed="true"]),
+.toolbar select:hover:not(:disabled) {
+  border-color: var(--tool-accent);
+  outline: 0;
+}
+
 .toolbar button:focus-visible,
 .toolbar select:focus-visible,
 .toolbar input:focus-visible {
-  border-color: var(--tool-accent);
-  outline: 2px solid color-mix(in srgb, var(--tool-accent) 55%, transparent);
+  border-color: var(--tool-text);
+  outline: 2px solid var(--tool-text);
   outline-offset: 1px;
 }
 

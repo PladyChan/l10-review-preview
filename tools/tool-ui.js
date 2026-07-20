@@ -44,6 +44,13 @@
     if (!toolbar || toolbar.dataset.toolUiReady === "true") return;
     toolbar.dataset.toolUiReady = "true";
 
+    toolbar.addEventListener("click", (event) => {
+      if (event.detail === 0) return;
+      const control = event.target.closest("button, select");
+      if (!control || !toolbar.contains(control)) return;
+      requestAnimationFrame(() => control.blur());
+    });
+
     scope.querySelectorAll(".segmented").forEach((group) => {
       if (!group.hasAttribute("role")) group.setAttribute("role", "group");
       if (!group.hasAttribute("tabindex")) group.setAttribute("tabindex", "0");

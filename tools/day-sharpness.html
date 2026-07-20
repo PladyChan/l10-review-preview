@@ -164,10 +164,6 @@
       overflow: hidden;
     }
 
-    .compare-grid.is-single {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
     .camera-card {
       min-width: 0;
       border: 1px solid var(--line);
@@ -456,10 +452,6 @@
         height: 100%;
       }
 
-      .compare-grid.is-single {
-        grid-template-rows: minmax(0, 1fr);
-      }
-
       .camera-card {
         min-height: 0;
         height: 100%;
@@ -512,7 +504,6 @@
         <button class="debug-control" type="button" data-mark-corner>标记边角</button>
         <button class="debug-control" type="button" data-copy-anchors>复制标记</button>
         <button class="debug-control" type="button" data-reset-anchors>清除标记</button>
-        <button type="button" data-view>单图</button>
         <button type="button" data-fullscreen>全屏</button>
       </div>
     </div>
@@ -530,7 +521,6 @@
         zoom: 1,
         panX: 0,
         panY: 0,
-        view: "compare",
         group: null,
         markMode: null,
         focusMode: "center",
@@ -547,7 +537,6 @@
       const groupOptions = document.querySelector("[data-group-options]");
       const zoomInput = document.querySelector("[data-zoom]");
       const maxViewButton = document.querySelector("[data-max-view]");
-      const viewButton = document.querySelector("[data-view]");
       const fullscreenButton = document.querySelector("[data-fullscreen]");
       const markButton = document.querySelector("[data-mark-anchor]");
       const markCornerButton = document.querySelector("[data-mark-corner]");
@@ -585,7 +574,6 @@
             zoom: state.zoom,
             panX: state.panX,
             panY: state.panY,
-            view: state.view,
             group: state.group,
             focusMode: state.focusMode,
             anchorOverrides: state.anchorOverrides,
@@ -604,7 +592,6 @@
           state.zoom = Number(saved.zoom || state.zoom);
           state.panX = Number(saved.panX || 0);
           state.panY = Number(saved.panY || 0);
-          state.view = saved.view === "single" ? "single" : "compare";
           if (groupFor(saved.group)) state.group = saved.group;
           state.focusMode = saved.focusMode === "corner" ? "corner" : "center";
           if (saved.anchorOverrides && typeof saved.anchorOverrides === "object") {
@@ -637,7 +624,7 @@
         if (!group) return [];
         const left = resolveGroupItem(group, "left");
         const right = resolveGroupItem(group, "right");
-        return state.view === "single" ? [left] : [left, right];
+        return [left, right];
       }
 
       function resolveGroupItem(group, side) {
@@ -711,7 +698,6 @@
 
       function renderGrid() {
         const items = activeItems();
-        grid.classList.toggle("is-single", state.view === "single");
         if (!items.length) {
           grid.innerHTML = '<div class="empty-state">没有找到可用锐度素材</div>';
           return;
@@ -890,7 +876,6 @@
       function updateToolbarLabels() {
         const hasMarks = Object.keys(state.anchorOverrides).length || Object.keys(state.cornerOverrides).length;
         maxViewButton.textContent = "最大显示 400%";
-        viewButton.textContent = state.view === "single" ? "AB 对比" : "单图";
         L10ToolUI.syncFullscreenButton(fullscreenButton, isFullPageTool);
         markButton.textContent = state.markMode === "center" ? "点击标中心" : "标记中心";
         markCornerButton.textContent = state.markMode === "corner" ? "点击标边角" : "标记边角";
@@ -904,7 +889,6 @@
         document.querySelectorAll("[data-group]").forEach((button) => {
           button.classList.toggle("is-active", button.dataset.group === state.group);
         });
-        viewButton.classList.toggle("is-active", state.view === "single");
         markButton.classList.toggle("is-active", state.markMode === "center");
         markCornerButton.classList.toggle("is-active", state.markMode === "corner");
         document.querySelector("[data-center]")?.classList.toggle("is-active", state.focusMode === "center");
@@ -1092,16 +1076,6 @@
           state.cornerOverrides = {};
           state.markMode = null;
           state.focusMode = "center";
-          state.panX = 0;
-          state.panY = 0;
-          save();
-          render();
-          return;
-        }
-        if (target.matches("[data-view]")) {
-          event.preventDefault();
-          event.stopPropagation();
-          state.view = state.view === "single" ? "compare" : "single";
           state.panX = 0;
           state.panY = 0;
           save();
